@@ -23,7 +23,23 @@ $youku = false;
 if(!isset($imgdata['extension'])) $imgdata['extension'] = 'ddd';
 if(strpos('mp4,ogv,webm,m4v,oga,mp3,m4a,webma,wav', $imgdata['extension'])!==false){
 	$imgthumb = $imgdata['dirname'].'/'.$imgdata['filename'];
-	if(strpos($imgthumb, 'http')===0) $imgthumb = str_replace(" ", "%20", $imgthumb);
+	
+	$rootdir = str_replace($_SERVER['PHP_SELF'], '', $_SERVER['SCRIPT_FILENAME']).'/';
+	
+	if(($SERVER_['HTTPS']!='off')&&($SERVER_['HTTPS']!=null)){
+		$protocol = 'https://';
+	} else {
+		$protocol = 'http://';
+	}
+	$domain = $protocol.$_SERVER['HTTP_HOST'].'/';
+	$imgthumb = str_replace($domain, $rootdir, $imgthumb);
+	$imgthumb = str_replace('//', '/', $imgthumb);
+
+	if(strpos($imgthumb, 'http')===0){
+		$imgthumb = str_replace(" ", "%20", $imgthumb);	
+	} elseif(strpos($imgthumb, $rootdir)===false) {
+		$imgthumb = $rootdir.$imgthumb;
+	}
 	if(@getimagesize($imgthumb.'.png')){
 		$img = $imgthumb.'.png'; //thumbnail is provided, filetype .png
 	} elseif(@getimagesize($imgthumb.'.jpg')){
