@@ -34,6 +34,7 @@ class plgContentVideobox extends JPlugin
 		foreach($matches[1] as $match){
 			
 			$co++;
+			$match = strip_tags($match);
 			
 			// breakdown the string of videos being passed		
 			$parametri = explode('||', $match);
@@ -49,6 +50,7 @@ class plgContentVideobox extends JPlugin
 			$parametri['pages'] = $this->params->get('pages');
 			$parametri['box'] = 0;	
 			$parametri['break'] = $this->params->get('break');
+			$parametri['full_url'] = $this->params->get('full_url');
 			$parametri['t_width'] = 206;
 			$parametri['t_height'] = 155;
 			$parametri['width'] = 640;
@@ -226,8 +228,71 @@ class plgContentVideobox extends JPlugin
 				$n = 1;
 
 				foreach ($videos as $video) {
-					$video = str_replace("<br />","",$video);
 					$video = explode ('|', $video);
+					$offset = explode ('#', $video[0]);
+					$video[0] = $offset[0];
+					$video[4] = '';
+					if((strlen($video[0])>11)&(!is_numeric($video[0]))&($parametri['full_url']=='1')){
+						$coun_v = preg_match_all('/<a.*?>([^`]*?)<\/a>/', $video[0], $vvvvv);
+						if($coun_v!=0) $video[0] = $vvvvv[1][0];
+						if(strpos($video[0], 'youtube')!==false){
+							$v_urls = explode ('?', $video[0]);
+							$v_urls = explode ('#', $v_urls[1]);
+							if(is_numeric(str_replace(':', '', $v_urls[count($v_urls)-1]))){
+								$offset = explode (':', $v_urls[count($v_urls)-1]);
+								switch (count($offset)){
+									case 1:
+										$video[4] = '#t='.$offset[0].'s';
+										break;
+									case 2:
+										$video[4] = '#t='.$offset[0].'m'.$offset[1].'s';
+										break;
+									case 3:
+										$video[4] = '#t='.$offset[0].'h'.$offset[1].'m'.$offset[2].'s';
+										break;
+								}
+							}
+							$v_urls = explode ('&', $v_urls[0]);
+							foreach($v_urls as $v_url){
+								if(($v_url{0}=='v')&($v_url{1}=='=')) $video[0] = substr($v_url, 2);
+							}
+						} else { 
+							$v_urls = explode ('/', $video[0]);
+							$v_urls = explode ('#', $v_urls[count($v_urls)-1]);
+							if(is_numeric(str_replace(':', '', $v_urls[count($v_urls)-1]))){
+								$offset = explode (':', $v_urls[count($v_urls)-1]);
+								switch (count($offset)){
+									case 1:
+										$video[4] = '#t='.$offset[0].'s';
+										break;
+									case 2:
+										$video[4] = '#t='.$offset[0].'m'.$offset[1].'s';
+										break;
+									case 3:
+										$video[4] = '#t='.$offset[0].'h'.$offset[1].'m'.$offset[2].'s';
+										break;
+								}
+							}
+							$v_urls = explode ('&', $v_urls[0]);
+							$video[0] = $v_urls[0];
+						}
+					} else {
+						if($offset[1]!=''){
+							$offset = explode (':', $offset[1]);
+							switch (count($offset)){
+								case 1:
+									$video[4] = '#t='.$offset[0].'s';
+									break;
+								case 2:
+									$video[4] = '#t='.$offset[0].'m'.$offset[1].'s';
+									break;
+								case 3:
+									$video[4] = '#t='.$offset[0].'h'.$offset[1].'m'.$offset[2].'s';
+									break;
+							}
+						}	
+					}
+					$video = array_map('trim', $video);
 					if (($count == 1)&($parametri['box']!=1)) {
 						$video_content .= $this->_videoCode($video, $params, $i, $parametri['width'], $parametri['height']);
 					}else{
@@ -261,9 +326,9 @@ class plgContentVideobox extends JPlugin
 	
 	protected function _videoCode( $video, $params, $i, $v_width, $v_height ) {
 		if(!is_numeric($video[0])) {
-			$src = 'http://www.youtube.com/embed/' . $video[0] . '?wmode=transparent&rel=0';
+			$src = 'http://www.youtube.com/embed/' . $video[0] . '?wmode=transparent&rel=0'.$video[4];
 		} else {
-			$src = 'http://player.vimeo.com/video/'.$video[0];
+			$src = 'http://player.vimeo.com/video/'.$video[0].$video[4];
 		}
 		$html  = '<div id="videoFrame"><iframe width="'.$v_width.'" height="'.$v_height.'" src="'.$src.'" frameborder="0" allowfullscreen=""></iframe></div>';
 		return $html;
@@ -271,11 +336,11 @@ class plgContentVideobox extends JPlugin
 
 	protected function _videoThumb( $video, $params, $i, $t_width, $t_height, $v_width, $v_height, $n ) {
 		if(!is_numeric($video[0])) {
-			$src = 'http://www.youtube.com/embed/' . $video[0] . '?wmode=transparent&rel=0&autoplay=1';
+			$src = 'http://www.youtube.com/embed/' . $video[0] . '?wmode=transparent&rel=0&autoplay=1'.$video[4];
 			$img = '/plugins/content/videobox/showthumb.php?img='.urlencode('http://i2.ytimg.com/vi/' . $video[0] . '/hqdefault.jpg').'&width='.$t_width.'&height='.$t_height;
 		} else {
 			$hash = unserialize(file_get_contents('http://vimeo.com/api/v2/video/'.$video[0].'.php'));
-			$src = 'http://player.vimeo.com/video/'.$video[0].'?autoplay=1';
+			$src = 'http://player.vimeo.com/video/'.$video[0].'?autoplay=1'.$video[4];
 			$img = '/plugins/content/videobox/showthumb.php?img='.urlencode($hash[0]['thumbnail_large']).'&width='.$t_width.'&height='.$t_height;
 		}
 		if($params['lightbox']=='0'){
@@ -288,11 +353,11 @@ class plgContentVideobox extends JPlugin
 	
 	protected function _videoBox( $video, $params, $i, $t_width, $t_height, $v_width, $v_height, $style, $n ) {
 		if(!is_numeric($video[0])) {
-			$src = 'http://www.youtube.com/embed/' . $video[0] . '?wmode=transparent&rel=0&autoplay=1';
+			$src = 'http://www.youtube.com/embed/' . $video[0] . '?wmode=transparent&rel=0&autoplay=1'.$video[4];
 			$img = '/plugins/content/videobox/showthumb.php?img='.urlencode('http://i2.ytimg.com/vi/' . $video[0] . '/hqdefault.jpg').'&width='.$t_width.'&height='.$t_height;
 		} else {
 			$hash = unserialize(file_get_contents('http://vimeo.com/api/v2/video/'.$video[0].'.php'));
-			$src = 'http://player.vimeo.com/video/'.$video[0].'?autoplay=1';
+			$src = 'http://player.vimeo.com/video/'.$video[0].'?autoplay=1'.$video[4];
 			$img = '/plugins/content/videobox/showthumb.php?img='.urlencode($hash[0]['thumbnail_large']).'&width='.$t_width.'&height='.$t_height;
 		}
 		if($params['lightbox']=='0'){
