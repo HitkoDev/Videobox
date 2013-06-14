@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" version="2.5" group="system" method="upgrade">
+    <name>PLG_SYSTEM_VIDEOBOX</name>
+	<license>http://www.gnu.org/licenseses/gpl-2.0.html GNU/GPL</license>
+    <author>Hitko</author>
+    <creationDate>August 2012</creationDate>
+    <copyright>This extension in released under the GNU/GPL License - http://www.gnu.org/copyleft/gpl.html</copyright>
+    <authorEmail>development@hitko.si</authorEmail>
+    <authorUrl>http://hitko.si/</authorUrl>
+    <version>3.1.0</version>
+    <description>PLG_SYSTEM_VIDEOBOX_XML_DESCRIPTION</description>
+    <files>
+		<filename plugin="videobox">videobox.php</filename>
+		<filename plugin="videobox">showthumb.php</filename>
+		<filename plugin="videobox">videobox.js</filename>
+		<filename plugin="videobox">index.html</filename>
+		<filename plugin="videobox">player.php</filename>
+		<folder plugin="videobox">css</folder>
+		<folder plugin="videobox">thumbs</folder>
+    </files>
+	<languages>
+        <language tag="en-GB">language/en-GB/en-GB.plg_system_videobox.ini</language>
+        <language tag="en-GB">language/en-GB/en-GB.plg_system_videobox.sys.ini</language>
+    </languages>
+	<config>
+        <fields name="params">
+            <fieldset name="VIDEOBOX_PLUGIN">
+                <field name="full_url" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_FULL_URL" description="PLG_SYSTEM_VIDEOBOX_FULL_URLDESC" >
+					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
+					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
+				</field>
+                <field name="tag" type="text" default="videobox" size="20" label="PLG_SYSTEM_VIDEOBOX_TAG" description="PLG_SYSTEM_VIDEOBOX_TAGDESC" />
+                <field name="loadjq" type="radio" default="1" size="5" label="PLG_SYSTEM_VIDEOBOX_LOADJQ" description="PLG_SYSTEM_VIDEOBOX_LOADJQDESC" >
+					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
+					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
+				</field>
+            </fieldset>
+            <fieldset name="VIDEOBOX_VIDEO">
+                <field name="width" type="text" default="640" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH" description="PLG_SYSTEM_VIDEOBOX_WIDTHDESC" />
+                <field name="height" type="text" default="363" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT" description="PLG_SYSTEM_VIDEOBOX_HEIGHTDESC" />
+                <field name="class" type="text" default="" size="30" label="PLG_SYSTEM_VIDEOBOX_CLASS" description="PLG_SYSTEM_VIDEOBOX_CLASSDESC" />
+                <field name="style" type="textarea" default="" size="5" label="PLG_SYSTEM_VIDEOBOX_STYLE" description="PLG_SYSTEM_VIDEOBOX_STYLEDESC" />
+                <field name="autoplay" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_AUTOPLAY" description="PLG_SYSTEM_VIDEOBOX_AUTOPLAYDESC" >
+					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
+					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
+				</field>
+                <field name="box" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_BOX" description="PLG_SYSTEM_VIDEOBOX_BOXDESC" >
+					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
+					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
+				</field>
+            </fieldset>
+            <fieldset name="VIDEOBOX_BOX">
+                <field name="width_b" type="text" default="640" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_B" description="PLG_SYSTEM_VIDEOBOX_WIDTH_BDESC" />
+                <field name="height_b" type="text" default="363" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_B" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_BDESC" />
+                <field name="width_bt" type="text" default="188" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_BT" description="PLG_SYSTEM_VIDEOBOX_WIDTH_BTDESC" />
+                <field name="height_bt" type="text" default="141" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_BT" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_BTDESC" />
+                <field name="class_b" type="text" default="" size="30" label="PLG_SYSTEM_VIDEOBOX_CLASS_B" description="PLG_SYSTEM_VIDEOBOX_CLASS_BDESC" />
+                <field name="style_b" type="textarea" default="" size="5" label="PLG_SYSTEM_VIDEOBOX_STYLE_B" description="PLG_SYSTEM_VIDEOBOX_STYLE_BDESC" />
+                <field name="no_lb_b" type="radio" default="1" size="5" label="PLG_SYSTEM_VIDEOBOX_NO_LB_B" description="PLG_SYSTEM_VIDEOBOX_NO_LB_BDESC" >
+					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
+					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
+				</field>
+                <field name="play_b" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_PLAY_B" description="PLG_SYSTEM_VIDEOBOX_PLAY_BDESC" >
+					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
+					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
+				</field>
+                <field name="play_nlb_b" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_PLAY_NLB_B" description="PLG_SYSTEM_VIDEOBOX_PLAY_NLB_BDESC" >
+					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
+					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
+				</field>
+            </fieldset>
+            <fieldset name="VIDEOBOX_GALLERY">
+                <field name="width_g" type="text" default="640" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_G" description="PLG_SYSTEM_VIDEOBOX_WIDTH_GDESC" />
+                <field name="height_g" type="text" default="363" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_G" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_GDESC" />
+                <field name="width_gt" type="text" default="206" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_GT" description="PLG_SYSTEM_VIDEOBOX_WIDTH_GTDESC" />
+                <field name="height_gt" type="text" default="155" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_GT" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_GTDESC" />
+                <field name="break" type="text" default="4" size="5" label="PLG_SYSTEM_VIDEOBOX_BREAK" description="PLG_SYSTEM_VIDEOBOX_BREAKDESC" />
+                <field name="pages" type="text" default="16" size="5" label="PLG_SYSTEM_VIDEOBOX_PAGES" description="PLG_SYSTEM_VIDEOBOX_PAGESDESC" />
+                <field name="class_g" type="text" default="" size="30" label="PLG_SYSTEM_VIDEOBOX_CLASS_G" description="PLG_SYSTEM_VIDEOBOX_CLASS_GDESC" />
+                <field name="style_g" type="textarea" default="" size="5" label="PLG_SYSTEM_VIDEOBOX_STYLE_G" description="PLG_SYSTEM_VIDEOBOX_STYLE_GDESC" />
+                <field name="no_lb" type="radio" default="1" size="5" label="PLG_SYSTEM_VIDEOBOX_NO_LB" description="PLG_SYSTEM_VIDEOBOX_NO_LBDESC" >
+					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
+					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
+				</field>
+                <field name="play_g" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_PLAY_G" description="PLG_SYSTEM_VIDEOBOX_PLAY_GDESC" >
+					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
+					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
+				</field>
+                <field name="play_nlb_g" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_PLAY_NLB_G" description="PLG_SYSTEM_VIDEOBOX_PLAY_NLB_GDESC" >
+					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
+					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
+				</field>
+            </fieldset>
+        </fields>
+    </config>
+</extension>

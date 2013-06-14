@@ -1,0 +1,26 @@
+/*Videobox*/
+#vbOverlay { position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: #000; cursor: pointer; }
+#vbCenter, #vbBottomContainer { position: absolute; z-index: 9999; overflow: hidden; background-color: #fff; }
+.vbLoading { background: #fff url(loading.gif) no-repeat center; }
+#vbVideo, #vbVideo5{ position: absolute; left: 0; top: 0; border: 10px solid #fff; background-repeat: no-repeat; background-color: black; }
+#vbBottom { font-family: Verdana, Arial, Geneva, Helvetica, sans-serif; font-size: 10px; color: #13242A; line-height: 1.4em; text-align: left; border: 10px solid #fff; border-top-style: none; }
+#vbCloseLink { display: block; float: right; width: 66px; height: 22px; background: transparent url(closelabel.gif) no-repeat center; margin: 5px 0; outline: none; }
+#vbCaption, #vbNumber { margin-right: 71px;}
+#vbCaption { font-weight: bold; font-style: italic; }
+
+/*Gallery*/
+html, body {height: 100%;}
+.videoFrame {}
+.videoFrame  iframe {}
+.video{clear:both;margin: 0 -14px 0 -4px !important;padding:0;}
+.video_thumb{float:left;background:url(shadowAlpha.png) no-repeat bottom right !important;margin:10px;padding:0;}
+.video_thumb img, .video_thumb span {display:block;position:relative;background:#FFF !important;border:1px solid #ccc !important;margin:-5px 5px 5px -5px !important;padding:4px !important;z-index: 500;}
+.video_thumb iframe {z-index:1000;border:none;}
+.video li {background-image: none !important;}
+.video_cont_0 {float:left;display:inline-block;margin-bottom: -3px;padding: 0 !important;} 
+.video_cont_0 a, .video_cont_0 a:visited, .video_cont_0 a:hover{font-size: 13px;text-decoration: none !important; cursor: pointer;}
+.video_box_0 {display: inline-block;margin: -5px -14px 1px -5px !important;} 
+.video_box_0 a, .video_box_0 a:visited, .video_box_0 a:hover{font-size: 13px;text-decoration: none !important; cursor: pointer;}
+.video_title{position: relative;top: -10px;padding: 0 10px;font-weight: bold;width: 200px;display: block;text-align: center;}
+.video_close {background: url(close.png);display: none;height: 16px;width: 16px;float: right;z-index: 700;position: relative;margin: -3px 6px 0 -22px;}
+.video_close:hover{background: url(close.png);
