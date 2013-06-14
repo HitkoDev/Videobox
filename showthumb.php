@@ -11,7 +11,7 @@
 // It doesn't connect with any core files, exstensions, databases or anything. It recieves image url and desired Width + Height and returns downsized version of input image.
 // defined( '_JEXEC' ) or die( 'Restricted access' ); 
 
-if($_GET['img'] == "")
+if(!isset($_GET['img']))
 {
     exit("No parameters!");
 }
@@ -54,29 +54,28 @@ if(strpos('mp4,ogv,webm,m4v,oga,mp3,m4a,webma,wav', $imgdata['extension'])!==fal
 		$img = $url['dirname'].'/css/nobg_a.png';
 	}
 } else {
-	if((strlen($img)>11)&(!is_numeric($img))){
-		$img = urldecode($img);
-		$coun_v = preg_match_all('/<a.*?>([^`]*?)<\/a>/', $img, $vvvvv);
-		if($coun_v!=0) $img = $vvvvv[1][0];
+
+	if((strlen($img)>16)&(!is_numeric($img))){
 		if(strpos($img, 'youtube')!==false){
-			$v_urls = explode ('?', $img);
-			$v_urls = explode ('#', $v_urls[1]);
-			$v_urls = explode ('&', $v_urls[0]);
-			foreach($v_urls as $v_url){
-				if(($v_url{0}=='v')&($v_url{1}=='=')) $img = substr($v_url, 2);
-			}
-		} elseif(strpos($video[0], 'youku')!==false) {
+			preg_match('/v=(.{11}?)/isU', $img, $v_urls);
+			$img = $v_urls[1];
+		} elseif(strpos($img, 'youku')!==false) {
 			preg_match('/id_(.*?).html/isU', $img, $v_urls);
 			$img = $v_urls[1];
+		} elseif(strpos($img, 'youtu.be')!==false){
+			preg_match('/youtu.be\/(.{11}?)/isU', $img, $v_urls);
+			$img = $v_urls[1];
 		} else { 
-			$v_urls = explode ('/', $img);
-			$v_urls = explode ('#', $v_urls[count($v_urls)-1]);
-			$v_urls = explode ('&', $v_urls[0]);
-			$img = $v_urls[0];
+			preg_match('/vimeo.com\/([0-9]*?)/isU', $img, $v_urls);
+			$img = $v_urls[1];
+		}
+	} else {
+		if((substr($img, 0, 3)=='id_')&(strlen($img)==16)){
+			$img = substr($img, 3);
 		}
 	}
 	
-	if(@getimagesize($url['dirname'].'/thumbs/'.$img.'png')){
+	if(@getimagesize($url['dirname'].'/thumbs/'.$img.'.png')){
 		$img = $url['dirname'].'/thumbs/'.$img.'.png'; //thumbnail is provided, filetype .png
 	} elseif(@getimagesize($url['dirname'].'/thumbs/'.$img.'.jpg')){
 		$img = $url['dirname'].'/thumbs/'.$img.'.jpg'; //thumbnail is provided, filetype .jpg
@@ -90,7 +89,6 @@ if(strpos('mp4,ogv,webm,m4v,oga,mp3,m4a,webma,wav', $imgdata['extension'])!==fal
 		} else {
 			$hash = json_decode(file_get_contents('http://v.youku.com/player/getPlayList/VideoIDS/'.$img));
 			$img = $hash->data[0]->logo.'?u='.$hash->data[0]->userid;
-			//var_dump($hash);
 			$youku = true;
 		}
 	} else {
@@ -112,18 +110,81 @@ if(!isset($_GET['play'])){
 $width = $_GET['width'];
 $height = $_GET['height'];
 
-if($youku==false){
-	$imagedata = getimagesize($img);
-
-	if(!$imagedata[0])
-	{
-		exit();
+try {	
+	switch(strtolower(substr($img, -3))){
+		case 'peg': 
+			$src_img = imagecreatefromjpeg($img);
+			break;
+		case 'jpg': 
+			$src_img = imagecreatefromjpeg($img);
+			break;
+		case 'png': 
+			$src_img = imagecreatefrompng($img);
+			break;
+		case 'gif': 
+			$src_img = imagecreatefromgif($img);
+			break;
 	}
-} else {
-	$src_img = imagecreatefromjpeg($img);
 	$imagedata[0] = imagesx($src_img);
 	$imagedata[1] = imagesy($src_img);
+} catch (Exception $e) {
+	exit("Image can't be loaded");
 }
+
+$b_top = 0;
+$b_btm = 0;
+$b_lft = 0;
+$b_rt = 0;
+
+if(($imagedata[0]!==false)&&($imagedata[1]!==false)&&($imagedata[0]<=1920)&&($imagedata[1]<=1080)){
+
+	for($y = 0; $y < $imagedata[1]; $y++) {
+		for($x = 0; $x < $imagedata[0]; $x++) {
+			if(imagecolorat($src_img, $x, $y) > 0x000000) {
+				break 2;
+			}
+		}
+		$b_top++;
+	}
+
+	for($y = $imagedata[1]-1; $y >= 0; $y--) {
+		for($x = 0; $x < $imagedata[0]; $x++) {
+			if(imagecolorat($src_img, $x, $y) > 0x000000) {
+				break 2;
+			}
+		}
+		$b_btm++;
+	}
+
+	for($x = 0; $x < $imagedata[0]; $x++) {
+		for($y = 0; $y < $imagedata[1]; $y++) {
+			if(imagecolorat($src_img, $x, $y) > 0x000000) {
+				break 2;
+			}
+		}
+		$b_lft++;
+	}
+
+	for($x = $imagedata[0]-1; $x >= 0; $x--) {
+		for($y = 0; $y < $imagedata[1]; $y++) {
+			if(imagecolorat($src_img, $x, $y) > 0x000000) {
+				break 2;
+			}
+		}
+		$b_rt++;
+	}
+
+} else {
+	exit("Image contains errors or is too big to be processed");
+}
+
+$newimg = imagecreatetruecolor(imagesx($src_img)-($b_lft+$b_rt), imagesy($src_img)-($b_top+$b_btm));
+imagecopy($newimg, $src_img, 0, 0, $b_lft, $b_top, imagesx($newimg), imagesy($newimg));
+
+imagedestroy($src_img);
+
+$imagedata[0] = imagesx($newimg);
+$imagedata[1] = imagesy($newimg);
 
 $offset_h = 0;
 $offset_w = 0;
@@ -143,24 +204,8 @@ imagesavealpha($dst_img, true);
 $black = imagecolorallocatealpha($dst_img, 0, 0, 0, 0);
 imagefilledrectangle($dst_img, 0, 0, $width, $height, $black);
 
-if($youku==false){
-	switch(strtolower(substr($img, -3))){
-		case 'peg': 
-			$src_img = imagecreatefromjpeg($img);
-			break;
-		case 'jpg': 
-			$src_img = imagecreatefromjpeg($img);
-			break;
-		case 'png': 
-			$src_img = imagecreatefrompng($img);
-			break;
-		case 'gif': 
-			$src_img = imagecreatefromgif($img);
-			break;
-	}
-}
 
-imagecopyresampled($dst_img, $src_img, $offset_w, $offset_h, 0, 0, $new_w, $new_h, $imagedata[0], $imagedata[1]);
+imagecopyresampled($dst_img, $newimg, $offset_w, $offset_h, 0, 0, $new_w, $new_h, $imagedata[0], $imagedata[1]);
 
 if(($play!=0)&($width>=160)&($height>=120)){
 	imagecopyresampled($dst_img, $play, ($width-100)/2, ($height-80)/2, 0, 0, 100, 80, 100, 80);

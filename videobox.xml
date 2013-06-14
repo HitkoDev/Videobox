@@ -7,13 +7,14 @@
     <copyright>This extension in released under the GNU/GPL License - http://www.gnu.org/copyleft/gpl.html</copyright>
     <authorEmail>development@hitko.si</authorEmail>
     <authorUrl>http://hitko.si/</authorUrl>
-    <version>3.0.0</version>
+    <version>3.1.0</version>
     <description>PLG_SYSTEM_VIDEOBOX_XML_DESCRIPTION</description>
     <files>
 		<filename plugin="videobox">videobox.php</filename>
 		<filename plugin="videobox">showthumb.php</filename>
 		<filename plugin="videobox">videobox.js</filename>
 		<filename plugin="videobox">index.html</filename>
+		<filename plugin="videobox">player.php</filename>
 		<folder plugin="videobox">css</folder>
 		<folder plugin="videobox">thumbs</folder>
     </files>

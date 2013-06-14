@@ -14,9 +14,10 @@ html, body {height: 100%;}
 .videoFrame  iframe {}
 .video{clear:both;margin: 0 -14px 0 -4px !important;padding:0;}
 .video_thumb{float:left;background:url(shadowAlpha.png) no-repeat bottom right !important;margin:10px;padding:0;}
-.video_thumb img, .video_thumb iframe, .video_thumb video {display:block;position:relative;background:#FFF !important;border:1px solid #ccc !important;margin:-5px 5px 5px -5px !important;padding:4px !important;z-index: 500;}
+.video_thumb img, .video_thumb span {display:block;position:relative;background:#FFF !important;border:1px solid #ccc !important;margin:-5px 5px 5px -5px !important;padding:4px !important;z-index: 500;}
+.video_thumb iframe {z-index:1000;border:none;}
 .video li {background-image: none !important;}
-.video_cont_0 {float:left;display:inline-block;margin-bottom: -3px;} 
+.video_cont_0 {float:left;display:inline-block;margin-bottom: -3px;padding: 0 !important;} 
 .video_cont_0 a, .video_cont_0 a:visited, .video_cont_0 a:hover{font-size: 13px;text-decoration: none !important; cursor: pointer;}
 .video_box_0 {display: inline-block;margin: -5px -14px 1px -5px !important;} 
 .video_box_0 a, .video_box_0 a:visited, .video_box_0 a:hover{font-size: 13px;text-decoration: none !important; cursor: pointer;}
