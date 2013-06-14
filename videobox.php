@@ -23,6 +23,9 @@ class plgContentVideobox extends JPlugin
 		jimport('joomla.version');
 		$version = new JVersion();
 		$version = $version->RELEASE;
+		$custom_tag = preg_replace("/[^a-zA-Z0-9]/", "", $this->params->get('tag'));
+		
+		$hits = array();
 		
 		// setup what to look for in the content		
 		$regex = '/{videobox}(.*){\/videobox}/iU';
@@ -30,11 +33,52 @@ class plgContentVideobox extends JPlugin
 		// find all instances of the video players
 		preg_match_all( $regex, $article->text, $matches );
 		
-		$co = 0;
 		foreach($matches[1] as $match){
+			$hit[0] = $match;
+			$hit[1] = $regex;
+			$hits[] = $hit;
+		}
+		
+		$matches = array();
+		
+		if(($custom_tag!='videobox')&($custom_tag!='')){
+			$regex = '/{'.$custom_tag.'}(.*){\/'.$custom_tag.'}/iU';
+			
+			preg_match_all( $regex, $article->text, $matches );
+			
+			foreach($matches[1] as $match){
+				$hit[0] = $match;
+				$hit[1] = $regex;
+				$hits[] = $hit;
+			}
+			
+			$regex = '/{'.$custom_tag.'}(.*){\/videobox}/iU';
+			
+			preg_match_all( $regex, $article->text, $matches );
+			
+			foreach($matches[1] as $match){
+				$hit[0] = $match;
+				$hit[1] = $regex;
+				$hits[] = $hit;
+			}
+			
+			$regex = '/{videobox}(.*){\/'.$custom_tag.'}/iU';
+			
+			preg_match_all( $regex, $article->text, $matches );
+			
+			foreach($matches[1] as $match){
+				$hit[0] = $match;
+				$hit[1] = $regex;
+				$hits[] = $hit;
+			}
+		}
+		
+		$co = 0;
+		foreach($hits as $match){
 			
 			$co++;
-			$match = strip_tags($match);
+			$regex = $match[1];
+			$match = strip_tags($match[0]);
 			
 			// breakdown the string of videos being passed		
 			$parametri = explode('||', $match);

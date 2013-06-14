@@ -7,7 +7,7 @@
     <copyright>This extension in released under the GNU/GPL License - http://www.gnu.org/copyleft/gpl.html</copyright>
     <authorEmail>info@hitko.si</authorEmail>
     <authorUrl>http://hitko.si/</authorUrl>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <description>PLG_CONTENT_VIDEOBOX_XML_DESCRIPTION</description>
     <files>
 		<filename plugin="videobox">videobox.php</filename>
@@ -21,13 +21,16 @@
     </languages>
 	<config>
         <fields name="params">
-            <fieldset name="VIDEOBOX_VIDEO">
-                <field name="width" type="text" default="640" size="5" label="PLG_CONTENT_VIDEOBOX_WIDTH" description="PLG_CONTENT_VIDEOBOX_WIDTHDESC" />
-                <field name="height" type="text" default="363" size="5" label="PLG_CONTENT_VIDEOBOX_HEIGHT" description="PLG_CONTENT_VIDEOBOX_HEIGHTDESC" />
+            <fieldset name="VIDEOBOX_PLUGIN">
                 <field name="full_url" type="radio" default="0" size="5" label="PLG_CONTENT_VIDEOBOX_FULL_URL" description="PLG_CONTENT_VIDEOBOX_FULL_URLDESC" >
 					<option value="1" >PLG_CONTENT_VIDEOBOX_ON</option>
 					<option value="0" >PLG_CONTENT_VIDEOBOX_OFF</option>
 				</field>
+                <field name="tag" type="text" default="videobox" size="20" label="PLG_CONTENT_VIDEOBOX_TAG" description="PLG_CONTENT_VIDEOBOX_TAGDESC" />
+            </fieldset>
+            <fieldset name="VIDEOBOX_VIDEO">
+                <field name="width" type="text" default="640" size="5" label="PLG_CONTENT_VIDEOBOX_WIDTH" description="PLG_CONTENT_VIDEOBOX_WIDTHDESC" />
+                <field name="height" type="text" default="363" size="5" label="PLG_CONTENT_VIDEOBOX_HEIGHT" description="PLG_CONTENT_VIDEOBOX_HEIGHTDESC" />
             </fieldset>
             <fieldset name="VIDEOBOX_BOX">
                 <field name="width_b" type="text" default="640" size="5" label="PLG_CONTENT_VIDEOBOX_WIDTH_B" description="PLG_CONTENT_VIDEOBOX_WIDTH_BDESC" />
