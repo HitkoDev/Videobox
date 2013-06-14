@@ -7,7 +7,7 @@
     <copyright>This extension in released under the GNU/GPL License - http://www.gnu.org/copyleft/gpl.html</copyright>
     <authorEmail>development@hitko.si</authorEmail>
     <authorUrl>http://hitko.si/</authorUrl>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
     <description>PLG_CONTENT_VIDEOBOX_XML_DESCRIPTION</description>
     <files>
 		<filename plugin="videobox">videobox.php</filename>
@@ -15,6 +15,7 @@
 		<filename plugin="videobox">videobox.js</filename>
 		<filename plugin="videobox">index.html</filename>
 		<folder plugin="videobox">css</folder>
+		<folder plugin="videobox">thumbs</folder>
     </files>
 	<languages>
         <language tag="en-GB">language/en-GB/en-GB.plg_content_videobox.ini</language>
@@ -34,14 +35,6 @@
                 <field name="height" type="text" default="363" size="5" label="PLG_CONTENT_VIDEOBOX_HEIGHT" description="PLG_CONTENT_VIDEOBOX_HEIGHTDESC" />
                 <field name="class" type="text" default="" size="30" label="PLG_CONTENT_VIDEOBOX_CLASS" description="PLG_CONTENT_VIDEOBOX_CLASSDESC" />
                 <field name="style" type="textarea" default="" size="5" label="PLG_CONTENT_VIDEOBOX_STYLE" description="PLG_CONTENT_VIDEOBOX_STYLEDESC" />
-                <field name="d_width" type="radio" default="0" size="5" label="PLG_CONTENT_VIDEOBOX_D_WIDTH" description="PLG_CONTENT_VIDEOBOX_D_WIDTHDESC" >
-					<option value="1" >PLG_CONTENT_VIDEOBOX_ON</option>
-					<option value="0" >PLG_CONTENT_VIDEOBOX_OFF</option>
-				</field>
-                <field name="d_height" type="radio" default="0" size="5" label="PLG_CONTENT_VIDEOBOX_D_HEIGHT" description="PLG_CONTENT_VIDEOBOX_D_HEIGHTDESC" >
-					<option value="1" >PLG_CONTENT_VIDEOBOX_ON</option>
-					<option value="0" >PLG_CONTENT_VIDEOBOX_OFF</option>
-				</field>
                 <field name="box" type="radio" default="0" size="5" label="PLG_CONTENT_VIDEOBOX_BOX" description="PLG_CONTENT_VIDEOBOX_BOXDESC" >
 					<option value="1" >PLG_CONTENT_VIDEOBOX_ON</option>
 					<option value="0" >PLG_CONTENT_VIDEOBOX_OFF</option>
@@ -58,6 +51,14 @@
 					<option value="1" >PLG_CONTENT_VIDEOBOX_ON</option>
 					<option value="0" >PLG_CONTENT_VIDEOBOX_OFF</option>
 				</field>
+                <field name="play_b" type="radio" default="0" size="5" label="PLG_CONTENT_VIDEOBOX_PLAY_B" description="PLG_CONTENT_VIDEOBOX_PLAY_BDESC" >
+					<option value="1" >PLG_CONTENT_VIDEOBOX_ON</option>
+					<option value="0" >PLG_CONTENT_VIDEOBOX_OFF</option>
+				</field>
+                <field name="play_nlb_b" type="radio" default="0" size="5" label="PLG_CONTENT_VIDEOBOX_PLAY_NLB_B" description="PLG_CONTENT_VIDEOBOX_PLAY_NLB_BDESC" >
+					<option value="1" >PLG_CONTENT_VIDEOBOX_ON</option>
+					<option value="0" >PLG_CONTENT_VIDEOBOX_OFF</option>
+				</field>
             </fieldset>
             <fieldset name="VIDEOBOX_GALLERY">
                 <field name="width_g" type="text" default="640" size="5" label="PLG_CONTENT_VIDEOBOX_WIDTH_G" description="PLG_CONTENT_VIDEOBOX_WIDTH_GDESC" />
@@ -69,6 +70,14 @@
                 <field name="class_g" type="text" default="" size="30" label="PLG_CONTENT_VIDEOBOX_CLASS_G" description="PLG_CONTENT_VIDEOBOX_CLASS_GDESC" />
                 <field name="style_g" type="textarea" default="" size="5" label="PLG_CONTENT_VIDEOBOX_STYLE_G" description="PLG_CONTENT_VIDEOBOX_STYLE_GDESC" />
                 <field name="no_lb" type="radio" default="1" size="5" label="PLG_CONTENT_VIDEOBOX_NO_LB" description="PLG_CONTENT_VIDEOBOX_NO_LBDESC" >
+					<option value="1" >PLG_CONTENT_VIDEOBOX_ON</option>
+					<option value="0" >PLG_CONTENT_VIDEOBOX_OFF</option>
+				</field>
+                <field name="play_g" type="radio" default="0" size="5" label="PLG_CONTENT_VIDEOBOX_PLAY_G" description="PLG_CONTENT_VIDEOBOX_PLAY_GDESC" >
+					<option value="1" >PLG_CONTENT_VIDEOBOX_ON</option>
+					<option value="0" >PLG_CONTENT_VIDEOBOX_OFF</option>
+				</field>
+                <field name="play_nlb_g" type="radio" default="0" size="5" label="PLG_CONTENT_VIDEOBOX_PLAY_NLB_G" description="PLG_CONTENT_VIDEOBOX_PLAY_NLB_GDESC" >
 					<option value="1" >PLG_CONTENT_VIDEOBOX_ON</option>
 					<option value="0" >PLG_CONTENT_VIDEOBOX_OFF</option>
 				</field>
