@@ -325,11 +325,11 @@ class plgContentVideobox extends JPlugin
 					if(strpos($rr, 'videobox.js')!==false) $rrr = true;
 				}
 				if($trr===false){
-					$document->addCustomTag('<link rel="stylesheet" href="plugins/content/videobox/css/videobox.css" type="text/css" media="screen" />');			
+					$document->addCustomTag('<link rel="stylesheet" href="'.JURI::root().'/plugins/content/videobox/css/videobox.css" type="text/css" media="screen" />');			
 				}
 				if (($count>=2)||($parametri['box']==1)) {
 					if($rrr===false){
-						$document->addCustomTag('<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script><script src="http://api.html5media.info/1.1.5/html5media.min.js"></script><script type="text/javascript">jQuery.noConflict();</script><script type="text/javascript" src="plugins/content/videobox/videobox.js"></script><script type="text/javascript">
+						$document->addCustomTag('<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script><script src="http://api.html5media.info/1.1.5/html5media.min.js"></script><script type="text/javascript">jQuery.noConflict();</script><script type="text/javascript" src="'.JURI::root().'/plugins/content/videobox/videobox.js"></script><script type="text/javascript">
 							var displayvideo;
 							var vb_site_base = "'.JPATH_BASE.'/";
 							var vb_site_root = "'.JURI::root().'";
@@ -346,8 +346,8 @@ class plgContentVideobox extends JPlugin
 										$(frame).animate({height: vheight, width: vwidth}, { duration: 400, easing: \'swing\', queue: false });
 										$(title).animate({width: vwidth}, { duration: 400, easing: \'swing\', queue: false });
 										if(html5){
-											var time = src.split(\'#\')[1];
-											src = src.split(\'#\')[0];
+											var time = src.split(\'&\')[1];
+											src = src.split(\'&\')[0];
 											frame.parentNode.parentNode.setAttribute(\'onclick\', \'\');
 											frame.setAttribute("poster", image.src.replace(twidth, vwidth).replace(theight, vheight).slice(0, -7));
 											if(audio){
@@ -430,13 +430,13 @@ class plgContentVideobox extends JPlugin
 						$offset = explode (':', $offset[count($offset)-1]);
 						switch (count($offset)){
 							case 1:
-								$video[4] = '#t='.$offset[0].'s';
+								$video[4] = '&t='.$offset[0].'s';
 								break;
 							case 2:
-								$video[4] = '#t='.$offset[0].'m'.$offset[1].'s';
+								$video[4] = '&t='.$offset[0].'m'.$offset[1].'s';
 								break;
 							case 3:
-								$video[4] = '#t='.$offset[0].'h'.$offset[1].'m'.$offset[2].'s';
+								$video[4] = '&t='.$offset[0].'h'.$offset[1].'m'.$offset[2].'s';
 								break;
 						}
 					}
@@ -463,12 +463,32 @@ class plgContentVideobox extends JPlugin
 							foreach($offset as $offset1){
 								$video[4] = $video[4]*60+$offset1;
 							}
-							$video[4] = '#'.$video[4];
+							$video[4] = '&'.$video[4];
 						}
 						if(substr($video[0], 0, 4)!='http'){
 							$video[8] = JPATH_BASE;
 							if($video[0]{0}!='/') $video[0] = '/'.$video[0];
 						}
+					}
+					if(($video[5]==false)&(!is_numeric($video[0]))){
+						$offset = str_replace("&t=", '', $video[4]);
+						$video[4] = 0;
+						$offset = explode('h', $offset);
+						if(count($offset)==2){
+							$video[4] = $video[4]*60 + $offset[0];
+							$offset = explode('m', $offset[1]);
+						} else {
+							$offset = explode('m', $offset[0]);
+						}
+						if(count($offset)==2){
+							$video[4] = $video[4]*60 + $offset[0];
+							$offset = explode('s', $offset[1]);
+						} else {
+							$video[4] = $video[4]*60;
+							$offset = explode('s', $offset[0]);
+						}
+						$video[4] = $video[4]*60 + $offset[0];
+						$video[4] = '&start='.$video[4];
 					}
 					if (($count == 1)&($parametri['box']!=1)) {
 						$video_content .= $this->_videoCode($video, $parametri, $co, $parametri['width'], $parametri['height'], $n);
@@ -528,14 +548,14 @@ class plgContentVideobox extends JPlugin
 		} else {
 			if(!is_numeric($video[0])) {
 				if(strlen($video[0])==11) {
-					$src = 'http://www.youtube.com/embed/' . $video[0] . '?wmode=transparent&rel=0'.$video[4];
+					$src = 'http://www.youtube.com/embed/' . $video[0] . '?wmode=transparent&rel=0&fs=1'.$video[4];
 				} else {
 					$src = 'http://player.youku.com/embed/' . $video[0] ;
 				}
 			} else {
 				$src = 'http://player.vimeo.com/video/'.$video[0].$video[4];
 			}
-			$html  = '<div style="'.$params['style'].'" class="videoFrame '.$params['class'].'"><iframe width="'.$v_width.'" height="'.$v_height.'" src="'.$src.'" frameborder="0" allowfullscreen="1" style="display: block; background: #000;"></iframe></div>';
+			$html  = '<div style="'.$params['style'].'" class="videoFrame '.$params['class'].'"><iframe width="'.$v_width.'" height="'.$v_height.'" src="'.$src.'" frameborder="0" allowfullscreen oallowfullscreen msallowfullscreen webkitallowfullscreen mozallowfullscreen style="display: block; background: #000;"></iframe></div>';
 		}
 		return $html;
 	}
@@ -546,7 +566,7 @@ class plgContentVideobox extends JPlugin
 			if(strpos($src, 'http')!==0) $src = $video[9].$src;
 		} elseif(!is_numeric($video[0])) {
 			if(strlen($video[0])==11){
-				$src = 'http://www.youtube.com/embed/' . $video[0] . '?wmode=transparent&rel=0&autoplay=1'.$video[4];
+				$src = 'http://www.youtube.com/embed/' . $video[0] . '?wmode=transparent&rel=0&autoplay=1&fs=1'.$video[4];
 			} else {
 				$src = 'http://player.youku.com/embed/' . $video[0] . '?autoplay=1';
 			}
@@ -560,7 +580,7 @@ class plgContentVideobox extends JPlugin
 			if($video[5]){
 				$thumb  = '<li class="video_cont_0"><a class="video_close" onclick="displayvideo(\''.$i.'_'.$n.'\',\''.$src.'\',\''.$t_width.'\',\''.$t_height.'\',\''.$t_width.'\',\''.$t_height.'\', true, '.$video[6].')" id="close_'.$i.'_'.$n.'"></a><a onclick="displayvideo(\''.$i.'_'.$n.'\',\''.$src.'\',\''.$t_width.'\',\''.$t_height.'\',\''.$t_width.'\',\''.$t_height.'\', true, '.$video[6].')" ><span class="video_thumb"><video controls="controls" autoplay="autoplay" id="video_'.$i.'_'.$n.'" style="width: '.$t_width.'px; height: '.$t_height.'px; display: none;"></video><img src="'.$img.'" id="thumb_'.$i.'_'.$n.'"></span><span class="video_title" id="title_'.$i.'_'.$n.'" style="width: '.$t_width.'px;" >' . $video[1] . '</span></a></li>';
 			} else {
-				$thumb  = '<li class="video_cont_0"><a class="video_close" onclick="displayvideo(\''.$i.'_'.$n.'\',\''.$src.'\',\''.$t_width.'\',\''.$t_height.'\',\''.$t_width.'\',\''.$t_height.'\', false, true)" id="close_'.$i.'_'.$n.'"></a><a onclick="displayvideo(\''.$i.'_'.$n.'\',\''.$src.'\',\''.$t_width.'\',\''.$t_height.'\',\''.$t_width.'\',\''.$t_height.'\', false, true)" ><span class="video_thumb"><iframe allowfullscreen="1" id="video_'.$i.'_'.$n.'" style="width: '.$t_width.'px; height: '.$t_height.'px; display: none;"></iframe><img src="'.$img.'" id="thumb_'.$i.'_'.$n.'"></span><span class="video_title" id="title_'.$i.'_'.$n.'" style="width: '.$t_width.'px;" >' . $video[1] . '</span></a></li>';
+				$thumb  = '<li class="video_cont_0"><a class="video_close" onclick="displayvideo(\''.$i.'_'.$n.'\',\''.$src.'\',\''.$t_width.'\',\''.$t_height.'\',\''.$t_width.'\',\''.$t_height.'\', false, true)" id="close_'.$i.'_'.$n.'"></a><a onclick="displayvideo(\''.$i.'_'.$n.'\',\''.$src.'\',\''.$t_width.'\',\''.$t_height.'\',\''.$t_width.'\',\''.$t_height.'\', false, true)" ><span class="video_thumb"><iframe allowfullscreen oallowfullscreen msallowfullscreen webkitallowfullscreen mozallowfullscreen id="video_'.$i.'_'.$n.'" style="width: '.$t_width.'px; height: '.$t_height.'px; display: none;"></iframe><img src="'.$img.'" id="thumb_'.$i.'_'.$n.'"></span><span class="video_title" id="title_'.$i.'_'.$n.'" style="width: '.$t_width.'px;" >' . $video[1] . '</span></a></li>';
 			}
 		} else {
 			$thumb  = '<li class="video_cont_0"><a href="'.$src.'" rel="videobox.sig'.$i.'" title="' . $video[1] . '" videowidth="'.$v_width.'" videoheight="'.$v_height.'"><span class="video_thumb"><img src="'.$img.'" id="thumb_'.$i.'_'.$n.'"></span><span class="video_title" style="width: '.$t_width.'px;" >' . $video[1] . '</span></a></li>';
@@ -574,7 +594,7 @@ class plgContentVideobox extends JPlugin
 			if(strpos($src, 'http')!==0) $src = $video[9].$src;
 		} elseif(!is_numeric($video[0])) {
 			if(strlen($video[0])==11){
-				$src = 'http://www.youtube.com/embed/' . $video[0] . '?wmode=transparent&rel=0&autoplay=1'.$video[4];
+				$src = 'http://www.youtube.com/embed/' . $video[0] . '?wmode=transparent&rel=0&autoplay=1&fs=1'.$video[4];
 			} else {
 				$src = 'http://player.youku.com/embed/' . $video[0] . '?autoplay=1';
 			}
@@ -589,7 +609,7 @@ class plgContentVideobox extends JPlugin
 			if($video[5]){
 				$thumb  = '<span class="video_box_0 '.$params['class'].'" style="'.$params['style'].'"><a class="video_close" onclick="displayvideo(\''.$i.'_'.$n.'\',\''.$src.'\',\''.$v_width.'\',\''.$v_height.'\',\''.$t_width.'\',\''.$t_height.'\', true, '.$video[6].')" id="close_'.$i.'_'.$n.'"></a><a onclick="displayvideo(\''.$i.'_'.$n.'\',\''.$src.'\',\''.$v_width.'\',\''.$v_height.'\',\''.$t_width.'\',\''.$t_height.'\', true, '.$video[6].')" ><span class="video_thumb"><video controls="controls" autoplay="autoplay" id="video_'.$i.'_'.$n.'" style="width: '.$t_width.'px; height: '.$t_height.'px; display: none;"></video><img src="'.$img.'" id="thumb_'.$i.'_'.$n.'"></span><span class="video_title" id="title_'.$i.'_'.$n.'" style="width: '.$t_width.'px;">' . $video[1] . '</span></a></span>';
 			} else {
-				$thumb  = '<span class="video_box_0 '.$params['class'].'" style="'.$params['style'].'"><a class="video_close" onclick="displayvideo(\''.$i.'_'.$n.'\',\''.$src.'\',\''.$v_width.'\',\''.$v_height.'\',\''.$t_width.'\',\''.$t_height.'\', false, true)" id="close_'.$i.'_'.$n.'"></a><a onclick="displayvideo(\''.$i.'_'.$n.'\',\''.$src.'\',\''.$v_width.'\',\''.$v_height.'\',\''.$t_width.'\',\''.$t_height.'\', false, true)" ><span class="video_thumb"><iframe allowfullscreen="1" id="video_'.$i.'_'.$n.'" style="width: '.$t_width.'px; height: '.$t_height.'px; display: none;"></iframe><img src="'.$img.'" id="thumb_'.$i.'_'.$n.'"></span><span class="video_title" id="title_'.$i.'_'.$n.'" style="width: '.$t_width.'px;">' . $video[1] . '</span></a></span>';
+				$thumb  = '<span class="video_box_0 '.$params['class'].'" style="'.$params['style'].'"><a class="video_close" onclick="displayvideo(\''.$i.'_'.$n.'\',\''.$src.'\',\''.$v_width.'\',\''.$v_height.'\',\''.$t_width.'\',\''.$t_height.'\', false, true)" id="close_'.$i.'_'.$n.'"></a><a onclick="displayvideo(\''.$i.'_'.$n.'\',\''.$src.'\',\''.$v_width.'\',\''.$v_height.'\',\''.$t_width.'\',\''.$t_height.'\', false, true)" ><span class="video_thumb"><iframe allowfullscreen oallowfullscreen msallowfullscreen webkitallowfullscreen mozallowfullscreen id="video_'.$i.'_'.$n.'" style="width: '.$t_width.'px; height: '.$t_height.'px; display: none;"></iframe><img src="'.$img.'" id="thumb_'.$i.'_'.$n.'"></span><span class="video_title" id="title_'.$i.'_'.$n.'" style="width: '.$t_width.'px;">' . $video[1] . '</span></a></span>';
 			}
 		} else {
 			$thumb  = '<span class="video_box_0 '.$params['class'].'" style="'.$params['style'].'"><a href="'.$src.'" rel="videobox.sib'.$i.'" title="' . $video[1] . '" videowidth="'.$v_width.'" videoheight="'.$v_height.'"><span class="video_thumb"><img src="'.$img.'" id="thumb_'.$i.'_'.$n.'"></span><span class="video_title" style="width: '.$t_width.'px;">' . $video[1] . '</span></a></span>';
