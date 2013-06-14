@@ -16,7 +16,53 @@ if($_GET['img'] == "")
     exit("No parameters!");
 }
 
-$img = urldecode($_GET['img']);
+$img = rawurldecode($_GET['img']);
+$imgdata = pathinfo($img);
+if(strpos('mp4,ogv,webm,m4v,oga,mp3,m4a,webma,wav', $imgdata['extension'])!==false){
+	$imgthumb = $imgdata['dirname'].'/'.$imgdata['filename'];
+	if(@getimagesize($imgthumb.'.png')){
+		$img = $imgthumb.'.png'; //thumbnail is provided, filetype .png
+	} elseif(@getimagesize($imgthumb.'.jpg')){
+		$img = $imgthumb.'.jpg'; //thumbnail is provided, filetype .jpg
+	} elseif(@getimagesize($imgthumb.'.jpeg')){
+		$img = $imgthumb.'.jpeg'; //thumbnail is provided, filetype .jpeg
+	} elseif(@getimagesize($imgthumb.'.gif')){
+		$img = $imgthumb.'.gif';  //thumbnail is provided, filetype .gif
+	} elseif(strpos('oga,mp3,m4a,webma,wav', $imgdata['extension'])!==false){
+		$url = pathinfo(__FILE__);
+		$img = $url['dirname'].'/css/nobg_a.png';
+	} elseif(strpos('mp4,ogv,webm,m4v', $imgdata['extension'])!==false) {
+		$url = pathinfo(__FILE__);
+		$img = $url['dirname'].'/css/nobg_v.png';
+	}
+} else {
+	if((strlen($img)>11)&(!is_numeric($img))){
+		$img = urldecode($img);
+		$coun_v = preg_match_all('/<a.*?>([^`]*?)<\/a>/', $img, $vvvvv);
+		if($coun_v!=0) $img = $vvvvv[1][0];
+		if(strpos($img, 'youtube')!==false){
+			$v_urls = explode ('?', $img);
+			$v_urls = explode ('#', $v_urls[1]);
+			$v_urls = explode ('&', $v_urls[0]);
+			foreach($v_urls as $v_url){
+				if(($v_url{0}=='v')&($v_url{1}=='=')) $img = substr($v_url, 2);
+			}
+		} else { 
+			$v_urls = explode ('/', $img);
+			$v_urls = explode ('#', $v_urls[count($v_urls)-1]);
+			$v_urls = explode ('&', $v_urls[0]);
+			$img = $v_urls[0];
+		}
+	}
+
+	if(!is_numeric($img)) {
+		$img = 'http://i2.ytimg.com/vi/'.$img.'/hqdefault.jpg';
+	} else {
+		$hash = unserialize(file_get_contents('http://vimeo.com/api/v2/video/'.$img.'.php'));
+		$img = $hash[0]['thumbnail_large'];
+	}
+}
+
 $width = $_GET['width'];
 $height = $_GET['height'];
 
@@ -45,7 +91,7 @@ $dst_img = imagecreatetruecolor($width, $height);
 $black = imagecolorallocate($dst_img, 0, 0, 0);
 imagefilledrectangle($dst_img, 0, 0, $width, $height, $black);
 
-switch(strtolower(substr($_GET['img'], -3))){
+switch(strtolower(substr($img, -3))){
 	case 'peg': 
 		$src_img = imagecreatefromjpeg($img);
 		break;
