@@ -9,7 +9,7 @@
 -------------------------------------------------------------------------*/
 // This file MUST be directly accessible because it is included like this: <img src="/plugins/content/videobox/showthumb.php?img=http%3A%2F%2Fi2.ytimg.com%2Fvi%2Fz--83CE8Tr8%2Fhqdefault.jpg&amp;width=206&amp;height=155">
 // It doesn't connect with any core files, exstensions, databases or anything. It recieves image url and desired Width + Height and returns downsized version of input image.
-//defined( '_JEXEC' ) or die( 'Restricted access' ); 
+// defined( '_JEXEC' ) or die( 'Restricted access' ); 
 
 if($_GET['img'] == "")
 {

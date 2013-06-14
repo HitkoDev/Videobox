@@ -20,6 +20,9 @@ class plgContentVideobox extends JPlugin
 	public function onContentPrepare( $context, &$article, &$params, $limitstart )
 	{
 		$app = JFactory::getApplication();
+		jimport('joomla.version');
+		$version = new JVersion();
+		$version = $version->RELEASE;
 		
 		// setup what to look for in the content		
 		$regex = '/{videobox}(.*){\/videobox}/iU';
@@ -84,7 +87,45 @@ class plgContentVideobox extends JPlugin
 			//create pagination (if necessary)		
 			$start = 0;
 			$pagination = '';
-			if(($count>$parametri['pages'])&($parametri['pages']!=0)){
+			if(($count>$parametri['pages'])&($parametri['pages']!=0)&($version{0}=='3')){
+				$url1 = JURI::getInstance();
+				$url1 = $url1->toString();
+				$url1 = str_replace('%26', '&', $url1);
+				$url2 = explode('&', $url1);
+				$start = (int)$url2[$co];
+				$path = $url2[0];
+				for($h = 1; $h<$co; $h++){
+					$path .= '&'.$url2[$h];
+				}
+				$after = '';
+				for($h = $co+1; $h<count($url2); $h++){
+					$after .= '&'.$url2[$h];
+				}				
+				$pages = (int)($count/$parametri['pages']);
+				if($count%$parametri['pages']>0) $pages++;
+				$page = (int)($start/$parametri['pages']);
+				if($start%$parametri['pages']>0) $page++;
+				$pagination = '<div class="pagination"><p class="counter pull-right">Page '.($page+1).' of '.$pages.'</p><ul class="pagination-list">';
+				if($page==0){
+					$pagination .= '<li class="disabled"><a><i class="icon-first"></i></a></li><li class="disabled"><a><i class="icon-previous"></i></a></li>';
+				} else {
+					$pagination .= '<li><a title="Start" href="'.$path.'&0'.$after.'" class="pagenav">Start</a></li><li><a title="Prev" href="'.$path.'&'.($page-1)*$parametri['pages'].$after.'" class="pagenav">Prev</a></li>';
+				}
+				for($j = 0; $j<$pages; $j++){
+					if($j==$page){
+						$pagination .= '<li class="active"><a>'.($j+1).'</a></li>';
+					}else{
+						$pagination .= '<li><a title="'.($j+1).'" href="'.$path.'&'.$j*$parametri['pages'].$after.'" class="pagenav">'.($j+1).'</a></li>';
+					}
+				}
+				if($page==($pages-1)){
+					$pagination .= '<li class="disabled"><a><i class="icon-next"></i></a></li><li class="disabled"><a><i class="icon-last"></i></a></li>';
+				} else {
+					$pagination .= '<li><a title="Next" href="'.$path.'&'.($page+1)*$parametri['pages'].$after.'" class="pagenav">Next</a></li><li><a title="End" href="'.$path.'&'.($pages-1)*$parametri['pages'].$after.'" class="pagenav">End</a></li>';
+				}	
+				$pagination .= '</ul></div>';
+			}
+			if(($count>$parametri['pages'])&($parametri['pages']!=0)&($version{0}!='3')){
 				$url1 = JURI::getInstance();
 				$url1 = $url1->toString();
 				$url1 = str_replace('%26', '&', $url1);
@@ -122,6 +163,8 @@ class plgContentVideobox extends JPlugin
 				}	
 				$pagination .= '</div></div>';
 			}
+
+
 			
 			//include necessary header content
 			$document = JFactory::getDocument();
