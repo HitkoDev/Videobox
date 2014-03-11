@@ -20,8 +20,10 @@ $start = 0;
 if(isset($_GET['start'])) $start = $_GET['start'];
 $autoplay = 0;
 if(isset($_GET['autoplay'])) $autoplay = $_GET['autoplay'];
+$poster = '';
+if(isset($_GET['poster'])) $poster = $_GET['poster'];
 
-if(($SERVER_['HTTPS']!='off')&&($SERVER_['HTTPS']!=null)){
+if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']!='off' && $_SERVER['HTTPS']!=null){
 	$protocol = 'https://';
 } else {
 	$protocol = 'http://';
@@ -38,54 +40,82 @@ $videoinfo = pathinfo($video);
 if(strpos($html5extensions, $videoinfo['extension'])===false){
 	exit("Unsupported media type!");
 }
-$source = $videoinfo['dirname'].'/'.$videoinfo['filename'];
+$source = str_replace(' ', '%20', $videoinfo['dirname'].'/'.$videoinfo['filename']);
 if(strpos($videotypes, $videoinfo['extension'])===false){
-	$sources = '
-		<source src="'.$source.'.oga" type="audio/ogg">
-		<source src="'.$source.'.mp3" type="audio/mpeg">
-		<source src="'.$source.'.wav" type="audio/wav">
-		<source src="'.$source.'.m4a" type="audio/mp4">
-		<source src="'.$source.'.webma" type="audio/webm">
-	';
+	$sources = '[ 
+		[".mp3", "audio/mpeg"],
+		[".oga", "audio/ogg"],
+		[".webma", "audio/webm"],
+		[".wav", "audio/wav"],
+		[".m4a", "audio/mp4"]
+	]';
 } else {
-	$sources = '
-		<source src="'.$source.'.webm" type="video/webm">
-		<source src="'.$source.'.ogv" type="video/ogg">
-		<source src="'.$source.'.mp4" type="video/mp4">
-		<source src="'.$source.'.m4v" type="video/mp4">
-	';
+	$sources = '[
+		[".webm", "video/webm"],
+		[".ogv", "video/ogg"],
+		[".mp4", "video/mp4"],
+		[".m4v", "video/mp4"]
+	]';
 }
 $auto = '';
 if($autoplay=='1'){
-	$auto = ' autoplay="autoplay"';
+	$auto = 'autoplay';
 }
+$ended = '';
+$button = '';
+$pp = '';
 
-$poster = $http_root.'/plugins/system/videobox/showthumb.php?img='.$source.'.'.$videoinfo['extension'].'&amp;width=640&amp;height=363';
-
-$output = '<html>
+$output = '<!doctype html>
+<html>
 	<head>
-		<style type="text/css">
-			html, body {margin: 0; padding: 0; background: #000;}
-		</style>
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-		<script type="text/javascript">jQuery.noConflict();</script>
-		<script src="http://api.html5media.info/1.1.5/html5media.min.js"></script>
-	</head>
-	<body>
-		<video controls="controls"'.$auto.' poster="'.$poster.'" id="vb_HTML5_video" style="display: block; background: #000; width: 100%; height: 100%">
-			'.$sources.'
-		</video>
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/video.js"></script>
 		<script type="text/javascript">
-			try {
-				document.getElementById(\'vb_HTML5_video\').addEventListener(\'loadedmetadata\', function load(event){
-					document.getElementById(\'vb_HTML5_video\').currentTime = '.(int)$start.';
-					
-				}, false);
-			} catch(err) {
+			var sou = "";
+			var sources = '.$sources.';
+			var n = 0;
+			var str = "";
+			var onl = false;
 			
+			function loadPlayer(){
+				var video = videojs(\'vb-player\', {}, function(){});
+				video.on("loadedmetadata", function(){
+					this.currentTime('.$start.');
+				});
+			}
+			
+			function incN(){
+				str = \'<video '.$auto.' id="vb-player" class="video-js vjs-default-skin" width="100%" poster="'.$poster.'" height="100%" controls preload="none" >\' + sou + \'</video>\';
+				n++;
+				if(onl){
+					document.body.innerHTML = str;
+					if(n==sources.length) loadPlayer();
+				}
+			}
+			
+			function urlExists(source){
+				$.ajax({
+					type: "HEAD",
+					url: "'.$source.'" + source[0],
+					crossDomain: true,
+					success: function () {
+						sou += "<source src=\"'.$source.'" + source[0] + "\" type=\"" + source[1] + "\" />";
+						incN();
+					},
+					error: function () {
+						incN();
+					}
+				});
+			}
+			
+			for (key in sources){
+				urlExists(sources[key]);
 			}
 		</script>
-	</body>
+		<link href="css/video-js.min.css" rel="stylesheet" type="text/css">
+		<script>videojs.options.flash.swf = "video-js.swf";</script>
+	</head>
+	<body onload="document.body.innerHTML = str; onl = true; if(n==sources.length) loadPlayer();"></body>
 </html>';
 
 echo $output;
