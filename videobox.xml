@@ -26,11 +26,6 @@
 	<config>
         <fields name="params">
             <fieldset name="VIDEOBOX_PLUGIN">
-                <field name="full_url" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_FULL_URL" description="PLG_SYSTEM_VIDEOBOX_FULL_URLDESC" >
-					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
-					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
-				</field>
-                <field name="tag" type="text" default="videobox" size="20" label="PLG_SYSTEM_VIDEOBOX_TAG" description="PLG_SYSTEM_VIDEOBOX_TAGDESC" />
                 <field name="loadjq" type="radio" default="1" size="5" label="PLG_SYSTEM_VIDEOBOX_LOADJQ" description="PLG_SYSTEM_VIDEOBOX_LOADJQDESC" >
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
@@ -43,24 +38,28 @@
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
 				</field>
+                <field name="display" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_SINGLE" description="PLG_SYSTEM_VIDEOBOX_SINGLEDESC" >
+					<option value="0" >PLG_SYSTEM_VIDEOBOX_DISPLAY_DIRECT</option>
+					<option value="1" >PLG_SYSTEM_VIDEOBOX_DISPLAY_BOX</option>
+					<option value="2" >PLG_SYSTEM_VIDEOBOX_DISPLAY_LINK</option>
+				</field>
+                <field name="links_g" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_MULTIPLE" description="PLG_SYSTEM_VIDEOBOX_MULTIPLEDESC" >
+					<option value="0" >PLG_SYSTEM_VIDEOBOX_DISPLAY_GALLERY</option>
+					<option value="1" >PLG_SYSTEM_VIDEOBOX_DISPLAY_LINKS</option>
+				</field>
                 <field name="sc_visual" type="radio" default="1" size="5" label="PLG_SYSTEM_VIDEOBOX_SC_VISUAL" description="PLG_SYSTEM_VIDEOBOX_SC_VISUAL_GLOBALDESC" >
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
 				</field>
             </fieldset>
-            <fieldset name="VIDEOBOX_VIDEO">
-                <field name="width" type="text" default="640" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH" description="PLG_SYSTEM_VIDEOBOX_WIDTHDESC" />
-                <field name="height" type="text" default="363" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT" description="PLG_SYSTEM_VIDEOBOX_HEIGHTDESC" />
-                <field name="class" type="text" default="" size="30" label="PLG_SYSTEM_VIDEOBOX_CLASS" description="PLG_SYSTEM_VIDEOBOX_CLASSDESC" />
-                <field name="style" type="textarea" default="" size="5" label="PLG_SYSTEM_VIDEOBOX_STYLE" description="PLG_SYSTEM_VIDEOBOX_STYLEDESC" />
+            <fieldset name="VIDEOBOX_DIRECT">
+                <field name="width" type="text" default="640" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_D" description="PLG_SYSTEM_VIDEOBOX_WIDTH_DDESC" />
+                <field name="height" type="text" default="360" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_D" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_DDESC" />
+                <field name="class" type="text" default="" size="30" label="PLG_SYSTEM_VIDEOBOX_CLASS_D" description="PLG_SYSTEM_VIDEOBOX_CLASS_DDESC" />
+                <field name="style" type="textarea" default="" size="5" label="PLG_SYSTEM_VIDEOBOX_STYLE_D" description="PLG_SYSTEM_VIDEOBOX_STYLE_DDESC" />
                 <field name="autoplay" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_AUTOPLAY" description="PLG_SYSTEM_VIDEOBOX_AUTOPLAYDESC" >
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
-				</field>
-                <field name="display" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_DISPLAY" description="PLG_SYSTEM_VIDEOBOX_DISPLAYDESC" >
-					<option value="0" >PLG_SYSTEM_VIDEOBOX_DISPLAY_DIRECT</option>
-					<option value="1" >PLG_SYSTEM_VIDEOBOX_DISPLAY_BOX</option>
-					<option value="2" >PLG_SYSTEM_VIDEOBOX_DISPLAY_LINK</option>
 				</field>
                 <field name="sc_visual_s" type="radio" default="2" size="5" label="PLG_SYSTEM_VIDEOBOX_SC_VISUAL" description="PLG_SYSTEM_VIDEOBOX_SC_VISUALDESC" >
 					<option value="2" >PLG_SYSTEM_VIDEOBOX_GLOBAL</option>
@@ -69,36 +68,36 @@
 				</field>
             </fieldset>
             <fieldset name="VIDEOBOX_BOX">
-                <field name="width_b" type="text" default="640" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_B" description="PLG_SYSTEM_VIDEOBOX_WIDTH_BDESC" />
-                <field name="height_b" type="text" default="363" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_B" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_BDESC" />
-                <field name="width_bt" type="text" default="188" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_BT" description="PLG_SYSTEM_VIDEOBOX_WIDTH_BTDESC" />
-                <field name="height_bt" type="text" default="141" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_BT" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_BTDESC" />
-                <field name="play_b" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_PLAY_B" description="PLG_SYSTEM_VIDEOBOX_PLAY_BDESC" >
+                <field name="width_b" type="text" default="640" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH" description="PLG_SYSTEM_VIDEOBOX_WIDTHDESC" />
+                <field name="height_b" type="text" default="360" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT" description="PLG_SYSTEM_VIDEOBOX_HEIGHTDESC" />
+                <field name="width_bt" type="text" default="188" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_T" description="PLG_SYSTEM_VIDEOBOX_WIDTH_TDESC" />
+                <field name="height_bt" type="text" default="141" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_T" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_TDESC" />
+                <field name="play_b" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_PLAY" description="PLG_SYSTEM_VIDEOBOX_PLAYDESC" >
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
 				</field>
-                <field name="class_b" type="text" default="" size="30" label="PLG_SYSTEM_VIDEOBOX_CLASS_B" description="PLG_SYSTEM_VIDEOBOX_CLASS_BDESC" />
-                <field name="style_b" type="textarea" default="" size="5" label="PLG_SYSTEM_VIDEOBOX_STYLE_B" description="PLG_SYSTEM_VIDEOBOX_STYLE_BDESC" />
+                <field name="class_b" type="text" default="" size="30" label="PLG_SYSTEM_VIDEOBOX_CLASS" description="PLG_SYSTEM_VIDEOBOX_CLASSDESC" />
+                <field name="style_b" type="textarea" default="" size="5" label="PLG_SYSTEM_VIDEOBOX_STYLE" description="PLG_SYSTEM_VIDEOBOX_STYLEDESC" />
                 <field name="sc_visual_b" type="radio" default="2" size="5" label="PLG_SYSTEM_VIDEOBOX_SC_VISUAL" description="PLG_SYSTEM_VIDEOBOX_SC_VISUALDESC" >
 					<option value="2" >PLG_SYSTEM_VIDEOBOX_GLOBAL</option>
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
 				</field>
-                <field name="no_lb_b" type="radio" default="1" size="5" label="PLG_SYSTEM_VIDEOBOX_NO_LB_B" description="PLG_SYSTEM_VIDEOBOX_NO_LB_BDESC" >
+                <field name="player_b" type="radio" default="1" size="5" label="PLG_SYSTEM_VIDEOBOX_PLAYER" description="PLG_SYSTEM_VIDEOBOX_PLAYERDESC" >
+					<option value="1" >PLG_SYSTEM_VIDEOBOX_LIGHTBOX</option>
+					<option value="0" >PLG_SYSTEM_VIDEOBOX_INLINE</option>
+				</field>
+				<field name="cs_b" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_CS" description="PLG_SYSTEM_VIDEOBOX_CSDESC" >
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
 				</field>
-				<field name="cs_nlb_b" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_CS_NLB_B" description="PLG_SYSTEM_VIDEOBOX_CS_NLB_BDESC" >
+                <field name="width_nlb_b" type="text" default="640" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_NLB" description="PLG_SYSTEM_VIDEOBOX_WIDTH_NLBDESC" />
+                <field name="height_nlb_b" type="text" default="360" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_NLB" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_NLBDESC" />
+                <field name="play_nlb_b" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_PLAY_NLB" description="PLG_SYSTEM_VIDEOBOX_PLAY_NLBDESC" >
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
 				</field>
-                <field name="width_nlb_b" type="text" default="640" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_NLB_B" description="PLG_SYSTEM_VIDEOBOX_WIDTH_NLB_BDESC" />
-                <field name="height_nlb_b" type="text" default="363" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_NLB_B" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_NLB_BDESC" />
-                <field name="play_nlb_b" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_PLAY_NLB_B" description="PLG_SYSTEM_VIDEOBOX_PLAY_NLB_BDESC" >
-					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
-					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
-				</field>
-                <field name="sc_visual_nlb_b" type="radio" default="2" size="5" label="PLG_SYSTEM_VIDEOBOX_SC_VISUAL" description="PLG_SYSTEM_VIDEOBOX_SC_VISUALDESC" >
+                <field name="sc_visual_nlb_b" type="radio" default="2" size="5" label="PLG_SYSTEM_VIDEOBOX_SC_VISUAL_NLB" description="PLG_SYSTEM_VIDEOBOX_SC_VISUALDESC" >
 					<option value="2" >PLG_SYSTEM_VIDEOBOX_GLOBAL</option>
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
@@ -106,7 +105,7 @@
             </fieldset>
             <fieldset name="VIDEOBOX_LINK">
                 <field name="width_l" type="text" default="640" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_L" description="PLG_SYSTEM_VIDEOBOX_WIDTH_LDESC" />
-                <field name="height_l" type="text" default="363" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_L" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_LDESC" />
+                <field name="height_l" type="text" default="360" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_L" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_LDESC" />
                 <field name="class_l" type="text" default="" size="30" label="PLG_SYSTEM_VIDEOBOX_CLASS_L" description="PLG_SYSTEM_VIDEOBOX_CLASS_LDESC" />
                 <field name="style_l" type="textarea" default="" size="5" label="PLG_SYSTEM_VIDEOBOX_STYLE_L" description="PLG_SYSTEM_VIDEOBOX_STYLE_LDESC" />
                 <field name="sc_visual_l" type="radio" default="2" size="5" label="PLG_SYSTEM_VIDEOBOX_SC_VISUAL" description="PLG_SYSTEM_VIDEOBOX_SC_VISUALDESC" >
@@ -116,15 +115,11 @@
 				</field>
 			</fieldset>
             <fieldset name="VIDEOBOX_GALLERY">
-                <field name="width_g" type="text" default="640" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_G" description="PLG_SYSTEM_VIDEOBOX_WIDTH_GDESC" />
-                <field name="height_g" type="text" default="363" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_G" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_GDESC" />
-                <field name="width_gt" type="text" default="206" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_GT" description="PLG_SYSTEM_VIDEOBOX_WIDTH_GTDESC" />
-                <field name="height_gt" type="text" default="155" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_GT" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_GTDESC" />
-                <field name="play_g" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_PLAY_G" description="PLG_SYSTEM_VIDEOBOX_PLAY_GDESC" >
-					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
-					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
-				</field>
-                <field name="links_g" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_LINKS_G" description="PLG_SYSTEM_VIDEOBOX_LINKS_GDESC" >
+                <field name="width_g" type="text" default="640" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH" description="PLG_SYSTEM_VIDEOBOX_WIDTHDESC" />
+                <field name="height_g" type="text" default="360" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT" description="PLG_SYSTEM_VIDEOBOX_HEIGHTDESC" />
+                <field name="width_gt" type="text" default="206" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_T" description="PLG_SYSTEM_VIDEOBOX_WIDTH_TDESC" />
+                <field name="height_gt" type="text" default="155" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_T" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_TDESC" />
+                <field name="play_g" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_PLAY" description="PLG_SYSTEM_VIDEOBOX_PLAYDESC" >
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
 				</field>
@@ -134,41 +129,41 @@
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
 				</field>
-                <field name="class_g" type="text" default="" size="30" label="PLG_SYSTEM_VIDEOBOX_CLASS_G" description="PLG_SYSTEM_VIDEOBOX_CLASS_GDESC" />
-                <field name="style_g" type="textarea" default="" size="5" label="PLG_SYSTEM_VIDEOBOX_STYLE_G" description="PLG_SYSTEM_VIDEOBOX_STYLE_GDESC" />
+                <field name="class_g" type="text" default="" size="30" label="PLG_SYSTEM_VIDEOBOX_CLASS" description="PLG_SYSTEM_VIDEOBOX_CLASSDESC" />
+                <field name="style_g" type="textarea" default="" size="5" label="PLG_SYSTEM_VIDEOBOX_STYLE" description="PLG_SYSTEM_VIDEOBOX_STYLEDESC" />
                 <field name="sc_visual_g" type="radio" default="2" size="5" label="PLG_SYSTEM_VIDEOBOX_SC_VISUAL" description="PLG_SYSTEM_VIDEOBOX_SC_VISUALDESC" >
 					<option value="2" >PLG_SYSTEM_VIDEOBOX_GLOBAL</option>
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
 				</field>
-                <field name="no_lb_g" type="radio" default="1" size="5" label="PLG_SYSTEM_VIDEOBOX_NO_LB" description="PLG_SYSTEM_VIDEOBOX_NO_LBDESC" >
+                <field name="player_g" type="radio" default="1" size="5" label="PLG_SYSTEM_VIDEOBOX_PLAYER" description="PLG_SYSTEM_VIDEOBOX_PLAYERDESC" >
+					<option value="1" >PLG_SYSTEM_VIDEOBOX_LIGHTBOX</option>
+					<option value="0" >PLG_SYSTEM_VIDEOBOX_INLINE</option>
+				</field>
+				<field name="cs_g" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_CS" description="PLG_SYSTEM_VIDEOBOX_CSDESC" >
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
 				</field>
-				<field name="cs_nlb_g" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_CS_NLB_G" description="PLG_SYSTEM_VIDEOBOX_CS_NLB_GDESC" >
-					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
-					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
-				</field>
-                <field name="width_nlb_g" type="text" default="284" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_NLB_G" description="PLG_SYSTEM_VIDEOBOX_WIDTH_NLB_GDESC" />
-                <field name="height_nlb_g" type="text" default="214" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_NLB_G" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_NLB_GDESC" />
-                <field name="play_nlb_g" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_PLAY_NLB_G" description="PLG_SYSTEM_VIDEOBOX_PLAY_NLB_GDESC" >
+                <field name="width_nlb_g" type="text" default="284" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_NLB" description="PLG_SYSTEM_VIDEOBOX_WIDTH_NLBDESC" />
+                <field name="height_nlb_g" type="text" default="214" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_NLB" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_NLBDESC" />
+                <field name="play_nlb_g" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_PLAY_NLB" description="PLG_SYSTEM_VIDEOBOX_PLAY_NLBDESC" >
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
 				</field>	
-                <field name="break_nlb" type="text" default="3" size="5" label="PLG_SYSTEM_VIDEOBOX_BREAK_NLB" description="PLG_SYSTEM_VIDEOBOX_BREAK_NLBDESC" />
-                <field name="pages_nlb" type="text" default="9" size="5" label="PLG_SYSTEM_VIDEOBOX_PAGES_NLB" description="PLG_SYSTEM_VIDEOBOX_PAGES_NLBDESC" />		
-                <field name="sc_visual_nlb_g" type="radio" default="2" size="5" label="PLG_SYSTEM_VIDEOBOX_SC_VISUAL" description="PLG_SYSTEM_VIDEOBOX_SC_VISUALDESC" >
+                <field name="break_nlb" type="text" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_BREAK_NLB" description="PLG_SYSTEM_VIDEOBOX_BREAKDESC" />
+                <field name="pages_nlb" type="text" default="9" size="5" label="PLG_SYSTEM_VIDEOBOX_PAGES_NLB" description="PLG_SYSTEM_VIDEOBOX_PAGESDESC" />		
+                <field name="sc_visual_nlb_g" type="radio" default="2" size="5" label="PLG_SYSTEM_VIDEOBOX_SC_VISUAL_NLB" description="PLG_SYSTEM_VIDEOBOX_SC_VISUALDESC" >
 					<option value="2" >PLG_SYSTEM_VIDEOBOX_GLOBAL</option>
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
 				</field>	
             </fieldset>
 			<fieldset name="VIDEOBOX_LINKS">
-                <field name="width_lg" type="text" default="640" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_LG" description="PLG_SYSTEM_VIDEOBOX_WIDTH_LGDESC" />
-                <field name="height_lg" type="text" default="363" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_LG" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_LGDESC" />
+                <field name="width_lg" type="text" default="640" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_L" description="PLG_SYSTEM_VIDEOBOX_WIDTH_LDESC" />
+                <field name="height_lg" type="text" default="363" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_L" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_LDESC" />
 				<field name="separator" type="text" default=", " size="5" label="PLG_SYSTEM_VIDEOBOX_SEPARATOR" description="PLG_SYSTEM_VIDEOBOX_SEPARATORDESC" />
-                <field name="class_lg" type="text" default="" size="30" label="PLG_SYSTEM_VIDEOBOX_CLASS_LG" description="PLG_SYSTEM_VIDEOBOX_CLASS_LGDESC" />
-                <field name="style_lg" type="textarea" default="" size="5" label="PLG_SYSTEM_VIDEOBOX_STYLE_LG" description="PLG_SYSTEM_VIDEOBOX_STYLE_LGDESC" />
+                <field name="class_lg" type="text" default="" size="30" label="PLG_SYSTEM_VIDEOBOX_CLASS_L" description="PLG_SYSTEM_VIDEOBOX_CLASS_LDESC" />
+                <field name="style_lg" type="textarea" default="" size="5" label="PLG_SYSTEM_VIDEOBOX_STYLE_L" description="PLG_SYSTEM_VIDEOBOX_STYLE_LDESC" />
                 <field name="sc_visual_lg" type="radio" default="2" size="5" label="PLG_SYSTEM_VIDEOBOX_SC_VISUAL" description="PLG_SYSTEM_VIDEOBOX_SC_VISUALDESC" >
 					<option value="2" >PLG_SYSTEM_VIDEOBOX_GLOBAL</option>
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>

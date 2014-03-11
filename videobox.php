@@ -96,7 +96,7 @@ class plgSystemVideobox extends JPlugin
 							if((trim($parameter[1])!='') && (trim($parameter[2])!='')) $parametri[trim($parameter[1])] = trim($parameter[2]);
 						}
 					}
-				}			
+				}
 				if(isset($parametri['alternative']) && ($parametri['alternative']==1)) $parametri['alternative'] = 99;
 				
 				// Get the required parameters		
@@ -104,7 +104,7 @@ class plgSystemVideobox extends JPlugin
 				if($count>1){
 					if(!isset($parametri['links'])) $parametri['links'] = $this->params->get('links_g');
 					if($parametri['links']==1){
-						$parametri['lightbox'] = 1;
+						$parametri['player'] = 1;
 						if(!isset($parametri['class'])) $parametri['class'] = $this->params->get('class_lg');
 						if(!isset($parametri['style'])) $parametri['style'] = $this->params->get('style_lg');
 						if(!isset($parametri['separator'])) $parametri['separator'] = $this->params->get('separator');
@@ -112,11 +112,11 @@ class plgSystemVideobox extends JPlugin
 						if(!isset($parametri['height'])) $parametri['height'] = $this->params->get('height_lg');
 						if(!isset($parametri['sc_visual'])) $parametri['sc_visual'] = $this->params->get('sc_visual_lg');
 					} else {
-						if(!isset($parametri['lightbox'])) $parametri['lightbox'] = $this->params->get('no_lb_g');
+						if(!isset($parametri['player'])) $parametri['player'] = $this->params->get('player_g');
 						if(!isset($parametri['class'])) $parametri['class'] = $this->params->get('class_g');
 						if(!isset($parametri['style'])) $parametri['style'] = $this->params->get('style_g');
-						if(!isset($parametri['alternative'])) $parametri['alternative'] = $this->params->get('cs_nlb_g');
-						if(($parametri['lightbox']==0 && $parametri['alternative']==1) || $parametri['alternative']==99){
+						if(!isset($parametri['alternative'])) $parametri['alternative'] = $this->params->get('cs_g');
+						if(($parametri['player']!=$this->params->get('player_g') && $parametri['alternative']==1) || $parametri['alternative']==99){
 							if(!isset($parametri['t_width'])) $parametri['t_width'] = $this->params->get('width_nlb_g');
 							if(!isset($parametri['t_height'])) $parametri['t_height'] = $this->params->get('height_nlb_g');	
 							if(!isset($parametri['button'])) $parametri['button'] = $this->params->get('play_nlb_g');	
@@ -158,13 +158,13 @@ class plgSystemVideobox extends JPlugin
 					if($box==1){
 						$parametri['box'] = 1;
 						$parametri['links'] = 0;
-						if(!isset($parametri['lightbox'])) $parametri['lightbox'] = $this->params->get('no_lb_b');
+						if(!isset($parametri['player'])) $parametri['player'] = $this->params->get('player_b');
 						if(!isset($parametri['class'])) $parametri['class'] = $this->params->get('class_l');
 						if(!isset($parametri['style'])) $parametri['style'] = $this->params->get('style_l');
 						if(!isset($parametri['t_width'])) $parametri['t_width'] = $this->params->get('width_bt');
 						if(!isset($parametri['t_height'])) $parametri['t_height'] = $this->params->get('height_bt');
-						if(!isset($parametri['alternative'])) $parametri['alternative'] = $this->params->get('cs_nlb_b');
-						if(($parametri['lightbox']==0 && $parametri['alternative']==1) || $parametri['alternative']==99){
+						if(!isset($parametri['alternative'])) $parametri['alternative'] = $this->params->get('cs_b');
+						if(($parametri['player']!=$this->params->get('player_b') && $parametri['alternative']==1) || $parametri['alternative']==99){
 							if(!isset($parametri['width'])) $parametri['width'] = $this->params->get('width_nlb_b');
 							if(!isset($parametri['height'])) $parametri['height'] = $this->params->get('height_nlb_b');	
 							if(!isset($parametri['button'])) $parametri['button'] = $this->params->get('play_nlb_b');
@@ -179,7 +179,7 @@ class plgSystemVideobox extends JPlugin
 						if($lnk==1){
 							$parametri['links'] = 1;
 							$parametri['box'] = 0;
-							$parametri['lightbox'] = 1;
+							$parametri['player'] = 1;
 							if(!isset($parametri['class'])) $parametri['class'] = $this->params->get('class_l');
 							if(!isset($parametri['style'])) $parametri['style'] = $this->params->get('style_l');
 							if(!isset($parametri['width'])) $parametri['width'] = $this->params->get('width_l');
@@ -206,7 +206,7 @@ class plgSystemVideobox extends JPlugin
 				if(!isset($parametri['box'])) $parametri['box'] = 0;
 				if(!isset($parametri['button'])) $parametri['button'] = 0;	
 				if(!isset($parametri['links'])) $parametri['links'] = 0;
-				if(!isset($parametri['lightbox'])) $parametri['lightbox'] = 1;
+				if(!isset($parametri['player'])) $parametri['player'] = 1;
 				if(!isset($parametri['width'])) $parametri['width'] = 640;
 				if(!isset($parametri['height'])) $parametri['height'] = 363;
 				if(!isset($parametri['class'])) $parametri['class'] = '';
@@ -372,7 +372,7 @@ class plgSystemVideobox extends JPlugin
 	protected function _videoLink($video, $params, $i, $n = 1, $separator = ''){
 		$src = $video->getPlayerLink(true);
 		$rel = 'videobox';
-		if($params['lightbox']=='0') $rel = 'vbinline';
+		if($params['player']=='0') $rel = 'vbinline';
 		$html = '<a class="'.$params['class'].' vb_video_link_a" style="'.$params['style'].'" href="'.$src.'" rel="'.$rel.'.sig'.$i.'" title="' . $video->getTitle() . '" videowidth="'.$params['width'].'" videoheight="'.$params['height'].'">' . $video->getTitle(true) . '</a>'.$separator;
 		return $html;
 	}
@@ -383,7 +383,7 @@ class plgSystemVideobox extends JPlugin
 		$rel = 'videobox';
 		$v_width = $params['width'];
 		$v_height = $params['height'];
-		if($params['lightbox']=='0'){
+		if($params['player']=='0'){
 			$rel = 'vbinline';
 			$v_width = $params['t_width'];
 			$v_height = $params['t_height'];
@@ -401,7 +401,7 @@ class plgSystemVideobox extends JPlugin
 		$src = $video->getPlayerLink(true);
 		$img = JURI::root().'/plugins/system/videobox/'.$this->_videoThumbnail($video, $params);
 		$rel = 'videobox';
-		if($params['lightbox']=='0') $rel = 'vbinline';		
+		if($params['player']=='0') $rel = 'vbinline';		
 		$thumb  = '<span class="vb_video_cont vb_box '.$params['class'].'" style="'.$params['style'].'">
 			<a href="'.$src.'" rel="'.$rel.'.sib'.$i.'" title="' . $video->getTitle() . '" videowidth="'.$params['width'].'" videoheight="'.$params['height'].'">
 				<img src="'.$img.'" id="vb_thumb_'.$i.'_'.$n.'" alt="' . $video->getTitle() . '" />
