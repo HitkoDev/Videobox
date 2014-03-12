@@ -2,10 +2,10 @@
 /*------------------------------------------------------------------------
 # plg_videobox - Videobox
 # ------------------------------------------------------------------------
-# author    HiTKO
+# author    HitkoDev
 # copyright Copyright (C) 2012 hitko.si. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
-# Websites: http://hitko.si
+# Websites: http://hitko.eu/software/videobox
 -------------------------------------------------------------------------*/
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted Access' );
@@ -199,7 +199,7 @@ class plgSystemVideobox extends JPlugin
 				$parametri['path'] = $vb_path;
 				if(!isset($parametri['sc_visual']) || $parametri['sc_visual']==2) $parametri['sc_visual'] = $this->params->get('sc_visual');
 				
-				if($parametri['pages']==0) $parametri['pages'] = 99999999;
+				if(!isset($parametri['pages']) || $parametri['pages']==0) $parametri['pages'] = 99999999;
 				
 				// Create video adapter object for each video
 				$video_objects = array();

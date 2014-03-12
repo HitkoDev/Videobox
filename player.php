@@ -2,10 +2,10 @@
 /*------------------------------------------------------------------------
 # plg_videobox - Videobox
 # ------------------------------------------------------------------------
-# author    HiTKO
+# author    HitkoDev
 # copyright Copyright (C) 2012 hitko.si. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
-# Websites: http://hitko.si
+# Websites: http://hitko.eu/software/videobox
 -------------------------------------------------------------------------*/
 // This file MUST be directly accessible because it provides the palyer for HTML5 media which is inserted in iframe on the page
 // It doesn't connect with any core files, exstensions, databases or anything. It recieves URL of the media file to be inserted and creates a player that can be inserted in an iframe later on

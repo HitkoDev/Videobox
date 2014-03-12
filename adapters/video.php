@@ -2,10 +2,10 @@
 /*------------------------------------------------------------------------
 # plg_videobox - Videobox
 # ------------------------------------------------------------------------
-# author    HiTKO
+# author    HitkoDev
 # copyright Copyright (C) 2012 hitko.si. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
-# Website: http://hitko.si
+# Websites: http://hitko.eu/software/videobox
 -------------------------------------------------------------------------*/
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted Access' );
