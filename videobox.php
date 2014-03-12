@@ -98,12 +98,30 @@ class plgSystemVideobox extends JPlugin
 					}
 				}
 				if(isset($parametri['alternative']) && ($parametri['alternative']==1)) $parametri['alternative'] = 99;
+				if(isset($parametri['display'])){
+					$parametri['display'] = strtolower($parametri['display']);
+					if($parametri['display']=='links' || $parametri['display']=='link' || $parametri['display']==1){
+						$parametri['display'] = 1;
+					} else if($parametri['display']=='box' || $parametri['display']==2) {
+						$parametri['display'] = 2;
+					} else {
+						$parametri['display'] = 0;
+					}
+				}
+				if(isset($parametri['player'])){
+					$parametri['player'] = strtolower($parametri['player']);
+					if($parametri['player']=='inline' || $parametri['player']==0){
+						$parametri['player'] = 0;
+					} else {
+						$parametri['player'] = 1;
+					}
+				}
 				
 				// Get the required parameters		
-				if(!isset($parametri['cache'])) $parametri['cache'] = $this->params->get('cache');			
+				if(!isset($parametri['cache'])) $parametri['cache'] = $this->params->get('cache');
 				if($count>1){
-					if(!isset($parametri['links'])) $parametri['links'] = $this->params->get('links_g');
-					if($parametri['links']==1){
+					if(!isset($parametri['display']) || $parametri['display']>1) $parametri['display'] = $this->params->get('links_g');
+					if($parametri['display']==1){
 						$parametri['player'] = 1;
 						if(!isset($parametri['class'])) $parametri['class'] = $this->params->get('class_lg');
 						if(!isset($parametri['style'])) $parametri['style'] = $this->params->get('style_lg');
@@ -117,13 +135,17 @@ class plgSystemVideobox extends JPlugin
 						if(!isset($parametri['style'])) $parametri['style'] = $this->params->get('style_g');
 						if(!isset($parametri['alternative'])) $parametri['alternative'] = $this->params->get('cs_g');
 						if(($parametri['player']!=$this->params->get('player_g') && $parametri['alternative']==1) || $parametri['alternative']==99){
-							if(!isset($parametri['t_width'])) $parametri['t_width'] = $this->params->get('width_nlb_g');
-							if(!isset($parametri['t_height'])) $parametri['t_height'] = $this->params->get('height_nlb_g');	
+							if(!isset($parametri['width'])) $parametri['width'] = $this->params->get('width_nlb_g');
+							if(!isset($parametri['height'])) $parametri['height'] = $this->params->get('height_nlb_g');
+							if(!isset($parametri['t_width'])) $parametri['t_width'] = $this->params->get('width_nlb_gt');
+							if(!isset($parametri['t_height'])) $parametri['t_height'] = $this->params->get('height_nlb_gt');
 							if(!isset($parametri['button'])) $parametri['button'] = $this->params->get('play_nlb_g');	
 							if(!isset($parametri['break'])) $parametri['break'] = $this->params->get('break_nlb');
 							if(!isset($parametri['pages'])) $parametri['pages'] = $this->params->get('pages_nlb');
 							if(!isset($parametri['sc_visual'])) $parametri['sc_visual'] = $this->params->get('sc_visual_nlb_g');
 						} else {
+							if(!isset($parametri['width'])) $parametri['width'] = $this->params->get('width_g');
+							if(!isset($parametri['height'])) $parametri['height'] = $this->params->get('height_g');
 							if(!isset($parametri['t_width'])) $parametri['t_width'] = $this->params->get('width_gt');
 							if(!isset($parametri['t_height'])) $parametri['t_height'] = $this->params->get('height_gt');
 							if(!isset($parametri['button'])) $parametri['button'] = $this->params->get('play_g');	
@@ -134,51 +156,29 @@ class plgSystemVideobox extends JPlugin
 						}
 					}
 				} else {
-					$display = $this->params->get('display');
-					$def = 0;
-					$box = 0;
-					$lnk = 0;
-					switch($display){
-						case 0:
-							$def = 1;
-							break;
-						case 1:
-							$box = 1;
-							break;
-						case 2:
-							$lnk = 1;
-							break;
-					}
-					if(isset($parametri['box'])){
-						$box = $parametri['box'];
-					}
-					if(isset($parametri['links'])){
-						$lnk = $parametri['links'];
-					}
-					if($box==1){
-						$parametri['box'] = 1;
-						$parametri['links'] = 0;
+					if(!isset($parametri['display'])) $parametri['display'] = $this->params->get('display');
+					if($parametri['display']==2){
 						if(!isset($parametri['player'])) $parametri['player'] = $this->params->get('player_b');
 						if(!isset($parametri['class'])) $parametri['class'] = $this->params->get('class_l');
 						if(!isset($parametri['style'])) $parametri['style'] = $this->params->get('style_l');
-						if(!isset($parametri['t_width'])) $parametri['t_width'] = $this->params->get('width_bt');
-						if(!isset($parametri['t_height'])) $parametri['t_height'] = $this->params->get('height_bt');
 						if(!isset($parametri['alternative'])) $parametri['alternative'] = $this->params->get('cs_b');
 						if(($parametri['player']!=$this->params->get('player_b') && $parametri['alternative']==1) || $parametri['alternative']==99){
+							if(!isset($parametri['t_width'])) $parametri['t_width'] = $this->params->get('width_nlb_bt');
+							if(!isset($parametri['t_height'])) $parametri['t_height'] = $this->params->get('height_nlb_bt');
 							if(!isset($parametri['width'])) $parametri['width'] = $this->params->get('width_nlb_b');
 							if(!isset($parametri['height'])) $parametri['height'] = $this->params->get('height_nlb_b');	
 							if(!isset($parametri['button'])) $parametri['button'] = $this->params->get('play_nlb_b');
 							if(!isset($parametri['sc_visual'])) $parametri['sc_visual'] = $this->params->get('sc_visual_nlb_b');
 						} else {
+							if(!isset($parametri['t_width'])) $parametri['t_width'] = $this->params->get('width_bt');
+							if(!isset($parametri['t_height'])) $parametri['t_height'] = $this->params->get('height_bt');
 							if(!isset($parametri['width'])) $parametri['width'] = $this->params->get('width_b');
 							if(!isset($parametri['height'])) $parametri['height'] = $this->params->get('height_b');
 							if(!isset($parametri['button'])) $parametri['button'] = $this->params->get('play_b');	
 							if(!isset($parametri['sc_visual'])) $parametri['sc_visual'] = $this->params->get('sc_visual_b');					
 						}
 					} else {
-						if($lnk==1){
-							$parametri['links'] = 1;
-							$parametri['box'] = 0;
+						if($parametri['display']==1){
 							$parametri['player'] = 1;
 							if(!isset($parametri['class'])) $parametri['class'] = $this->params->get('class_l');
 							if(!isset($parametri['style'])) $parametri['style'] = $this->params->get('style_l');
@@ -186,8 +186,6 @@ class plgSystemVideobox extends JPlugin
 							if(!isset($parametri['height'])) $parametri['height'] = $this->params->get('height_l');
 							if(!isset($parametri['sc_visual'])) $parametri['sc_visual'] = $this->params->get('sc_visual_l');
 						} else {
-							$parametri['links'] = 0;
-							$parametri['box'] = 0;
 							if(!isset($parametri['width'])) $parametri['width'] = $this->params->get('width');
 							if(!isset($parametri['height'])) $parametri['height'] = $this->params->get('height');
 							if(!isset($parametri['class'])) $parametri['class'] = $this->params->get('class');
@@ -200,19 +198,7 @@ class plgSystemVideobox extends JPlugin
 				
 				$parametri['path'] = $vb_path;
 				if(!isset($parametri['sc_visual']) || $parametri['sc_visual']==2) $parametri['sc_visual'] = $this->params->get('sc_visual');
-				if(!isset($parametri['separator'])) $parametri['separator'] = ', ';
-				if(!isset($parametri['break'])) $parametri['break'] = 0;
-				if(!isset($parametri['pages'])) $parametri['pages'] = 0;
-				if(!isset($parametri['box'])) $parametri['box'] = 0;
-				if(!isset($parametri['button'])) $parametri['button'] = 0;	
-				if(!isset($parametri['links'])) $parametri['links'] = 0;
-				if(!isset($parametri['player'])) $parametri['player'] = 1;
-				if(!isset($parametri['width'])) $parametri['width'] = 640;
-				if(!isset($parametri['height'])) $parametri['height'] = 363;
-				if(!isset($parametri['class'])) $parametri['class'] = '';
-				if(!isset($parametri['style'])) $parametri['style'] = '';
-				if(!isset($parametri['play'])) $parametri['play'] = 0;
-				if(!isset($parametri['fixed'])) $parametri['fixed'] = 0;				
+				
 				if($parametri['pages']==0) $parametri['pages'] = 99999999;
 				
 				// Create video adapter object for each video
@@ -230,7 +216,7 @@ class plgSystemVideobox extends JPlugin
 					// Create pagination if needed
 					$start = 0;
 					$pagination = '';
-					if(($count>$parametri['pages']) && ($parametri['pages']!=0) && ($parametri['links']==0)){
+					if(($count>$parametri['pages']) && ($parametri['pages']!=0) && ($parametri['display']==0)){
 						
 						if(isset($url2[$co-1])) $start = (int)$url2[$co-1];
 						$path = '';
@@ -258,9 +244,9 @@ class plgSystemVideobox extends JPlugin
 					$thumbnails = '';
 					if($count==1){
 						
-						if($parametri['box']==1){
+						if($parametri['display']==2){
 							$thumbnails .= $this->_videoBox($videos[0], $parametri, $co);
-						} elseif($parametri['links']==1){
+						} elseif($parametri['display']==1){
 							$thumbnails .= $this->_videoLink($videos[0], $parametri, $co);
 						} else {
 							$thumbnails .= $this->_videoCode($videos[0], $parametri);
@@ -268,7 +254,7 @@ class plgSystemVideobox extends JPlugin
 						
 					} elseif($count > 1){
 						
-						if($parametri['links']==1){
+						if($parametri['display']==1){
 						
 							foreach($videos as $n => $video){
 								if($n < ($count-1)){
@@ -364,7 +350,6 @@ class plgSystemVideobox extends JPlugin
 	protected function _videoCode($video, $params) {
 		$src = $video->getPlayerLink($params['play']);
 		$responsive = '';
-		if($params['fixed']==0) $responsive = 'responsive_player';
 		$html  = '<div class="'.$responsive.'"><div owidth="'.$params['width'].'" oheight="'.$params['height'].'" style="width: '.$params['width'].'px; height: '.$params['height'].'px; max-width: 100%; '.$params['style'].'" class="vb_videoFrame '.$params['class'].'"><iframe src="'.$src.'" frameborder="0" allowfullscreen oallowfullscreen msallowfullscreen webkitallowfullscreen mozallowfullscreen style="display: block; width: 100%; height: 100%;"></iframe></div></div>';
 		return $html;
 	}

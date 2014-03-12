@@ -40,8 +40,8 @@
 				</field>
                 <field name="display" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_SINGLE" description="PLG_SYSTEM_VIDEOBOX_SINGLEDESC" >
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_DISPLAY_DIRECT</option>
-					<option value="1" >PLG_SYSTEM_VIDEOBOX_DISPLAY_BOX</option>
-					<option value="2" >PLG_SYSTEM_VIDEOBOX_DISPLAY_LINK</option>
+					<option value="2" >PLG_SYSTEM_VIDEOBOX_DISPLAY_BOX</option>
+					<option value="1" >PLG_SYSTEM_VIDEOBOX_DISPLAY_LINK</option>
 				</field>
                 <field name="links_g" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_MULTIPLE" description="PLG_SYSTEM_VIDEOBOX_MULTIPLEDESC" >
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_DISPLAY_GALLERY</option>
@@ -93,6 +93,8 @@
 				</field>
                 <field name="width_nlb_b" type="text" default="640" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_NLB" description="PLG_SYSTEM_VIDEOBOX_WIDTH_NLBDESC" />
                 <field name="height_nlb_b" type="text" default="360" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_NLB" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_NLBDESC" />
+                <field name="width_nlb_bt" type="text" default="240" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_NLB_T" description="PLG_SYSTEM_VIDEOBOX_WIDTH_NLB_TDESC" />
+                <field name="height_nlb_bt" type="text" default="180" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_NLB_T" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_NLB_TDESC" />
                 <field name="play_nlb_b" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_PLAY_NLB" description="PLG_SYSTEM_VIDEOBOX_PLAY_NLBDESC" >
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
@@ -144,8 +146,10 @@
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
 				</field>
-                <field name="width_nlb_g" type="text" default="284" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_NLB" description="PLG_SYSTEM_VIDEOBOX_WIDTH_NLBDESC" />
-                <field name="height_nlb_g" type="text" default="214" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_NLB" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_NLBDESC" />
+                <field name="width_nlb_g" type="text" default="640" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_NLB" description="PLG_SYSTEM_VIDEOBOX_WIDTH_NLBDESC" />
+                <field name="height_nlb_g" type="text" default="360" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_NLB" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_NLBDESC" />
+                <field name="width_nlb_gt" type="text" default="284" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_NLB_T" description="PLG_SYSTEM_VIDEOBOX_WIDTH_NLB_TDESC" />
+                <field name="height_nlb_gt" type="text" default="214" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_NLB_T" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_NLB_TDESC" />
                 <field name="play_nlb_g" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_PLAY_NLB" description="PLG_SYSTEM_VIDEOBOX_PLAY_NLBDESC" >
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
