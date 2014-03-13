@@ -397,182 +397,159 @@ class plgSystemVideobox extends JPlugin
 	}
 	
 	protected function _videoThumbnail($video, $params, $no_border = false, $n = 0) {
+		// Prevent infinite loop
 		if($n > 1) return '';
-		if(($video != 'css/nobg_v.png') && ($video != 'css/nobg_a.png')){
+		
+		// Get name suffixes
+		$name = '';
+		if($no_border){
+			$name .= '-no_border';
+		} else {
+			$name .= '-'.$params['t_width'].'-'.$params['t_height'];
+			if($params['button']) $name .= '-button';
+		}
+		
+		// If $video is a Video object, get its data, otherwise get nobg data
+		if($video instanceof Video){
 			$nobg = 'nobg_v';
 			if($video->type == 'a') $nobg = 'nobg_a';
-			$name = $video->id;
-			if($no_border){
-				$name .= '-no_border';
-			} else {
-				$name .= '-'.$params['t_width'].'-'.$params['t_height'];
-				if($params['button']) $name .= '-button';
-			}
-			$hash = md5($name);
+			$hash = md5($video->id . $name);
 			if($params['cache'] && is_file($params['path'].'cache/'.$hash.'.jpg')){
 				return 'cache/'.$hash.'.jpg';
 			}
 			$img = $video->getThumb();
-			$play = '';
-			if($params['button']){
-				$play = imagecreatefrompng($params['path'].'css/play.png');
-			}
-			try {
-				switch($img[1]){
-					case IMAGETYPE_JPEG: 
-						$src_img = imagecreatefromjpeg($img[0]);
-						break;
-					case IMAGETYPE_PNG: 
-						$src_img = imagecreatefrompng($img[0]);
-						break;
-					case IMAGETYPE_GIF: 
-						$src_img = imagecreatefromgif($img[0]);
-						break;
-					default:
-						return $this->_videoThumbnail('css/'.$nobg.'.png', $params, $no_border, $n + 1);
-				}
-				if($src_img){
-					$imagedata[0] = imagesx($src_img);
-					$imagedata[1] = imagesy($src_img);
-				} else {
-					return $this->_videoThumbnail('css/'.$nobg.'.png', $params, $no_border, $n + 1);
-				}
-			} catch (Exception $e) {
-				return $this->_videoThumbnail('css/'.$nobg.'.png', $params, $no_border, $n + 1);
-			}
 		} else {
-			if($video == 'css/nobg_v.png'){
-				$nobg = 'nobg_v';
-			} else {
-				$nobg = 'nobg_a';
+			$nobg = $video;
+			$hash = md5($video . $name);
+			if($params['cache'] && is_file($params['path'].'cache/'.$hash.'.jpg')){
+				return 'cache/'.$hash.'.jpg';
 			}
-			$play = '';
-			if($params['button']){
-				$play = imagecreatefrompng($params['path'].'css/play.png');
-			}
-			$name = $nobg.'-'.$params['t_width'].'-'.$params['t_height'];
-			if($no_border) $name .= '-no_border';
-			if($params['button']) $name .= '-button';
-			$hash = md5($name);
-			$src_img = imagecreatefrompng($params['path'].'css/'.$nobg.'.png');
-			$imagedata[0] = imagesx($src_img);
-			$imagedata[1] = imagesy($src_img);
+			$img = array($params['path'].'css/'.$nobg.'.png', IMAGETYPE_PNG);
 		}
 		
-		$b_top = 0;
-		$b_btm = 0;
-		$b_lft = 0;
-		$b_rt = 0;
+		try {
+			switch($img[1]){
+				case IMAGETYPE_JPEG: 
+					$src_img = imagecreatefromjpeg($img[0]);
+					break;
+				case IMAGETYPE_PNG: 
+					$src_img = imagecreatefrompng($img[0]);
+					break;
+				case IMAGETYPE_GIF: 
+					$src_img = imagecreatefromgif($img[0]);
+					break;
+				default:
+					return $this->_videoThumbnail($nobg, $params, $no_border, $n + 1);
+			}
+		} catch (Exception $e) {
+			return $this->_videoThumbnail($nobg, $params, $no_border, $n + 1);
+		}
+		if(!$src_img) return $this->_videoThumbnail($nobg, $params, $no_border, $n + 1);
+		
+		$imagedata[0] = imagesx($src_img);
+		$imagedata[1] = imagesy($src_img);
 
-		if(($imagedata[0]!==false)&&($imagedata[1]!==false)){
+		// Remove border added by video provider
+		if($imagedata[0] && $imagedata[1]){
+		
+			$b_t = 0;
+			$b_b = 0;
+			$b_l = 0;
+			$b_r = 0;
 
-			if(($imagedata[0]<=1920)&&($imagedata[1]<=1080)){
+			if($imagedata[0]<=1920 && $imagedata[1]<=1080){
 			
 				for($y = 3; $y < $imagedata[1]; $y++) {
 					for($x = 3; $x < $imagedata[0]; $x++) {
-						$rgb = imagecolorat($src_img, $x, $y);
-						$r = ($rgb >> 16) & 0xFF;
-						$g = ($rgb >> 8) & 0xFF;
-						$b = $rgb & 0xFF;
-						if(($r > 31)||($g > 31)||($b > 31)) {
-							break 2;
-						}
+						if($this->_chkB($src_img, $x, $y)) break 2;
 					}
-					$b_top = $y;
+					$b_t = $y;
 				}
 
 				for($y = $imagedata[1]-4; $y >= 0; $y--) {
 					for($x = 3; $x < $imagedata[0]; $x++) {
-						$rgb = imagecolorat($src_img, $x, $y);
-						$r = ($rgb >> 16) & 0xFF;
-						$g = ($rgb >> 8) & 0xFF;
-						$b = $rgb & 0xFF;
-						if(($r > 31)||($g > 31)||($b > 31)) {
-							break 2;
-						}
+						if($this->_chkB($src_img, $x, $y)) break 2;
 					}
-					$b_btm = $imagedata[1] - 1 - $y;
+					$b_b = $imagedata[1] - 1 - $y;
 				}
 
 				for($x = 3; $x < $imagedata[0]; $x++) {
 					for($y = 3; $y < $imagedata[1]; $y++) {
-						$rgb = imagecolorat($src_img, $x, $y);
-						$r = ($rgb >> 16) & 0xFF;
-						$g = ($rgb >> 8) & 0xFF;
-						$b = $rgb & 0xFF;
-						if(($r > 31)||($g > 31)||($b > 31)) {
-							break 2;
-						}
+						if($this->_chkB($src_img, $x, $y)) break 2;
 					}
-					$b_lft = $x;
+					$b_l = $x;
 				}
 
 				for($x = $imagedata[0]-4; $x >= 0; $x--) {
 					for($y = 3; $y < $imagedata[1]; $y++) {
-						$rgb = imagecolorat($src_img, $x, $y);
-						$r = ($rgb >> 16) & 0xFF;
-						$g = ($rgb >> 8) & 0xFF;
-						$b = $rgb & 0xFF;
-						if(($r > 31)||($g > 31)||($b > 31)) {
-							break 2;
-						}
+						if($this->_chkB($src_img, $x, $y)) break 2;
 					}
-					$b_rt = $imagedata[0] - 1 - $x;
+					$b_r = $imagedata[0] - 1 - $x;
 				}
 			
 			}
 
 		} else {
-			return $this->_videoThumbnail('css/'.$nobg.'.png', $params, $no_border, $n + 1);
+			return $this->_videoThumbnail($nobg, $params, $no_border, $n + 1);
 		}
 		
-		$newimg = imagecreatetruecolor(imagesx($src_img)-($b_lft+$b_rt), imagesy($src_img)-($b_top+$b_btm));
-		imagealphablending($newimg, false);
-		imagesavealpha($newimg, true);
-		$black = imagecolorallocatealpha($newimg, 0, 0, 0, 0);
-		imagefilledrectangle($newimg, 0, 0, imagesx($newimg), imagesy($newimg), $black);
-		imagecopy($newimg, $src_img, 0, 0, $b_lft, $b_top, imagesx($newimg), imagesy($newimg));
+		$imagedata[0] -= $b_l + $b_r;
+		$imagedata[1] -= $b_t + $b_b;
 		
-		if($no_border){
+		if($no_border){	
 			
-			imagejpeg($newimg, $params['path'].'cache/'.$hash.'.jpg', 100);			
-			return 'cache/'.$hash.'.jpg';
-		}
-		
-		imagedestroy($src_img);
-
-		$imagedata[0] = imagesx($newimg);
-		$imagedata[1] = imagesy($newimg);
-
-		$offset_h = 0;
-		$offset_w = 0;
-
-		if((($params['t_width']*$imagedata[1])/$params['t_height'])>=$imagedata[0]){
-			$new_h = $params['t_height'];
-			$new_w = (int)(($params['t_height']*$imagedata[0])/$imagedata[1]);
-			$offset_w = (int)(($params['t_width'] - $new_w)/2);
+			// Just crop the border
+			$newimg = imagecreatetruecolor($imagedata[0], $imagedata[1]);
+			imagecopy($newimg, $src_img, 0, 0, $b_l, $b_t, $imagedata[0], $imagedata[1]);
+			
 		} else {
-			$new_w = $params['t_width'];
-			$new_h = (int)(($params['t_width']*$imagedata[1])/$imagedata[0]);
-			$offset_h = (int)(($params['t_height'] - $new_h)/2);
-		}
-		$dst_img = imagecreatetruecolor($params['t_width'], $params['t_height']);
-		imagealphablending($dst_img, false);
-		imagesavealpha($dst_img, true);
-		$black = imagecolorallocatealpha($dst_img, 0, 0, 0, 0);
-		imagefilledrectangle($dst_img, 0, 0, $params['t_width'], $params['t_height'], $black);
-
-
-		imagecopyresampled($dst_img, $newimg, $offset_w, $offset_h, 0, 0, $new_w, $new_h, $imagedata[0], $imagedata[1]);
-
-		if(($play!=0) && ($params['t_width']>=160) && ($params['t_height']>=120)){
-			imagealphablending($dst_img, true);
-			imagecopyresampled($dst_img, $play, ($params['t_width']-100)/2, ($params['t_height']-80)/2, 0, 0, 100, 80, 100, 80);
+		
+			// Calculate new size and offset
+			$new_w = $imagedata[0];
+			$new_h = $imagedata[1];		
+			
+			if($new_h > $params['t_height']){
+				$new_w = ($params['t_height']*$new_w) / $new_h;
+				$new_h = $params['t_height'];
+			}
+			if($new_w > $params['t_width']){
+				$new_h = ($params['t_width']*$new_h) / $new_w;
+				$new_w = $params['t_width'];
+			}		
+			
+			$new_w = (int)$new_w;
+			$new_h = (int)$new_h;
+			$off_w = (int)(($params['t_width'] - $new_w)/2);
+			$off_h = (int)(($params['t_height'] - $new_h)/2);
+			
+			// Copy and crop
+			$newimg = imagecreatetruecolor($params['t_width'], $params['t_height']);
+			$black = imagecolorallocate($newimg, 0, 0, 0);
+			imagefilledrectangle($newimg, 0, 0, $params['t_width'], $params['t_height'], $black);
+			imagecopyresampled($newimg, $src_img, $off_w, $off_h, $b_l, $b_t, $new_w, $new_h, $imagedata[0], $imagedata[1]);
+			
+			// Add button
+			if($params['button']){
+				$play = imagecreatefrompng($params['path'].'css/play.png');
+				if($play && $params['t_width'] >= (imagesx($play) + 50) && $params['t_height'] >= (imagesy($play) + 50)){
+					imagealphablending($newimg, true);
+					imagecopyresampled($newimg, $play, ($params['t_width']-imagesx($play))/2, ($params['t_height']-imagesy($play))/2, 0, 0, imagesx($play), imagesy($play), imagesx($play), imagesy($play));
+				}
+			}
 		}
 		
-		imagejpeg($dst_img, $params['path'].'cache/'.$hash.'.jpg', 100);
+		// Save the image and return
+		imagejpeg($newimg, $params['path'].'cache/'.$hash.'.jpg', 100);
 		return 'cache/'.$hash.'.jpg';
-
+		
+	}
+	
+	protected function _chkB($img, $x, $y){
+		$rgb = imagecolorat($img, $x, $y);
+		$r = ($rgb >> 16) & 0xFF;
+		$g = ($rgb >> 8) & 0xFF;
+		$b = $rgb & 0xFF;
+		return (($r > 31)||($g > 31)||($b > 31));
 	}
 	
 	protected function htmldec($string){
