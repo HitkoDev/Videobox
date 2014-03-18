@@ -69,219 +69,227 @@ class plgSystemVideobox extends JPlugin
 				$buffer = preg_replace('/{raw}([\s\S]*){\/raw}/isU', $raw_text, $buffer, 1);
 			}
 			
-			// Match Videobox calls
-			$regex = '/{videobox}(.*){\/videobox}/isU';			
-			preg_match_all($regex, $buffer, $matches);
+			// Get custom tag
+			$tags = array('videobox');
+			$tag = preg_replace("/[^a-zA-Z0-9]/", "", $this->params->get('tag', 'videobox'));
+			if($tag != 'videobox' && $tag != '') $tags[] = $tag;
 			
-			// Get pages for the gallery display
-			$url2 = explode(',', JRequest::getVar('vblimitstart', ''));
+			foreach($tags as $tag){
 			
-			$co = 0;
-			foreach($matches[1] as $match){
+				// Match Videobox calls
+				$regex = '/{'.$tag.'}(.*){\/'.$tag.'}/isU';
+				preg_match_all($regex, $buffer, $matches);
 				
-				$co++;
-				$match = strip_tags($match);				
-				$parametri = explode('||', $match);
-				$videos = explode('|,', $parametri[0]);
-				$count = count($videos);
+				// Get pages for the gallery display
+				$url2 = explode(',', JRequest::getVar('vblimitstart', ''));
 				
-				// Match parameters in code
-				$para_match = array(array());
-				if(isset($parametri[1])){
-					preg_match_all('/([^=, ]*)=(([^,]*)|"([^"]*)")/i', $parametri[1], $para_match);
-				}
-				foreach($para_match[0] as $para){
-					if(preg_match('/([^=]+)="{0,1}([^"]*)"{0,1}/i', $para, $parameter) > 0){
-						if(isset($parameter[1]) && isset($parameter[2])){
-							if((trim($parameter[1])!='') && (trim($parameter[2])!='')) $parametri[trim($parameter[1])] = trim($parameter[2]);
+				$co = 0;
+				foreach($matches[1] as $match){
+					
+					$co++;
+					$match = strip_tags($match);				
+					$parametri = explode('||', $match);
+					$videos = explode('|,', $parametri[0]);
+					$count = count($videos);
+					
+					// Match parameters in code
+					$para_match = array(array());
+					if(isset($parametri[1])){
+						preg_match_all('/([^=, ]*)=(([^,]*)|"([^"]*)")/i', $parametri[1], $para_match);
+					}
+					foreach($para_match[0] as $para){
+						if(preg_match('/([^=]+)="{0,1}([^"]*)"{0,1}/i', $para, $parameter) > 0){
+							if(isset($parameter[1]) && isset($parameter[2])){
+								if((trim($parameter[1])!='') && (trim($parameter[2])!='')) $parametri[trim($parameter[1])] = trim($parameter[2]);
+							}
 						}
 					}
-				}
-				if(isset($parametri['alternative']) && ($parametri['alternative']==1)) $parametri['alternative'] = 99;
-				if(isset($parametri['display'])){
-					$parametri['display'] = strtolower($parametri['display']);
-					if($parametri['display']=='links' || $parametri['display']=='link' || $parametri['display']==1){
-						$parametri['display'] = 1;
-					} else if($parametri['display']=='box' || $parametri['display']==2) {
-						$parametri['display'] = 2;
-					} else {
-						$parametri['display'] = 0;
-					}
-				}
-				if(isset($parametri['player'])){
-					$parametri['player'] = strtolower($parametri['player']);
-					if($parametri['player']=='inline' || $parametri['player']==0){
-						$parametri['player'] = 0;
-					} else {
-						$parametri['player'] = 1;
-					}
-				}
-				
-				// Get the required parameters		
-				if(!isset($parametri['cache'])) $parametri['cache'] = $this->params->get('cache');
-				if($count>1){
-					if(!isset($parametri['display']) || $parametri['display']>1) $parametri['display'] = $this->params->get('links_g');
-					if($parametri['display']==1){
-						$parametri['player'] = 1;
-						if(!isset($parametri['class'])) $parametri['class'] = $this->params->get('class_lg');
-						if(!isset($parametri['style'])) $parametri['style'] = $this->params->get('style_lg');
-						if(!isset($parametri['separator'])) $parametri['separator'] = $this->params->get('separator');
-						if(!isset($parametri['width'])) $parametri['width'] = $this->params->get('width_lg');
-						if(!isset($parametri['height'])) $parametri['height'] = $this->params->get('height_lg');
-						if(!isset($parametri['sc_visual'])) $parametri['sc_visual'] = $this->params->get('sc_visual_lg');
-					} else {
-						if(!isset($parametri['player'])) $parametri['player'] = $this->params->get('player_g');
-						if(!isset($parametri['class'])) $parametri['class'] = $this->params->get('class_g');
-						if(!isset($parametri['style'])) $parametri['style'] = $this->params->get('style_g');
-						if(!isset($parametri['alternative'])) $parametri['alternative'] = $this->params->get('cs_g');
-						if(($parametri['player']!=$this->params->get('player_g') && $parametri['alternative']==1) || $parametri['alternative']==99){
-							if(!isset($parametri['width'])) $parametri['width'] = $this->params->get('width_nlb_g');
-							if(!isset($parametri['height'])) $parametri['height'] = $this->params->get('height_nlb_g');
-							if(!isset($parametri['t_width'])) $parametri['t_width'] = $this->params->get('width_nlb_gt');
-							if(!isset($parametri['t_height'])) $parametri['t_height'] = $this->params->get('height_nlb_gt');
-							if(!isset($parametri['button'])) $parametri['button'] = $this->params->get('play_nlb_g');	
-							if(!isset($parametri['break'])) $parametri['break'] = $this->params->get('break_nlb');
-							if(!isset($parametri['pages'])) $parametri['pages'] = $this->params->get('pages_nlb');
-							if(!isset($parametri['sc_visual'])) $parametri['sc_visual'] = $this->params->get('sc_visual_nlb_g');
+					if(isset($parametri['alternative']) && ($parametri['alternative']==1)) $parametri['alternative'] = 99;
+					if(isset($parametri['display'])){
+						$parametri['display'] = strtolower($parametri['display']);
+						if($parametri['display']=='links' || $parametri['display']=='link' || $parametri['display']==1){
+							$parametri['display'] = 1;
+						} else if($parametri['display']=='box' || $parametri['display']==2) {
+							$parametri['display'] = 2;
 						} else {
-							if(!isset($parametri['width'])) $parametri['width'] = $this->params->get('width_g');
-							if(!isset($parametri['height'])) $parametri['height'] = $this->params->get('height_g');
-							if(!isset($parametri['t_width'])) $parametri['t_width'] = $this->params->get('width_gt');
-							if(!isset($parametri['t_height'])) $parametri['t_height'] = $this->params->get('height_gt');
-							if(!isset($parametri['button'])) $parametri['button'] = $this->params->get('play_g');	
-							if(!isset($parametri['break'])) $parametri['break'] = $this->params->get('break');
-							if(!isset($parametri['pages'])) $parametri['pages'] = $this->params->get('pages');
-							if(!isset($parametri['pages_results'])) $parametri['pages_results'] = $this->params->get('pages_results');
-							if(!isset($parametri['sc_visual'])) $parametri['sc_visual'] = $this->params->get('sc_visual_g');
+							$parametri['display'] = 0;
 						}
 					}
-				} else {
-					if(!isset($parametri['display'])) $parametri['display'] = $this->params->get('display');
-					if($parametri['display']==2){
-						if(!isset($parametri['player'])) $parametri['player'] = $this->params->get('player_b');
-						if(!isset($parametri['class'])) $parametri['class'] = $this->params->get('class_l');
-						if(!isset($parametri['style'])) $parametri['style'] = $this->params->get('style_l');
-						if(!isset($parametri['alternative'])) $parametri['alternative'] = $this->params->get('cs_b');
-						if(($parametri['player']!=$this->params->get('player_b') && $parametri['alternative']==1) || $parametri['alternative']==99){
-							if(!isset($parametri['t_width'])) $parametri['t_width'] = $this->params->get('width_nlb_bt');
-							if(!isset($parametri['t_height'])) $parametri['t_height'] = $this->params->get('height_nlb_bt');
-							if(!isset($parametri['width'])) $parametri['width'] = $this->params->get('width_nlb_b');
-							if(!isset($parametri['height'])) $parametri['height'] = $this->params->get('height_nlb_b');	
-							if(!isset($parametri['button'])) $parametri['button'] = $this->params->get('play_nlb_b');
-							if(!isset($parametri['sc_visual'])) $parametri['sc_visual'] = $this->params->get('sc_visual_nlb_b');
+					if(isset($parametri['player'])){
+						$parametri['player'] = strtolower($parametri['player']);
+						if($parametri['player']=='inline' || $parametri['player']==0){
+							$parametri['player'] = 0;
 						} else {
-							if(!isset($parametri['t_width'])) $parametri['t_width'] = $this->params->get('width_bt');
-							if(!isset($parametri['t_height'])) $parametri['t_height'] = $this->params->get('height_bt');
-							if(!isset($parametri['width'])) $parametri['width'] = $this->params->get('width_b');
-							if(!isset($parametri['height'])) $parametri['height'] = $this->params->get('height_b');
-							if(!isset($parametri['button'])) $parametri['button'] = $this->params->get('play_b');	
-							if(!isset($parametri['sc_visual'])) $parametri['sc_visual'] = $this->params->get('sc_visual_b');					
+							$parametri['player'] = 1;
 						}
-					} else {
+					}
+					
+					// Get the required parameters		
+					if(!isset($parametri['cache'])) $parametri['cache'] = $this->params->get('cache');
+					if($count>1){
+						if(!isset($parametri['display']) || $parametri['display']>1) $parametri['display'] = $this->params->get('links_g');
 						if($parametri['display']==1){
 							$parametri['player'] = 1;
+							if(!isset($parametri['class'])) $parametri['class'] = $this->params->get('class_lg');
+							if(!isset($parametri['style'])) $parametri['style'] = $this->params->get('style_lg');
+							if(!isset($parametri['separator'])) $parametri['separator'] = $this->params->get('separator');
+							if(!isset($parametri['width'])) $parametri['width'] = $this->params->get('width_lg');
+							if(!isset($parametri['height'])) $parametri['height'] = $this->params->get('height_lg');
+							if(!isset($parametri['sc_visual'])) $parametri['sc_visual'] = $this->params->get('sc_visual_lg');
+						} else {
+							if(!isset($parametri['player'])) $parametri['player'] = $this->params->get('player_g');
+							if(!isset($parametri['class'])) $parametri['class'] = $this->params->get('class_g');
+							if(!isset($parametri['style'])) $parametri['style'] = $this->params->get('style_g');
+							if(!isset($parametri['alternative'])) $parametri['alternative'] = $this->params->get('cs_g');
+							if(($parametri['player']!=$this->params->get('player_g') && $parametri['alternative']==1) || $parametri['alternative']==99){
+								if(!isset($parametri['width'])) $parametri['width'] = $this->params->get('width_nlb_g');
+								if(!isset($parametri['height'])) $parametri['height'] = $this->params->get('height_nlb_g');
+								if(!isset($parametri['t_width'])) $parametri['t_width'] = $this->params->get('width_nlb_gt');
+								if(!isset($parametri['t_height'])) $parametri['t_height'] = $this->params->get('height_nlb_gt');
+								if(!isset($parametri['button'])) $parametri['button'] = $this->params->get('play_nlb_g');	
+								if(!isset($parametri['break'])) $parametri['break'] = $this->params->get('break_nlb');
+								if(!isset($parametri['pages'])) $parametri['pages'] = $this->params->get('pages_nlb');
+								if(!isset($parametri['sc_visual'])) $parametri['sc_visual'] = $this->params->get('sc_visual_nlb_g');
+							} else {
+								if(!isset($parametri['width'])) $parametri['width'] = $this->params->get('width_g');
+								if(!isset($parametri['height'])) $parametri['height'] = $this->params->get('height_g');
+								if(!isset($parametri['t_width'])) $parametri['t_width'] = $this->params->get('width_gt');
+								if(!isset($parametri['t_height'])) $parametri['t_height'] = $this->params->get('height_gt');
+								if(!isset($parametri['button'])) $parametri['button'] = $this->params->get('play_g');	
+								if(!isset($parametri['break'])) $parametri['break'] = $this->params->get('break');
+								if(!isset($parametri['pages'])) $parametri['pages'] = $this->params->get('pages');
+								if(!isset($parametri['pages_results'])) $parametri['pages_results'] = $this->params->get('pages_results');
+								if(!isset($parametri['sc_visual'])) $parametri['sc_visual'] = $this->params->get('sc_visual_g');
+							}
+						}
+					} else {
+						if(!isset($parametri['display'])) $parametri['display'] = $this->params->get('display');
+						if($parametri['display']==2){
+							if(!isset($parametri['player'])) $parametri['player'] = $this->params->get('player_b');
 							if(!isset($parametri['class'])) $parametri['class'] = $this->params->get('class_l');
 							if(!isset($parametri['style'])) $parametri['style'] = $this->params->get('style_l');
-							if(!isset($parametri['width'])) $parametri['width'] = $this->params->get('width_l');
-							if(!isset($parametri['height'])) $parametri['height'] = $this->params->get('height_l');
-							if(!isset($parametri['sc_visual'])) $parametri['sc_visual'] = $this->params->get('sc_visual_l');
+							if(!isset($parametri['alternative'])) $parametri['alternative'] = $this->params->get('cs_b');
+							if(($parametri['player']!=$this->params->get('player_b') && $parametri['alternative']==1) || $parametri['alternative']==99){
+								if(!isset($parametri['t_width'])) $parametri['t_width'] = $this->params->get('width_nlb_bt');
+								if(!isset($parametri['t_height'])) $parametri['t_height'] = $this->params->get('height_nlb_bt');
+								if(!isset($parametri['width'])) $parametri['width'] = $this->params->get('width_nlb_b');
+								if(!isset($parametri['height'])) $parametri['height'] = $this->params->get('height_nlb_b');	
+								if(!isset($parametri['button'])) $parametri['button'] = $this->params->get('play_nlb_b');
+								if(!isset($parametri['sc_visual'])) $parametri['sc_visual'] = $this->params->get('sc_visual_nlb_b');
+							} else {
+								if(!isset($parametri['t_width'])) $parametri['t_width'] = $this->params->get('width_bt');
+								if(!isset($parametri['t_height'])) $parametri['t_height'] = $this->params->get('height_bt');
+								if(!isset($parametri['width'])) $parametri['width'] = $this->params->get('width_b');
+								if(!isset($parametri['height'])) $parametri['height'] = $this->params->get('height_b');
+								if(!isset($parametri['button'])) $parametri['button'] = $this->params->get('play_b');	
+								if(!isset($parametri['sc_visual'])) $parametri['sc_visual'] = $this->params->get('sc_visual_b');					
+							}
 						} else {
-							if(!isset($parametri['width'])) $parametri['width'] = $this->params->get('width');
-							if(!isset($parametri['height'])) $parametri['height'] = $this->params->get('height');
-							if(!isset($parametri['class'])) $parametri['class'] = $this->params->get('class');
-							if(!isset($parametri['style'])) $parametri['style'] = $this->params->get('style');
-							if(!isset($parametri['play'])) $parametri['play'] = $this->params->get('autoplay');
-							if(!isset($parametri['sc_visual'])) $parametri['sc_visual'] = $this->params->get('sc_visual_s');
+							if($parametri['display']==1){
+								$parametri['player'] = 1;
+								if(!isset($parametri['class'])) $parametri['class'] = $this->params->get('class_l');
+								if(!isset($parametri['style'])) $parametri['style'] = $this->params->get('style_l');
+								if(!isset($parametri['width'])) $parametri['width'] = $this->params->get('width_l');
+								if(!isset($parametri['height'])) $parametri['height'] = $this->params->get('height_l');
+								if(!isset($parametri['sc_visual'])) $parametri['sc_visual'] = $this->params->get('sc_visual_l');
+							} else {
+								if(!isset($parametri['width'])) $parametri['width'] = $this->params->get('width');
+								if(!isset($parametri['height'])) $parametri['height'] = $this->params->get('height');
+								if(!isset($parametri['class'])) $parametri['class'] = $this->params->get('class');
+								if(!isset($parametri['style'])) $parametri['style'] = $this->params->get('style');
+								if(!isset($parametri['play'])) $parametri['play'] = $this->params->get('autoplay');
+								if(!isset($parametri['sc_visual'])) $parametri['sc_visual'] = $this->params->get('sc_visual_s');
+							}
 						}
-					}
-				}
-				
-				$parametri['path'] = $vb_path;
-				if(!isset($parametri['sc_visual']) || $parametri['sc_visual']==2) $parametri['sc_visual'] = $this->params->get('sc_visual');
-				
-				if(!isset($parametri['pages']) || $parametri['pages']==0) $parametri['pages'] = 99999999;
-				
-				// Create video adapter object for each video
-				$video_objects = array();
-				foreach($videos as $video){
-					$video = $this->_getVideo($video, $parametri);
-					if($video) $video_objects[] = $video;
-				}
-				$videos = $video_objects;
-				
-				$count = count($videos);
-				
-				if($count){
-				
-					// Create pagination if needed
-					$start = 0;
-					$pagination = '';
-					if(($count>$parametri['pages']) && ($parametri['pages']!=0) && ($parametri['display']==0)){
-						
-						if(isset($url2[$co-1])) $start = (int)$url2[$co-1];
-						$path = '';
-						for($h = 0; $h<$co-1; $h++){
-							if(!isset($url2[$h])) $url2[$h] = '';
-							if($url2[$h]=='') $url2[$h]='0';
-							$path .= ','.$url2[$h];
-						}
-						$after = '';
-						for($h = $co; $h<count($url2); $h++){
-							if($url2[$h]=='') $url2[$h]='0';
-							$after .= ','.$url2[$h];
-						}
-						
-						jimport('joomla.html.pagination');
-						$pg = new JPagination($count, $start, $parametri['pages']);
-						$pg->prefix = 'vb';
-						$pagination = '<div class="pagination">';
-						if($parametri['pages_results']) $pagination .= '<p class="counter">'.$pg->getPagesCounter().'</p>';
-						$pagination .= $pg->getPagesLinks().'</div>';
-						$pagination = str_replace(array('vblimitstart=,', ',,'), array('vblimitstart=', ','), preg_replace('/vblimitstart=(\d+)/', 'vblimitstart='.$path.',$1'.$after, $pagination));
 					}
 					
-					// Create the appropriate display method code
-					$thumbnails = '';
-					if($count==1){
-						
-						if($parametri['display']==2){
-							$thumbnails .= $this->_videoBox($videos[0], $parametri, $co);
-						} elseif($parametri['display']==1){
-							$thumbnails .= $this->_videoLink($videos[0], $parametri, $co);
-						} else {
-							$thumbnails .= $this->_videoCode($videos[0], $parametri);
-						}
-						
-					} elseif($count > 1){
-						
-						if($parametri['display']==1){
-						
-							foreach($videos as $n => $video){
-								if($n < ($count-1)){
-									$thumbnails .= $this->_videoLink($video, $parametri, $co, $n, $parametri['separator']);
-								} else {
-									$thumbnails .= $this->_videoLink($video, $parametri, $co, $n);
-								}
+					$parametri['path'] = $vb_path;
+					if(!isset($parametri['sc_visual']) || $parametri['sc_visual']==2) $parametri['sc_visual'] = $this->params->get('sc_visual');
+					
+					if(!isset($parametri['pages']) || $parametri['pages']==0) $parametri['pages'] = 99999999;
+					
+					// Create video adapter object for each video
+					$video_objects = array();
+					foreach($videos as $video){
+						$video = $this->_getVideo($video, $parametri);
+						if($video) $video_objects[] = $video;
+					}
+					$videos = $video_objects;
+					
+					$count = count($videos);
+					
+					if($count){
+					
+						// Create pagination if needed
+						$start = 0;
+						$pagination = '';
+						if(($count>$parametri['pages']) && ($parametri['pages']!=0) && ($parametri['display']==0)){
+							
+							if(isset($url2[$co-1])) $start = (int)$url2[$co-1];
+							$path = '';
+							for($h = 0; $h<$co-1; $h++){
+								if(!isset($url2[$h])) $url2[$h] = '';
+								if($url2[$h]=='') $url2[$h]='0';
+								$path .= ','.$url2[$h];
+							}
+							$after = '';
+							for($h = $co; $h<count($url2); $h++){
+								if($url2[$h]=='') $url2[$h]='0';
+								$after .= ','.$url2[$h];
 							}
 							
-						} else {
-							$thumbnails .= '<div style="'.$parametri['style'];
-							if($parametri['break']!=0) $thumbnails.= ' max-width: '.(($parametri['t_width'] + 30) * $parametri['break'] - 20).'px;';
-							$thumbnails.= '" class="vb_gallery_frame '.$parametri['class'].'"><ul class="vb_video">';
-							for($n = $start; $n < ($start + $parametri['pages']); $n++){
-								if(isset($videos[$n])){
-									$thumbnails .= $this->_videoThumb($videos[$n], $parametri, $co, $n);
-								} else {
-									break;
-								}
-							}
-							$thumbnails .= '</ul></div>';
+							jimport('joomla.html.pagination');
+							$pg = new JPagination($count, $start, $parametri['pages']);
+							$pg->prefix = 'vb';
+							$pagination = '<div class="pagination">';
+							if($parametri['pages_results']) $pagination .= '<p class="counter">'.$pg->getPagesCounter().'</p>';
+							$pagination .= $pg->getPagesLinks().'</div>';
+							$pagination = str_replace(array('vblimitstart=,', ',,'), array('vblimitstart=', ','), preg_replace('/vblimitstart=(\d+)/', 'vblimitstart='.$path.',$1'.$after, $pagination));
 						}
 						
+						// Create the appropriate display method code
+						$thumbnails = '';
+						if($count==1){
+							
+							if($parametri['display']==2){
+								$thumbnails .= $this->_videoBox($videos[0], $parametri, $co);
+							} elseif($parametri['display']==1){
+								$thumbnails .= $this->_videoLink($videos[0], $parametri, $co);
+							} else {
+								$thumbnails .= $this->_videoCode($videos[0], $parametri);
+							}
+							
+						} elseif($count > 1){
+							
+							if($parametri['display']==1){
+							
+								foreach($videos as $n => $video){
+									if($n < ($count-1)){
+										$thumbnails .= $this->_videoLink($video, $parametri, $co, $n, $parametri['separator']);
+									} else {
+										$thumbnails .= $this->_videoLink($video, $parametri, $co, $n);
+									}
+								}
+								
+							} else {
+								$thumbnails .= '<div style="'.$parametri['style'];
+								if($parametri['break']!=0) $thumbnails.= ' max-width: '.(($parametri['t_width'] + 30) * $parametri['break'] - 20).'px;';
+								$thumbnails.= '" class="vb_gallery_frame '.$parametri['class'].'"><ul class="vb_video">';
+								for($n = $start; $n < ($start + $parametri['pages']); $n++){
+									if(isset($videos[$n])){
+										$thumbnails .= $this->_videoThumb($videos[$n], $parametri, $co, $n);
+									} else {
+										break;
+									}
+								}
+								$thumbnails .= '</ul></div>';
+							}
+							
+						}
+						
+						// Insert the code into the content
+						$buffer = preg_replace($regex, str_replace('&', '&amp;', $thumbnails).$pagination, $buffer, 1);
 					}
-					
-					// Insert the code into the content
-					$buffer = preg_replace($regex, str_replace('&', '&amp;', $thumbnails).$pagination, $buffer, 1);
 				}
 			}
 			
