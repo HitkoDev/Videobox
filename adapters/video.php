@@ -30,10 +30,12 @@ class Video {
 	function getThumb($id = false){
 		if($id === false) $id = $this->id;
 		$ext = array('.png', '.jpg', '.jpeg', '.gif');
+		$folder = substr(dirname(__FILE__), 0, -8);
+		$file = $folder . 'thumbs/' . $id;
 		foreach($ext as $ex){
-			if(is_file('thumbs/' . $id . $ex)){
-				$im = @getimagesize('thumbs/' . $id . $ex);
-				if($im !== false) return array('thumbs/' . $id . $ex, $im[2]);
+			if(is_file($file . $ex)){
+				$im = @getimagesize($file . $ex);
+				if($im !== false) return array($file . $ex, $im[2]);
 			}
 		}
 		return false;

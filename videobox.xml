@@ -7,7 +7,7 @@
     <copyright>This extension in released under the GNU/GPL License - http://www.gnu.org/copyleft/gpl.html</copyright>
     <authorEmail>development@hitko.si</authorEmail>
     <authorUrl>http://hitko.eu/</authorUrl>
-    <version>4.0.0 RC4</version>
+    <version>4.0.0 RC5</version>
     <description>PLG_SYSTEM_VIDEOBOX_XML_DESCRIPTION</description>
     <files>
 		<filename plugin="videobox">index.html</filename>
