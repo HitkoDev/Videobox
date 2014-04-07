@@ -12,8 +12,18 @@
 (function vb($) {
 
 	// Global variables, accessible to videobox only
-	var win = $(window), options, videos, activevideo = -1, activeURL, compatibleOverlay, middle, centerWidth, centerHeight,
-		ie6 = !window.XMLHttpRequest, hiddenElements = [], documentElement = document.documentElement,
+	var win = $(window), videos, activevideo = -1, activeURL, compatibleOverlay, middle, centerWidth, centerHeight, ie6 = !window.XMLHttpRequest, hiddenElements = [], documentElement = document.documentElement,
+	
+	options = defaults = {
+		overlayOpacity: 0.8,			// 1 is opaque, 0 is completely transparent (change the color in the CSS file)
+		overlayFadeDuration: 400,		// Duration of the overlay fade-in and fade-out animations (in milliseconds)
+		resizeDuration: 400,			// Duration of each of the box resize animations (in milliseconds)
+		resizeEasing: "swing",			// "swing" is jQuery's default easing
+		videoWidth: 640,				// Default width of videobox
+		videoHeight: 363,				// Default height of videobox
+		videoFadeDuration: 400,			// Duration of the video fade-in animation (in milliseconds)
+		captionAnimationDuration: 400,	// Duration of the caption animation (in milliseconds)
+	},
 
 	// DOM elements
 	overlay, center, video, bottomContainer, bottom, caption, button;
@@ -48,16 +58,7 @@
 
 	// Open videobox with the specified parameters
 	$.videobox = function(_videos, startvideo, _options) {
-		options = $.extend({
-			overlayOpacity: 0.8,			// 1 is opaque, 0 is completely transparent (change the color in the CSS file)
-			overlayFadeDuration: 400,		// Duration of the overlay fade-in and fade-out animations (in milliseconds)
-			resizeDuration: 400,			// Duration of each of the box resize animations (in milliseconds)
-			resizeEasing: "swing",			// "swing" is jQuery's default easing
-			videoWidth: 640,				// Default width of videobox
-			videoHeight: 363,				// Default height of videobox
-			videoFadeDuration: 400,			// Duration of the video fade-in animation (in milliseconds)
-			captionAnimationDuration: 400,	// Duration of the caption animation (in milliseconds)
-		}, _options);
+		options = $.extend(defaults, _options);
 
 		// The function is called for a single video, with URL and Title as first two arguments
 		if (typeof _videos == "string") {
@@ -66,6 +67,7 @@
 		}
 		
 		$.vbi_close();
+		$.cfr_close();
 
 		middle = win.scrollTop() + (win.height() / 2);
 		centerWidth = 0;
@@ -202,8 +204,14 @@
 (function vbi($) {
 
 	// Global variables, accessible to vbinline only
-	var win = $(window), options, videos, activevideo = -1, activeURL,
-		ie6 = !window.XMLHttpRequest, hiddenElements = [],
+	var win = $(window), videos, activevideo = -1, activeURL, ie6 = !window.XMLHttpRequest, hiddenElements = [],
+	
+	options = defaults = {
+		resizeDuration: 400,		// Duration of each of the box resize animations (in milliseconds)
+		resizeEasing: "swing",		// "swing" is jQuery's default easing
+		videoWidth: 640,			// Default width of vbinline player
+		videoHeight: 363,			// Default height of vbinline player
+	},
 
 	// DOM elements
 	hidden, video, caption, button, player, videoCont, hiddenVideo;
@@ -237,12 +245,7 @@
 
 	// Open vbinline with the specified parameters
 	$.vbinline = function(_videos, startvideo, _options){
-		options = $.extend({
-			resizeDuration: 400,		// Duration of each of the box resize animations (in milliseconds)
-			resizeEasing: "swing",		// "swing" is jQuery's default easing
-			videoWidth: 640,			// Default width of vbinline player
-			videoHeight: 363,			// Default height of vbinline player
-		}, _options);
+		options = $.extend(defaults, _options);
 
 		// The function is called for a single video, with URL and Title as first two arguments
 		if (typeof _videos == "string") {
@@ -251,6 +254,7 @@
 		}
 		
 		$.vb_close();
+		$.cfr_close();
 		
 		vbisetup(1);
 

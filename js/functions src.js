@@ -5,7 +5,99 @@
 	Website		http://hitko.eu/software/videobox
 */
 
-(function cfr(b){var c=b(window),a=!window.XMLHttpRequest,f=[];b(function i(){b("body").append(b([overlay=b('<div id="cfrOverlay" />').click(b.cfr_close)[0],center=b('<div id="cfrCenter" />')[0]]).css("display","none"));message=b('<div id="cfrContent" />').appendTo(center)[0];close=b('<div id="cfrClose" />').click(b.cfr_close).appendTo(center)[0]});b.cfr=function(k,j){options=b.extend({overlayOpacity:0.8,overlayFadeDuration:400,resizeDuration:400,resizeEasing:"swing",width:400},j);message.innerHTML=k;middle=c.scrollTop()+(c.height()/2);compatibleOverlay=a||(overlay.currentStyle&&(overlay.currentStyle.position!="fixed"));if(compatibleOverlay){overlay.style.position="absolute"}b(overlay).css("opacity",options.overlayOpacity).fadeIn(options.overlayFadeDuration);b(overlay).unbind("click").click(b.cfr_close);b(close).unbind("click").click(b.cfr_close);d();e()};b.cfr_close=function(){b(overlay).stop().fadeOut(options.overlayFadeDuration,h);g();return false};function h(j){if(j){b("object").add(a?"select":"embed").each(function(l,m){f[l]=[m,m.style.visibility];m.style.visibility="hidden"})}else{b.each(f,function(l,m){m[0].style.visibility=m[1]});f=[]}var k=j?"bind":"unbind";c[k]("scroll resize",d)}function d(){var k=c.scrollLeft(),j=c.width();b(center).css("left",k+(j/2));if(compatibleOverlay){b(overlay).css({left:k,top:c.scrollTop(),width:j,height:c.height()})}}function e(){b(center).show();centerWidth=b(center).width();if(centerWidth>c.width()){centerWidth=c.width()}if(centerWidth>options.width){centerWidth=options.width}centerHeight=b(center).height();var j=Math.max(0,middle-(centerHeight/2));b(center).animate({top:j,marginLeft:-centerWidth/2},options.resizeDuration,options.resizeEasing);if(centerWidth!=b(center).width()){b(center).css("max-width",centerWidth)}b(message).css("width",(centerWidth-20))}function g(){b(center).hide();b(message).css("width","")}})(jQuery);
+(function cfr($) {
+	
+	var win = $(window), ie6 = !window.XMLHttpRequest, hiddenElements = [], middle, compatibleOverlay, centerWidth, centerHeight,
+	
+	options = defaults = {
+		overlayOpacity: 0.8,			// 1 is opaque, 0 is completely transparent (change the color in the CSS file)
+		overlayFadeDuration: 400,		// Duration of the overlay fade-in and fade-out animations (in milliseconds)
+		resizeDuration: 400,			// Duration of each of the box resize animations (in milliseconds)
+		resizeEasing: "swing",			// "swing" is jQuery's default easing
+		width: 400,						// Default width of videobox
+	},
+	
+	// DOM elements
+	overlay, center, message, close;
+
+	$(function cfrl() {
+		$("body").append(
+			$([
+				overlay = $('<div id="cfrOverlay" />').click($.cfr_close)[0],
+				center = $('<div id="cfrCenter" />')[0]
+			]).css("display", "none")
+		);
+		
+		message = $('<div id="cfrContent" />').appendTo(center)[0];
+		close = $('<div id="cfrClose" />').click($.cfr_close).appendTo(center)[0];
+	});
+	
+	$.cfr = function(msg, _options){
+		options = $.extend(defaults, _options);
+		
+		$.vb_close();
+		$.vbi_close();
+		
+		message.innerHTML = msg;
+		
+		middle = win.scrollTop() + (win.height() / 2);
+		compatibleOverlay = ie6 || (overlay.currentStyle && (overlay.currentStyle.position != "fixed"));
+		if (compatibleOverlay) overlay.style.position = "absolute";
+		$(overlay).css("opacity", options.overlayOpacity).fadeIn(options.overlayFadeDuration);
+		$(overlay).unbind("click").click($.cfr_close);
+		$(close).unbind("click").click($.cfr_close);
+		cfrPosition();
+		animateCenter();
+	}
+
+	$.cfr_close = function() {
+		$(overlay).stop().fadeOut(options.overlayFadeDuration, cfrsetup);
+		cfrstop();
+		return false;
+	}
+
+	function cfrsetup(open) {
+		if (open) {
+			$("object").add(ie6 ? "select" : "embed").each(function(index, el) {
+				hiddenElements[index] = [el, el.style.visibility];
+				el.style.visibility = "hidden";
+			});
+		} else {
+			$.each(hiddenElements, function(index, el) {
+				el[0].style.visibility = el[1];
+			});
+			hiddenElements = [];
+		}
+		var fn = open ? "bind" : "unbind";
+		win[fn]("scroll resize", cfrPosition);
+	}
+
+	function cfrPosition() {
+		var l = win.scrollLeft(), w = win.width();
+		$(center).css("left", l + (w / 2));
+		if (compatibleOverlay) $(overlay).css({left: l, top: win.scrollTop(), width: w, height: win.height()});
+	}
+	
+	function animateCenter(){
+		
+		$(center).show();
+		centerWidth = $(center).width();
+		if(centerWidth > win.width()) centerWidth = win.width();
+		if(centerWidth > options.width) centerWidth = options.width;
+		centerHeight = $(center).height();
+		var top = Math.max(0, middle - (centerHeight / 2));
+		$(center).animate({top: top, marginLeft: -centerWidth/2}, options.resizeDuration, options.resizeEasing);
+		if(centerWidth != $(center).width()) $(center).css("max-width", centerWidth);
+		$(message).css("width", (centerWidth - 20));
+		
+	}
+	
+	function cfrstop() {
+		$(center).hide();
+		$(message).css("width", "");
+	}
+	
+})(jQuery);
 
 /**
 	jQuery.contextMenu - Show a custom context when right clicking something
