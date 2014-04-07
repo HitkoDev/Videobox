@@ -28,8 +28,11 @@ class Video {
 	}
 	
 	function getID(){
-		if($this->title != '') return ('id="_vbVideo_' . crc32($this->title) . '"');
-		return '';
+		if($this->title != ''){
+			return ('id="_vbVideo_' . crc32($this->title) . '"');
+		} else {
+			return ('id="_vbVideo_' . crc32($this->id) . '"');
+		}
 	}
 	
 	function getThumb($id = false){
