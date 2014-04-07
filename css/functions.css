@@ -1,0 +1,79 @@
+#cfrOverlay {
+	position: fixed;
+	z-index: 9999;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #000;
+	cursor: pointer;
+}
+
+#cfrCenter {
+	position: absolute;
+	z-index: 9999;
+	overflow: hidden;
+	background-color: #fff;
+}
+
+#cfrContent {
+	padding: 10px;
+	display: inline-block;
+	line-height: 22px;
+}
+
+#cfrClose {
+	display: inline-block;
+	float: right;
+	width: 66px;
+	height: 29px;
+	background: transparent url(closelabel.gif) no-repeat center;
+	outline: none;
+	padding: 10px;
+	cursor: pointer;
+}
+
+#cfrContent input {
+	margin: 0 -6px;
+	padding: 5px;
+	font-size: 15px;
+	display: block;
+	width: 100%;
+	border: 1px solid #ccc;
+	cursor: auto;
+}
+
+#cfrContent .input-container {
+	padding: 0 6px;
+}
+
+ul#context-menu {
+	padding: 0;
+	margin: 0;
+	background: #fff;
+	box-shadow: 0 0 0 4px #FFF, 0 0 0 5px #CCC, 2px 2px 5px 6px rgba(0,0,0,0.2);
+}
+
+ul#context-menu>li {
+	display: block;
+	margin: 0;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 11.5px;
+	padding: 4px 7px;
+	max-width: 200px;
+	min-width: 150px;
+}
+
+ul#context-menu>li>a {
+	text-decoration: none;
+	color: #13242a;
+	line-height: 16px;
+}
+
+ul#context-menu>li:hover {
+	background: #005580;
+}
+
+ul#context-menu>li:hover>a {
+	color: #fff;
+}

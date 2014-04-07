@@ -2,10 +2,10 @@
 /*------------------------------------------------------------------------
 # plg_videobox - Videobox
 # ------------------------------------------------------------------------
-# author    HitkoDev
-# copyright Copyright (C) 2012 hitko.si. All Rights Reserved.
-# @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
-# Websites: http://hitko.eu/software/videobox
+# author	HitkoDev
+# copyright	Copyright (C) 2014 HitkoDev. All Rights Reserved.
+# @license	http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
+# Websites:	http://hitko.eu/software/videobox
 -------------------------------------------------------------------------*/
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted Access' );
@@ -20,10 +20,12 @@ class plgSystemVideobox extends JPlugin
 		$document = JFactory::getDocument();
 		if($app->isSite() && method_exists($document, 'addCustomTag')){
 			$document->addCustomTag('<link rel="stylesheet" href="'.JURI::root().'/plugins/system/videobox/css/videobox.css" type="text/css" media="screen" />');
+			$document->addCustomTag('<link rel="stylesheet" href="'.JURI::root().'/plugins/system/videobox/css/functions.css" type="text/css" media="screen" />');
 			if($this->params->get('loadjq')=='1'){
 				$document->addCustomTag('<script type="text/javascript" src="'.JURI::root().'/plugins/system/videobox/js/jquery.min.js"></script><script type="text/javascript">jQuery.noConflict();</script>');
 			}
 			$document->addCustomTag('<script type="text/javascript" src="'.JURI::root().'/plugins/system/videobox/js/videobox.js"></script>');
+			$document->addCustomTag('<script type="text/javascript" src="'.JURI::root().'/plugins/system/videobox/js/functions.js"></script>');
 		}
 	}
 
@@ -357,8 +359,7 @@ class plgSystemVideobox extends JPlugin
 	
 	protected function _videoCode($video, $params) {
 		$src = $video->getPlayerLink($params['play']);
-		$responsive = '';
-		$html  = '<div class="'.$responsive.'"><div owidth="'.$params['width'].'" oheight="'.$params['height'].'" style="width: '.$params['width'].'px; height: '.$params['height'].'px; max-width: 100%; '.$params['style'].'" class="vb_videoFrame '.$params['class'].'"><iframe src="'.$src.'" frameborder="0" allowfullscreen oallowfullscreen msallowfullscreen webkitallowfullscreen mozallowfullscreen style="display: block; width: 100%; height: 100%;"></iframe></div></div>';
+		$html  = '<div style="width: '.$params['width'].'px; height: '.$params['height'].'px; max-width: 100%; '.$params['style'].'" class="vb_videoFrame '.$params['class'].'"><iframe src="'.$src.'" frameborder="0" allowfullscreen oallowfullscreen msallowfullscreen webkitallowfullscreen mozallowfullscreen style="display: block; width: 100%; height: 100%;"></iframe></div>';
 		return $html;
 	}
 	
@@ -366,7 +367,7 @@ class plgSystemVideobox extends JPlugin
 		$src = $video->getPlayerLink(true);
 		$rel = 'videobox';
 		if($params['player']=='0') $rel = 'vbinline';
-		$html = '<a class="'.$params['class'].' vb_video_link_a" style="'.$params['style'].'" href="'.$src.'" rel="'.$rel.'.sig'.$i.'" title="' . $video->getTitle() . '" videowidth="'.$params['width'].'" videoheight="'.$params['height'].'">' . $video->getTitle(true) . '</a>'.$separator;
+		$html = '<a class="'.$params['class'].' vb_video_link_a" ' . $video->getID() . ' style="'.$params['style'].'" href="'.$src.'" rel="'.$rel.'.sig'.$i.'" title="' . $video->getTitle() . '" videowidth="'.$params['width'].'" videoheight="'.$params['height'].'">' . $video->getTitle(true) . '</a>'.$separator;
 		return $html;
 	}
 
@@ -382,7 +383,7 @@ class plgSystemVideobox extends JPlugin
 			$v_height = $params['t_height'];
 		}
 		$thumb  = '<li class="vb_video_cont vb_gal" style="width:'.($params['t_width'] + 10).'px;">
-			<a href="'.$src.'" rel="'.$rel.'.sig'.$i.'" title="' . $video->getTitle() . '" videowidth="'.$v_width.'" videoheight="'.$v_height.'">
+			<a href="'.$src.'" rel="'.$rel.'.sig'.$i.'" ' . $video->getID() . ' title="' . $video->getTitle() . '" videowidth="'.$v_width.'" videoheight="'.$v_height.'">
 				<img src="'.$img.'" id="vb_thumb_'.$i.'_'.$n.'" alt="' . $video->getTitle() . '" />
 				<span class="vb_video_title" >' . $video->getTitle() . '</span>
 			</a>
@@ -396,7 +397,7 @@ class plgSystemVideobox extends JPlugin
 		$rel = 'videobox';
 		if($params['player']=='0') $rel = 'vbinline';		
 		$thumb  = '<span class="vb_video_cont vb_box '.$params['class'].'" style="'.$params['style'].'">
-			<a href="'.$src.'" rel="'.$rel.'.sib'.$i.'" title="' . $video->getTitle() . '" videowidth="'.$params['width'].'" videoheight="'.$params['height'].'">
+			<a href="'.$src.'" rel="'.$rel.'.sib'.$i.'" ' . $video->getID() . ' title="' . $video->getTitle() . '" videowidth="'.$params['width'].'" videoheight="'.$params['height'].'">
 				<img src="'.$img.'" id="vb_thumb_'.$i.'_'.$n.'" alt="' . $video->getTitle() . '" />
 				<span class="vb_video_title" style="max-width:'.$params['t_width'].'px;" >' . $video->getTitle() . '</span>
 			</a>

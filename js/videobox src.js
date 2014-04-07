@@ -1,5 +1,8 @@
-/**	@license
-	Videobox v2 - jQuery lightbox clone for displaying iframe videos
+/**	
+	author		HitkoDev
+	copyright	Copyright (C) 2014 HitkoDev All Rights Reserved.
+	@license	http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
+	Website		http://hitko.eu/software/videobox
 	Based on Slimbox 2.04 
 		(c) 2007-2010 Christophe Beyls <http://www.digitalia.be>
 		MIT-style license.
@@ -383,109 +386,52 @@
 
 })(jQuery);
 
-(function vbr($) {
-	
-	$.fn.responsive = function(){
-			
-		for(j = 0; j < this.length; j++){
-			
-			
-			var line_width = $(this[j]).width();
-			var items = $(this[j]).children();
-			var i = 0;
-			while(i<items.length){
-				
-				var line = new Array();
-				var l_width = 0;
-				var height = 0;
-				while((l_width<=line_width)&&(i<items.length)){
-					
-					var item_w = $(items[i]).outerWidth(true);
-					$(items[i]).height('auto');
-					var item_h = $(items[i]).height();
-					if((l_width+item_w)<=line_width){
-						l_width += item_w;
-						line.push(i);
-						if(item_h>height) height = item_h;
-						i++;
-					} else {
-						if((l_width==0)&&(item_w>line_width)) i++;
-						break;
-					}
-					
-				}
-				
-				for (index = 0; index < line.length; ++index) {
-					$(items[line[index]]).height(height);
-				}
-				
-			}
-		
-		}
-		
-	};
-	
-	$.fn.responsivePlayer = function(){
-	
-		for(i = 0; i < this.length; i++){
-	
-			var item = this[i];
-			var width = $(item).width();
-			var player = $(item).children()[0];
-			
-			var p_width = parseInt(player.getAttribute('owidth'));
-			var p_height = parseInt(player.getAttribute('oheight'));
-			
-			if(p_width>width){
-				
-				var new_w = width;
-				var new_h = (p_height*width)/p_width;
-				console.log(new_w);
-				console.log(new_h);
-				
-				$(player).width(new_w);
-				$(player).height(new_h);
-				
-			}
-		
-		}
-	
-	}
-	
-	$.fn.windowResize = function(){
-				
-		$(window).resize(function(){
-			$('.responsive_gird').responsive();
-			$('.responsive_player').responsivePlayer();
-		});
-		
-	}
-	
-})(jQuery);
-
-// AUTOLOAD CODE BLOCK (MAY BE CHANGED OR REMOVED)
 jQuery(function vb($) {
+	
+	// AUTOLOAD FOR VIDEOBOX
 	$("a[rel^='videobox']").videobox({ /* Put custom options here */ }, function vbl(el) {
 		return [el.href, el.getAttribute("title"), el.getAttribute("videowidth"), el.getAttribute("videoheight")];
 	}, function vbl(el) {
 		return (this == el) || ((this.rel.length > 8) && (this.rel == el.rel));
 	});
-});
-
-// AUTOLOAD FOR INLINE PLAYER
-jQuery(function vbi($) {
+	
+	// AUTOLOAD FOR INLINE PLAYER
 	$("a[rel^='vbinline']").vbinline({ /* Put custom options here */ }, function vbil(el) {
 		return [el.href, el.getAttribute("title"), el.getAttribute("videowidth"), el.getAttribute("videoheight"), $(el)];
 	}, function vbil(el) {
 		return (this == el) || ((this.rel.length > 8) && (this.rel == el.rel));
 	});
-});
-
-// AUTOLOAD FOR RESPONSIVE GRID
-jQuery(function vbr($){
-	$(window).load(function(){
-		$('.responsive_gird').responsive();
-		$('.responsive_player').responsivePlayer();
-		$(window).windowResize();
+	
+	// START LINKED PLAYER
+	$(document).ready(function() {
+		
+		// Add context menu for lightbox / inline videos
+		$.each($("[id^='_vbVideo_']"), function(i, v){
+			$(v).contextMenu("context-menu", {
+				"Link for this video": {
+					click: function(){
+						$.cfr("<div class=\"input-container\"><input readonly onclick=\"select()\" value=\"" + document.location.href.match(/(^[^#]*)/)[0] + "#" + v.id.substring(1) + "\" /></div>", {});
+					},
+					klass: "menu-item"
+				}
+			});
+		});
+		
+		jumpHash();
 	});
+	
+	// Open the linked player
+	function jumpHash(){
+		if(window.location.hash){
+			el = $('#_' + window.location.hash.substring(1))[0];
+			if(el && (el.rel.indexOf('videobox') == 0 || el.rel.indexOf('vbinline') == 0)){
+				el.click();
+			}
+		}
+	}
+	
+	if("onhashchange" in window){
+		$(window).bind('hashchange', jumpHash);
+	}
+	
 });

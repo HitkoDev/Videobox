@@ -2,10 +2,10 @@
 /*------------------------------------------------------------------------
 # plg_videobox - Videobox
 # ------------------------------------------------------------------------
-# author    HitkoDev
-# copyright Copyright (C) 2012 hitko.si. All Rights Reserved.
-# @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
-# Websites: http://hitko.eu/software/videobox
+# author	HitkoDev
+# copyright	Copyright (C) 2014 HitkoDev. All Rights Reserved.
+# @license	http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
+# Websites:	http://hitko.eu/software/videobox
 -------------------------------------------------------------------------*/
 // This file MUST be directly accessible because it provides the palyer for HTML5 media which is inserted in iframe on the page
 // It doesn't connect with any core files, exstensions, databases or anything. It recieves URL of the media file to be inserted and creates a player that can be inserted in an iframe later on
@@ -70,17 +70,21 @@ $output = '<!doctype html>
 	<head>
 		<script type="text/javascript" src="js/jquery.min.js"></script>
 		<script type="text/javascript" src="js/video.js"></script>
-		<script type="text/javascript">
+		<script type="text/javascript">			
 			var sou = "";
 			var sources = '.$sources.';
 			var n = 0;
 			var str = "";
 			var onl = false;
+			var video;
 			
 			function loadPlayer(){
-				var video = videojs(\'vb-player\', {}, function(){});
+				video = videojs(\'vb-player\', {}, function(){});
 				video.on("loadedmetadata", function(){
 					this.currentTime('.$start.');
+				});
+				jQuery.getScript("js/functions.js", function(data, textStatus, jqxhr){
+					loadMenu();
 				});
 			}
 			
@@ -108,11 +112,45 @@ $output = '<!doctype html>
 				});
 			}
 			
+			function loadMenu(){
+				$("#vb-player").contextMenu("context-menu", {
+					"Copy video URL": {
+						click: function(){
+							video.pause();
+							$.cfr("<div class=\"input-container\"><input readonly onclick=\"select()\" value=\"" + getPlayerLink(1, 0) + "\" /></div>", {});
+						},
+						klass: "menu-item"
+					},
+					"Copy video URL at current time": {
+						click: function(){
+							video.pause();
+							$.cfr("<div class=\"input-container\"><input readonly onclick=\"select()\" value=\"" + getPlayerLink(1, 1) + "\" /></div>", {});
+						},
+						klass: "menu-item"
+					},
+					"Copy embed code": {
+						click: function(){
+							video.pause();
+							$.cfr("<div class=\"input-container\"><input readonly onclick=\"select()\" value=\"' . htmlentities('<iframe width="640" height="360" src="') . '" + getPlayerLink(0, 0) + "' . htmlentities('" frameborder="0" allowfullscreen></iframe>') . '\" /></div>", {});
+						},
+						klass: "menu-item"
+					}
+				});
+			}
+			
+			function getPlayerLink(autoplay, time){
+				var link = [location.protocol, "//", location.host, location.pathname.replace(/\/\//g, "/")].join("") + "?video=' . rawurlencode($video) . '&poster=' . rawurlencode(rawurldecode($poster)) . '";
+				if(autoplay) link += "&autoplay=1";
+				if(time) link += "&start=" + parseInt(video.currentTime());
+				return link;
+			}
+			
 			for (key in sources){
 				urlExists(sources[key]);
 			}
 		</script>
 		<link href="css/video-js.min.css" rel="stylesheet" type="text/css">
+		<link href="css/functions.css" rel="stylesheet" type="text/css">
 		<script>videojs.options.flash.swf = "video-js.swf";</script>
 	</head>
 	<body onload="document.body.innerHTML = str; onl = true; if(n==sources.length) loadPlayer();"></body>

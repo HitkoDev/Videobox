@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="plugin" version="2.5" group="system" method="upgrade">
+<extension type="plugin" version="3.1" group="system" method="upgrade">
     <name>PLG_SYSTEM_VIDEOBOX</name>
 	<license>http://www.gnu.org/licenseses/gpl-2.0.html GNU/GPL</license>
     <author>HitkoDev</author>
@@ -7,7 +7,7 @@
     <copyright>This extension in released under the GNU/GPL License - http://www.gnu.org/copyleft/gpl.html</copyright>
     <authorEmail>development@hitko.si</authorEmail>
     <authorUrl>http://hitko.eu/</authorUrl>
-    <version>4.0.0 RC5</version>
+    <version>4.0.0 RC6</version>
     <description>PLG_SYSTEM_VIDEOBOX_XML_DESCRIPTION</description>
     <files>
 		<filename plugin="videobox">index.html</filename>

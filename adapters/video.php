@@ -2,10 +2,10 @@
 /*------------------------------------------------------------------------
 # plg_videobox - Videobox
 # ------------------------------------------------------------------------
-# author    HitkoDev
-# copyright Copyright (C) 2012 hitko.si. All Rights Reserved.
-# @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
-# Websites: http://hitko.eu/software/videobox
+# author	HitkoDev
+# copyright	Copyright (C) 2014 HitkoDev. All Rights Reserved.
+# @license	http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
+# Websites:	http://hitko.eu/software/videobox
 -------------------------------------------------------------------------*/
 // no direct access
 defined( '_JEXEC' ) or die( 'Restricted Access' );
@@ -25,6 +25,11 @@ class Video {
 		} else {
 			return $this->title; 
 		}
+	}
+	
+	function getID(){
+		if($this->title != '') return ('id="_vbVideo_' . crc32($this->title) . '"');
+		return '';
 	}
 	
 	function getThumb($id = false){
