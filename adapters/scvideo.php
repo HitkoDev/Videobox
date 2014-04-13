@@ -14,6 +14,16 @@ include_once('video.php');
 
 class scVideo extends Video {
 	
+	/*
+	*	$id - link to the song (https://soundcloud.com/alestorm/shipwrecked)
+	*/
+	static function adapterSwitch($id, $title, $offset, $vb){
+		if(strpos($id, 'soundcloud')!==false){
+			return new self($id, $title, $offset, $vb->parametri['sc_visual']);
+		}
+		return false;
+	}
+	
 	function __construct($id, $title = '', $offset = 0, $visual = true){
 		parent::__construct($id, $title, $offset);
 		$this->visual = $visual;

@@ -7,8 +7,9 @@
     <copyright>This extension in released under the GNU/GPL License - http://www.gnu.org/copyleft/gpl.html</copyright>
     <authorEmail>development@hitko.si</authorEmail>
     <authorUrl>http://hitko.eu/</authorUrl>
-    <version>4.0.0 RC6</version>
+    <version>4.0.0 RC7</version>
     <description>PLG_SYSTEM_VIDEOBOX_XML_DESCRIPTION</description>
+	<scriptfile>videobox.script.php</scriptfile>
     <files>
 		<filename plugin="videobox">index.html</filename>
 		<filename plugin="videobox">player.php</filename>
@@ -52,12 +53,13 @@
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
 				</field>
                 <field name="tag" type="text" default="videobox" size="30" label="PLG_SYSTEM_VIDEOBOX_TAG" description="PLG_SYSTEM_VIDEOBOX_TAGDESC" />
+				<field name="adapters" type="filelist" required="true" default="" multiple="true" directory="plugins/system/videobox/adapters" hide_default="true" hide_none="true" filter="" exclude="^video\.php$|^index\.html$" label="PLG_SYSTEM_VIDEOBOX_ADAPTERS" description="PLG_SYSTEM_VIDEOBOX_ADAPTERSDESC" />
             </fieldset>
             <fieldset name="VIDEOBOX_DIRECT">
                 <field name="width" type="text" default="640" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_D" description="PLG_SYSTEM_VIDEOBOX_WIDTH_DDESC" />
                 <field name="height" type="text" default="360" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_D" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_DDESC" />
                 <field name="class" type="text" default="" size="30" label="PLG_SYSTEM_VIDEOBOX_CLASS_D" description="PLG_SYSTEM_VIDEOBOX_CLASS_DDESC" />
-                <field name="style" type="textarea" default="" size="5" label="PLG_SYSTEM_VIDEOBOX_STYLE_D" description="PLG_SYSTEM_VIDEOBOX_STYLE_DDESC" />
+                <field name="style" type="textarea" default="" rows="5" label="PLG_SYSTEM_VIDEOBOX_STYLE_D" description="PLG_SYSTEM_VIDEOBOX_STYLE_DDESC" />
                 <field name="autoplay" type="radio" default="0" size="5" label="PLG_SYSTEM_VIDEOBOX_AUTOPLAY" description="PLG_SYSTEM_VIDEOBOX_AUTOPLAYDESC" >
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
@@ -78,7 +80,7 @@
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
 				</field>
                 <field name="class_b" type="text" default="" size="30" label="PLG_SYSTEM_VIDEOBOX_CLASS" description="PLG_SYSTEM_VIDEOBOX_CLASSDESC" />
-                <field name="style_b" type="textarea" default="" size="5" label="PLG_SYSTEM_VIDEOBOX_STYLE" description="PLG_SYSTEM_VIDEOBOX_STYLEDESC" />
+                <field name="style_b" type="textarea" default="" rows="5" label="PLG_SYSTEM_VIDEOBOX_STYLE" description="PLG_SYSTEM_VIDEOBOX_STYLEDESC" />
                 <field name="sc_visual_b" type="radio" default="2" size="5" label="PLG_SYSTEM_VIDEOBOX_SC_VISUAL" description="PLG_SYSTEM_VIDEOBOX_SC_VISUALDESC" >
 					<option value="2" >PLG_SYSTEM_VIDEOBOX_GLOBAL</option>
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
@@ -110,7 +112,7 @@
                 <field name="width_l" type="text" default="640" size="5" label="PLG_SYSTEM_VIDEOBOX_WIDTH_L" description="PLG_SYSTEM_VIDEOBOX_WIDTH_LDESC" />
                 <field name="height_l" type="text" default="360" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_L" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_LDESC" />
                 <field name="class_l" type="text" default="" size="30" label="PLG_SYSTEM_VIDEOBOX_CLASS_L" description="PLG_SYSTEM_VIDEOBOX_CLASS_LDESC" />
-                <field name="style_l" type="textarea" default="" size="5" label="PLG_SYSTEM_VIDEOBOX_STYLE_L" description="PLG_SYSTEM_VIDEOBOX_STYLE_LDESC" />
+                <field name="style_l" type="textarea" default="" rows="5" label="PLG_SYSTEM_VIDEOBOX_STYLE_L" description="PLG_SYSTEM_VIDEOBOX_STYLE_LDESC" />
                 <field name="sc_visual_l" type="radio" default="2" size="5" label="PLG_SYSTEM_VIDEOBOX_SC_VISUAL" description="PLG_SYSTEM_VIDEOBOX_SC_VISUALDESC" >
 					<option value="2" >PLG_SYSTEM_VIDEOBOX_GLOBAL</option>
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
@@ -133,7 +135,7 @@
 					<option value="0" >PLG_SYSTEM_VIDEOBOX_OFF</option>
 				</field>
                 <field name="class_g" type="text" default="" size="30" label="PLG_SYSTEM_VIDEOBOX_CLASS" description="PLG_SYSTEM_VIDEOBOX_CLASSDESC" />
-                <field name="style_g" type="textarea" default="" size="5" label="PLG_SYSTEM_VIDEOBOX_STYLE" description="PLG_SYSTEM_VIDEOBOX_STYLEDESC" />
+                <field name="style_g" type="textarea" default="" rows="5" label="PLG_SYSTEM_VIDEOBOX_STYLE" description="PLG_SYSTEM_VIDEOBOX_STYLEDESC" />
                 <field name="sc_visual_g" type="radio" default="2" size="5" label="PLG_SYSTEM_VIDEOBOX_SC_VISUAL" description="PLG_SYSTEM_VIDEOBOX_SC_VISUALDESC" >
 					<option value="2" >PLG_SYSTEM_VIDEOBOX_GLOBAL</option>
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>
@@ -168,7 +170,7 @@
                 <field name="height_lg" type="text" default="363" size="5" label="PLG_SYSTEM_VIDEOBOX_HEIGHT_L" description="PLG_SYSTEM_VIDEOBOX_HEIGHT_LDESC" />
 				<field name="separator" type="text" default=", " size="5" label="PLG_SYSTEM_VIDEOBOX_SEPARATOR" description="PLG_SYSTEM_VIDEOBOX_SEPARATORDESC" />
                 <field name="class_lg" type="text" default="" size="30" label="PLG_SYSTEM_VIDEOBOX_CLASS_L" description="PLG_SYSTEM_VIDEOBOX_CLASS_LDESC" />
-                <field name="style_lg" type="textarea" default="" size="5" label="PLG_SYSTEM_VIDEOBOX_STYLE_L" description="PLG_SYSTEM_VIDEOBOX_STYLE_LDESC" />
+                <field name="style_lg" type="textarea" default="" rows="5" label="PLG_SYSTEM_VIDEOBOX_STYLE_L" description="PLG_SYSTEM_VIDEOBOX_STYLE_LDESC" />
                 <field name="sc_visual_lg" type="radio" default="2" size="5" label="PLG_SYSTEM_VIDEOBOX_SC_VISUAL" description="PLG_SYSTEM_VIDEOBOX_SC_VISUALDESC" >
 					<option value="2" >PLG_SYSTEM_VIDEOBOX_GLOBAL</option>
 					<option value="1" >PLG_SYSTEM_VIDEOBOX_ON</option>

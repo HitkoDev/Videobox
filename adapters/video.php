@@ -12,27 +12,15 @@ defined( '_JEXEC' ) or die( 'Restricted Access' );
 
 class Video {
 	
+	static function adapterSwitch($id, $title, $offset, $vb){
+		return false;
+	}
+	
 	function __construct($id, $title = '', $offset = 0){
 		$this->id = $id;
 		$this->title = $title;
 		$this->offset = $offset;
 		$this->type = 'v';
-	}
-
-	function getTitle($forced = false){
-		if($forced && $this->title==''){
-			return $this->id;
-		} else {
-			return $this->title; 
-		}
-	}
-	
-	function getID(){
-		if($this->title != ''){
-			return ('id="_vbVideo_' . crc32($this->title) . '"');
-		} else {
-			return ('id="_vbVideo_' . crc32($this->id) . '"');
-		}
 	}
 	
 	function getThumb($id = false){
@@ -48,6 +36,14 @@ class Video {
 		}
 		return false;
 	}
+
+	function getTitle($forced = false){
+		if($forced && $this->title==''){
+			return $this->id;
+		} else {
+			return $this->title; 
+		}
+	}
 	
 	function getPlayerLink($autoplay = false){
 		$src = $this->id;
@@ -55,8 +51,16 @@ class Video {
 		if($this->offset != 0) $src .= '&t=' . $this->splitOffset();
 		return $src;
 	}
+	
+	final function getID(){
+		if($this->title != ''){
+			return ('id="_vbVideo_' . crc32($this->title) . '"');
+		} else {
+			return ('id="_vbVideo_' . crc32($this->id) . '"');
+		}
+	}
 
-	protected function splitOffset(){
+	protected final function splitOffset(){
 		if($this->offset != 0){
 			$off = '';
 			$offset = $this->offset;

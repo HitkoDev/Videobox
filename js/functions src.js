@@ -35,8 +35,8 @@
 	$.cfr = function(msg, _options){
 		options = $.extend(defaults, _options);
 		
-		$.vb_close();
-		$.vbi_close();
+		if(typeof $.vb_close == 'function') $.vb_close();
+		if(typeof $.vbi_close == 'function') $.vbi_close();
 		
 		message.innerHTML = msg;
 		
@@ -80,15 +80,15 @@
 	
 	function animateCenter(){
 		
-		$(center).show();
+		$(center).css("width", '');
+		$(center).css("display", 'table-row');
 		centerWidth = $(center).width();
 		if(centerWidth > win.width()) centerWidth = win.width();
 		if(centerWidth > options.width) centerWidth = options.width;
 		centerHeight = $(center).height();
 		var top = Math.max(0, middle - (centerHeight / 2));
 		$(center).animate({top: top, marginLeft: -centerWidth/2}, options.resizeDuration, options.resizeEasing);
-		if(centerWidth != $(center).width()) $(center).css("max-width", centerWidth);
-		$(message).css("width", (centerWidth - 20));
+		$(center).css("width", centerWidth);
 		
 	}
 	

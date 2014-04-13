@@ -12,19 +12,14 @@ defined( '_JEXEC' ) or die( 'Restricted Access' );
 
 include_once('video.php');
 
-class vmVideo extends Video {
+class aolVideo extends Video {
 	
 	/*
-	*	$id - one of the following:
-	*		- numeric Vimeo video ID
-	*		- link to the video (http://vimeo.com/4700344)
+	*	$id - link to the video (http://on.aol.com/video/violinist-david-garrett-talks-about-his-latest-album-518187279)
 	*/
 	static function adapterSwitch($id, $title, $offset, $vb){
-		if(is_numeric($id)){
-			return new self($id, $title, $offset);
-		}
-		if(strpos($id, 'vimeo')!==false){
-			preg_match('/vimeo.com\/([0-9]*?)/isU', $id, $v_urls);
+		if(strpos($id, 'aol.com')!==false){
+			preg_match('/(\d*)$/isU', $id, $v_urls);
 			return new self($v_urls[1], $title, $offset);
 		}
 		return false;
@@ -32,7 +27,7 @@ class vmVideo extends Video {
 
 	function getTitle($forced = false){
 		if($forced && $this->title==''){
-			return 'http://vimeo.com/' . $this->id;
+			return 'http://on.aol.com/video/' . $this->id;
 		} else {
 			return $this->title; 
 		}
@@ -41,17 +36,14 @@ class vmVideo extends Video {
 	function getThumb(){
 		$th = parent::getThumb();
 		if($th !== false) return $th;
-		$data = unserialize(file_get_contents('http://vimeo.com/api/v2/video/' . $this->id . '.php'));
-		$img = $data[0]['thumbnail_large'];
-		$im = @getimagesize($img);
-		if($im !== false) return array($img, $im[2]);
-		return false;
+		$data = json_decode(file_get_contents('http://api.5min.com/video/' . $this->id . '/info.json'), true);
+		$img = $data['items'][0]['image'];
+		return array($img, IMAGETYPE_JPEG);
 	}
 	
 	function getPlayerLink($autoplay = false){
-		$src = 'https://player.vimeo.com/video/' . $this->id . '?byline=0&portrait=0';
-		if($autoplay) $src .= '&autoplay=1';
-		if($this->offset != 0) $src .= '#t=' . $this->splitOffset();
+		$src = 'https://embed.5min.com/' . $this->id;
+		if($autoplay) $src .= '?autoStart=true';
 		return $src;
 	}
 	

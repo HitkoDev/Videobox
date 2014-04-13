@@ -18,18 +18,18 @@
 
 #cfrContent {
 	padding: 10px;
-	display: inline-block;
+	display: table-cell;
 	line-height: 22px;
+	width: 100%;
 }
 
 #cfrClose {
-	display: inline-block;
-	float: right;
+	display: table-cell;
 	width: 66px;
-	height: 29px;
+	height: 30px;
 	background: transparent url(closelabel.gif) no-repeat center;
 	outline: none;
-	padding: 10px;
+	padding: 10px 43px;
 	cursor: pointer;
 }
 

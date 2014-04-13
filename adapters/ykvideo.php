@@ -12,19 +12,19 @@ defined( '_JEXEC' ) or die( 'Restricted Access' );
 
 include_once('video.php');
 
-class vmVideo extends Video {
+class ykVideo extends Video {
 	
 	/*
 	*	$id - one of the following:
-	*		- numeric Vimeo video ID
-	*		- link to the video (http://vimeo.com/4700344)
+	*		- YouKu video ID (id_XNjk4MDIyNDMy)
+	*		- link to the video (http://v.youku.com/v_show/id_XNjk4MDIyNDMy.html)
 	*/
 	static function adapterSwitch($id, $title, $offset, $vb){
-		if(is_numeric($id)){
-			return new self($id, $title, $offset);
+		if(strlen($id) == 16 && substr($video[0], 0, 3) == 'id_'){
+			return new self(substr($id, 3), $title, $offset);
 		}
-		if(strpos($id, 'vimeo')!==false){
-			preg_match('/vimeo.com\/([0-9]*?)/isU', $id, $v_urls);
+		if(strpos($id, 'youku')!==false){
+			preg_match('/id_(.{13})\.html/isU', $id, $v_urls);
 			return new self($v_urls[1], $title, $offset);
 		}
 		return false;
@@ -32,7 +32,7 @@ class vmVideo extends Video {
 
 	function getTitle($forced = false){
 		if($forced && $this->title==''){
-			return 'http://vimeo.com/' . $this->id;
+			return 'http://v.youku.com/v_show/id_' . $this->id . '.html';
 		} else {
 			return $this->title; 
 		}
@@ -41,17 +41,22 @@ class vmVideo extends Video {
 	function getThumb(){
 		$th = parent::getThumb();
 		if($th !== false) return $th;
-		$data = unserialize(file_get_contents('http://vimeo.com/api/v2/video/' . $this->id . '.php'));
-		$img = $data[0]['thumbnail_large'];
+		$data = json_decode(file_get_contents('http://v.youku.com/player/getPlayList/VideoIDS/' . $this->id));
+		$img = $data->data[0]->logo.'?u='.$data->data[0]->userid;;
 		$im = @getimagesize($img);
 		if($im !== false) return array($img, $im[2]);
 		return false;
 	}
 	
 	function getPlayerLink($autoplay = false){
-		$src = 'https://player.vimeo.com/video/' . $this->id . '?byline=0&portrait=0';
+		$src = 'http://player.youku.com/embed/' . $this->id;
 		if($autoplay) $src .= '&autoplay=1';
-		if($this->offset != 0) $src .= '#t=' . $this->splitOffset();
+		if($autoplay && $this->offset != 0){
+			$src .= '&';
+		} else {
+			$src .= '?';
+		}
+		if($this->offset != 0) $src .= 'start=' . $this->splitOffset();
 		return $src;
 	}
 	

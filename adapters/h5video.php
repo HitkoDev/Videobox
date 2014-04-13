@@ -14,6 +14,18 @@ include_once('video.php');
 
 class h5Video extends Video {
 	
+	/*
+	*	$id - Link to the video (relative to the site root for local videos)
+	*/
+	static function adapterSwitch($id, $title, $offset, $vb){
+		if(in_array(pathinfo($id, PATHINFO_EXTENSION), array('mp4', 'ogv', 'webm', 'm4v', 'oga', 'mp3', 'm4a', 'webma', 'wav'))){
+			$video = new self(rawurldecode($id), $title, $offset);
+			$video->poster = $vb->videoThumbnail($video, $vb->parametri, true);
+			return $video;
+		}
+		return false;
+	}
+	
 	function __construct($id, $title = '', $offset = 0){
 		parent::__construct($id, $title, $offset);
 		if(in_array(pathinfo($id, PATHINFO_EXTENSION), array('oga', 'mp3', 'm4a', 'webma', 'wav'))) $this->type = 'a';
