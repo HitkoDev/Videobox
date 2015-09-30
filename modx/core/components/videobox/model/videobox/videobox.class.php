@@ -276,7 +276,10 @@ class Videobox {
 		$output = '';
 		$id = $modx->resource->get('id');
 		$que = $_GET;
-		unset($que['req']);
+		$rq = trim($modx->getOption('request_param_id'));
+		$ra = trim($modx->getOption('request_param_alias'));
+		if($rq) unset($que[$rq]);
+		if($ra) unset($que[$ra]);
 		unset($que['vbpages']);
 		for($i = 0; $i < $pages; $i++){
 			$output .= '<li '.($i == $current ? 'class="active"' : '').'><a href="'.$modx->makeUrl($id, '', ($i == 0 ? $que : array_merge($que, array('vbpages' => $i)))).'">'.($i+1).'</a></li>';
