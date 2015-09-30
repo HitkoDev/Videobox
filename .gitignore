@@ -2,6 +2,8 @@
 ## Eclipse
 #################
 
+modx/assets/components/videobox/cache/*
+
 *.pydevproject
 .project
 .metadata
