@@ -1,6 +1,6 @@
 /* Pop-up player */
 #vbOverlay,
-#vbSizer,
+#vbWrap,
 #vbCenter,
 #vbContent,
 #vbResponsive,
@@ -27,29 +27,32 @@
 	background-color: rgba(0, 0, 0, 0.7);
 }
 
-#vbSizer {
+#vbWrap {
 	position: absolute;
 	z-index: 9999;
 	left: 0;
 	top: 0;
-	width: 15%;
 	height: 100%;
-	right: 0;
-	margin: 0 auto;
 	visibility: hidden;
-	max-width: 100%;
 	pointer-events: none;
-	padding: 30px;
+	width: 100%;
 }
 
-#vbSizer.visible {
+#vbWrap.visible {
 	visibility: visible;
 }
 
 #vbCenter {
 	display: table;
+	max-width: 15%;
 	width: 100%;
 	height: 100%;
+	margin: 0 auto;
+	position: relative;
+}
+
+#vbWrap.animating {
+    overflow: hidden;
 }
 
 #vbContent {
@@ -65,8 +68,8 @@
 	padding: 0;
 	overflow: hidden;
 	background-color: #000;
-	pointer-events: all;
 	box-shadow: 0px 0px 40px -5px #000;
+	pointer-events: all;
 }
 
 #vbVideo {
@@ -86,10 +89,10 @@
 	background-color: #fff;
 	max-height: 0;
 	overflow: hidden;
-	pointer-events: all;
 	background-color: #000;
     opacity: 0.5;
 	box-shadow: 0px 0px 40px -5px #000;
+	pointer-events: all;
 }
 
 #vbBottomContainer.visible {
@@ -160,7 +163,7 @@
 }
 
 #vbOverlay,
-#vbSizer.visible {
+#vbWrap.visible #vbCenter {
 	-webkit-transition: all .5s ease-in-out;
 	-moz-transition: all .5s ease-in-out;
 	-ms-transition: all .5s ease-in-out;
