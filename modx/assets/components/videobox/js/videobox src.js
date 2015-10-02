@@ -67,10 +67,10 @@
 				if(mappedLinks[i] == link) startIndex = i;
 				mappedLinks[i] = linkMapper(mappedLinks[i], i);
 			}
-
+			
 			return $.videobox(mappedLinks, startIndex, _options, {
-				x: evt.clientX,
-				y: evt.clientY,
+				x: $(this).offset().left - win.scrollLeft() + $(this).innerWidth()/2,
+				y: $(this).offset().top - win.scrollTop() + $(this).innerHeight()/2,
 			});
 		});
 		return false;

@@ -196,6 +196,7 @@
 .vb_video_cont a {
 	text-decoration: none;
     color: #005723;
+	display: inline-block;
 	-webkit-transition: all .5s ease-in-out;
 	-moz-transition: all .5s ease-in-out;
 	-ms-transition: all .5s ease-in-out;
