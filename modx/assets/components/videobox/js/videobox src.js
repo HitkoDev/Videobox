@@ -170,7 +170,7 @@
 	}
 
 	win.on("resize", function() {
-		if(activeVideo >= 0) setRatio();
+		if(activeVideo >= 0) setPlayer();
 	});
 
 	// AUTOLOAD CODE BLOCK (MAY BE CHANGED OR REMOVED)
