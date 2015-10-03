@@ -6,12 +6,13 @@
 
 (function($) {
 	
-	var videos, activeURL, activeVideo, center, content, responsive, video, bottomContainer, bottom, wrap, caption, button, closeText, win = $(window), options, open = false,
+	var videos, activeURL, activeVideo, win = $(window), options, open = false, 
+	wrap, center, content, responsive, video, bottomContainer, bottom, caption, button, closeText,
 
 	defaults = {
 		videoWidth: 720,		//	default player width
 		videoHeight: 405,		//	default player height
-		closeText: 'close',		//	text for the close button
+		closeText: 'Close',		//	text for the close button
 		padding: 30,			//	player padding
 	};
 	
@@ -21,7 +22,7 @@
 	 *	@param _videos - array of videos as [player_url, title, player_width, player_height]
 	 *	@param startVideo - index of the curent video
 	 *	@param _options - Videobox options, see defaults for details
-	 *	@param origin - {x, y} window coordinates where the pop-up should appear from (default is window center)
+	 *	@param origin - {x, y, w} window coordinates where the pop-up should appear from (default is window center) and width (default 15%)
 	 */
 	$.videobox = function(_videos, startVideo, _options, origin) {
 		options = $.extend(defaults, _options);
@@ -71,6 +72,7 @@
 			return $.videobox(mappedLinks, startIndex, _options, {
 				x: $(this).offset().left - win.scrollLeft() + $(this).innerWidth()/2,
 				y: $(this).offset().top - win.scrollTop() + $(this).innerHeight()/2,
+				w: $(this).innerWidth(),
 			});
 		});
 		return false;
@@ -96,13 +98,15 @@
 		])[0];
 		closeText = $(bottom).find('#vbCloseText')[0];
 	});
-
+	
+	// set initial pop-up parameters
 	function setup(origin) {
 		$(closeText).html(options.closeText);
 		$(center).css({
 			top: origin ? -($(wrap).innerHeight()/2-origin.y) : 0,
 			left: origin ? -($(wrap).innerWidth()/2-origin.x) : 0,
-			'max-width': '',
+			padding: options.padding,
+			'max-width': origin ? origin.w+2*options.padding : '',
 		});
 	}
 
@@ -113,16 +117,30 @@
 			stop();
 			$(caption).html(videos[activeVideo][1] || "");
 			open = true;
-			animateBox();
+			
+			setPlayer();
+			
+			// animate player
+			$([wrap, bottomContainer, overlay]).toggleClass('visible', true);
+			$(wrap).toggleClass('animating', true);
+			setTimeout(function(){		// add some delay to let FF trigger transitions
+				$(center).css({
+					top: 0,
+					left: 0,
+					'max-width': parseInt(videos[activeVideo][2] || options.videoWidth) + 2*options.padding,
+				});
+			}, 10);
+			
 		}
 		return false;
 	}
-
-	function animateBox(){
+	
+	// set player
+	function setPlayer(){
 		var width = parseInt(videos[activeVideo][2] || options.videoWidth);
 		var height = parseInt(videos[activeVideo][3] || options.videoHeight);
 		
-		// move wrapper to the visible area
+		// move player to the visible area
 		$(wrap).css({
 			top: win.scrollTop(),
 			left: win.scrollLeft()
@@ -133,18 +151,9 @@
 		height = (height * width)/(videos[activeVideo][2] || options.videoWidth);
 		if(height + 2*options.padding > $(wrap).innerHeight()) height = $(wrap).innerHeight() - 2*options.padding;
 		
+		// set ratio
 		var ratio = (height*100)/width;
-		$(responsive).css('padding-bottom', ratio + '%');					// set player ratio
-		$([wrap, bottomContainer, overlay]).toggleClass('visible', true);	// show player
-		$(wrap).toggleClass('animating', true);
-		setTimeout(function(){
-			$(center).css({
-				top: 0,
-				left: 0,
-				'max-width': parseInt(videos[activeVideo][2] || options.videoWidth) + 2*options.padding,
-				padding: options.padding,
-			});
-		}, 10);
+		$(responsive).css('padding-bottom', ratio + '%');
 	}
 
 	function showVideo(){
@@ -161,7 +170,7 @@
 	}
 
 	win.on("resize", function() {
-		if(activeVideo >= 0) animateBox();
+		if(activeVideo >= 0) setRatio();
 	});
 
 	// AUTOLOAD CODE BLOCK (MAY BE CHANGED OR REMOVED)
