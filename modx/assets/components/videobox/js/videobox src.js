@@ -38,6 +38,7 @@
 	$.vbClose = function() {
 		stop();
 		$([wrap, bottomContainer, overlay]).toggleClass('visible', false);
+		$(wrap).toggleClass('animating', false);
 		$(wrap).css({
 			top: 0,
 			left: 0
@@ -62,7 +63,7 @@
 		
 		return links.unbind("click").click(function(evt) {
 			
-			var link = this, startIndex = 0, mappedLinks = links.slice();
+			var link = this, startIndex = 0, mappedLinks = links.slice(), target = $(this).find(this.getAttribute("data-target"))[0] || this;
 			
 			for(var i = 0; i < mappedLinks.length; i++){
 				if(mappedLinks[i] == link) startIndex = i;
@@ -70,9 +71,9 @@
 			}
 			
 			return $.videobox(mappedLinks, startIndex, _options, {
-				x: $(this).offset().left - win.scrollLeft() + $(this).innerWidth()/2,
-				y: $(this).offset().top - win.scrollTop() + $(this).innerHeight()/2,
-				w: $(this).innerWidth(),
+				x: $(target).offset().left - win.scrollLeft() + $(target).innerWidth()/2,
+				y: $(target).offset().top - win.scrollTop() + $(target).innerHeight()/2,
+				w: $(target).innerWidth(),
 			});
 		});
 		return false;
@@ -116,11 +117,11 @@
 			activeURL = videos[i][0];
 			stop();
 			$(caption).html(videos[activeVideo][1] || "");
-			open = true;
 			
 			setPlayer();
 			
 			// animate player
+			open = true;
 			$([wrap, bottomContainer, overlay]).toggleClass('visible', true);
 			$(wrap).toggleClass('animating', true);
 			setTimeout(function(){		// add some delay to let FF trigger transitions
