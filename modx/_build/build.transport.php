@@ -1,5 +1,6 @@
 <?php
 ini_set('display_errors', 1);
+require_once('build.functions.php');
 $tstart = explode(' ', microtime());
 $tstart = $tstart[1] + $tstart[0];
 set_time_limit(0);
@@ -42,15 +43,26 @@ $builder = new modPackageBuilder($modx);
 $builder->createPackage(PKG_NAME_LOWER,PKG_VERSION,PKG_RELEASE);
 $builder->registerNamespace(PKG_NAME_LOWER,false,true,'{core_path}components/'.PKG_NAME_LOWER.'/');
 
-$category= $modx->newObject('modCategory');
-$category->set('id',1);
-$category->set('category',PKG_NAME);
- 
+$category = $modx->newObject('modCategory');
+$category->set('id', 1);
+$category->set('category', PKG_NAME);
+
+$adaptersCategory = $modx->newObject('modCategory');
+$adaptersCategory->set('id', 2);
+$adaptersCategory->set('category', 'Adapters');
+$adaptersCategory->addOne($category);
+
 /* add snippets */
 $modx->log(modX::LOG_LEVEL_INFO,'Packaging in snippets...');
 $snippets = include $sources['data'].'transport.snippets.php';
 if (empty($snippets)) $modx->log(modX::LOG_LEVEL_ERROR,'Could not package in snippets.');
 $category->addMany($snippets);
+
+/* add adapter snippets */
+$modx->log(modX::LOG_LEVEL_INFO,'Packaging in adapter snippets...');
+$snippets = include $sources['data'].'transport.snippets.adapters.php';
+if (empty($snippets)) $modx->log(modX::LOG_LEVEL_ERROR,'Could not package in adapter snippets.');
+$adaptersCategory->addMany($snippets);
  
 /* add chunks */
 $modx->log(modX::LOG_LEVEL_INFO,'Packaging in chunks...');
@@ -59,7 +71,40 @@ if (empty($chunks)) $modx->log(modX::LOG_LEVEL_ERROR,'Could not package in chunk
 $category->addMany($chunks);
  
 /* create category vehicle */
-$attr = array(
+$vehicle = $builder->createVehicle($adaptersCategory, array(
+    xPDOTransport::UNIQUE_KEY => 'category',
+    xPDOTransport::PRESERVE_KEYS => false,
+    xPDOTransport::UPDATE_OBJECT => true,
+    xPDOTransport::RELATED_OBJECTS => true,
+    xPDOTransport::RELATED_OBJECT_ATTRIBUTES => array (
+        'Snippets' => array(
+            xPDOTransport::PRESERVE_KEYS => false,
+            xPDOTransport::UPDATE_OBJECT => true,
+            xPDOTransport::UNIQUE_KEY => 'name',
+        ),
+		'Parent' => array (
+			xPDOTransport::PRESERVE_KEYS => false,
+			xPDOTransport::UPDATE_OBJECT => true,
+			xPDOTransport::UNIQUE_KEY => 'category',
+			xPDOTransport::RELATED_OBJECTS => true,
+			xPDOTransport::RELATED_OBJECT_ATTRIBUTES => array (
+				'Snippets' => array(
+					xPDOTransport::PRESERVE_KEYS => false,
+					xPDOTransport::UPDATE_OBJECT => true,
+					xPDOTransport::UNIQUE_KEY => 'name',
+				),
+				'Chunks' => array (
+					xPDOTransport::PRESERVE_KEYS => false,
+					xPDOTransport::UPDATE_OBJECT => true,
+					xPDOTransport::UNIQUE_KEY => 'name',
+				),
+			),
+		),
+    ),
+));
+$builder->putVehicle($vehicle);
+
+$vehicle = $builder->createVehicle($category, array(
     xPDOTransport::UNIQUE_KEY => 'category',
     xPDOTransport::PRESERVE_KEYS => false,
     xPDOTransport::UPDATE_OBJECT => true,
@@ -75,9 +120,21 @@ $attr = array(
 			xPDOTransport::UPDATE_OBJECT => true,
 			xPDOTransport::UNIQUE_KEY => 'name',
 		),
+		'Children' => array (
+			xPDOTransport::PRESERVE_KEYS => false,
+			xPDOTransport::UPDATE_OBJECT => true,
+			xPDOTransport::UNIQUE_KEY => 'category',
+			xPDOTransport::RELATED_OBJECTS => true,
+			xPDOTransport::RELATED_OBJECT_ATTRIBUTES => array (
+				'Snippets' => array(
+					xPDOTransport::PRESERVE_KEYS => false,
+					xPDOTransport::UPDATE_OBJECT => true,
+					xPDOTransport::UNIQUE_KEY => 'name',
+				),
+			),
+		),
     ),
-);
-$vehicle = $builder->createVehicle($category,$attr);
+));
 $modx->log(modX::LOG_LEVEL_INFO,'Adding file resolvers to category...');
 $vehicle->resolve('file',array(
     'source' => $sources['source_assets'],
