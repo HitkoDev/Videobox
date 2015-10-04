@@ -112,7 +112,7 @@
 	}
 
 	function changeVideo(i) {
-		if(i >= 0){
+		if(i >= 0 && i < videos.length){
 			activeVideo = i;
 			activeURL = videos[i][0];
 			stop();

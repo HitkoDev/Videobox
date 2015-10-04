@@ -62,7 +62,7 @@ $videos = $vid;
 if(count($videos) < 1) return;
 $modx->regClientCSS($videobox->config['assets_url'] . 'css/videobox.css');
 $modx->regClientScript($videobox->config['assets_url'] . 'js/jquery.min.js');
-$modx->regClientScript($videobox->config['assets_url'] . 'js/videobox src.js');
+$modx->regClientScript($videobox->config['assets_url'] . 'js/videobox%20src.js');
 if(count($videos) > 1){
 	if(isset($display)) $multipleDisplay = $display;
 	$tpl = $multipleDisplay == 'links' ? $linkTpl : $thumbTpl;
