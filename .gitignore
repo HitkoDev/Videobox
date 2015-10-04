@@ -1,8 +1,14 @@
 #################
-## Eclipse
+## Cache & config files
 #################
 
 modx/assets/components/videobox/cache/*
+modx/_build/build.config.php
+
+
+#################
+## Eclipse
+#################
 
 *.pydevproject
 .project
