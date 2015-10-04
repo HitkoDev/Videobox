@@ -40,15 +40,13 @@ $modx->setLogTarget('ECHO');
  
 $modx->loadClass('transport.modPackageBuilder','',false, true);
 $builder = new modPackageBuilder($modx);
-$builder->createPackage(PKG_NAME_LOWER,PKG_VERSION,PKG_RELEASE);
+$builder->createPackage(PKG_NAME,PKG_VERSION,PKG_RELEASE);
 $builder->registerNamespace(PKG_NAME_LOWER,false,true,'{core_path}components/'.PKG_NAME_LOWER.'/');
 
 $category = $modx->newObject('modCategory');
-$category->set('id', 1);
 $category->set('category', PKG_NAME);
 
 $adaptersCategory = $modx->newObject('modCategory');
-$adaptersCategory->set('id', 2);
 $adaptersCategory->set('category', 'Adapters');
 $adaptersCategory->addOne($category);
 
@@ -82,6 +80,11 @@ $vehicle = $builder->createVehicle($adaptersCategory, array(
             xPDOTransport::UPDATE_OBJECT => true,
             xPDOTransport::UNIQUE_KEY => 'name',
         ),
+		'Chunks' => array (
+			xPDOTransport::PRESERVE_KEYS => false,
+			xPDOTransport::UPDATE_OBJECT => true,
+			xPDOTransport::UNIQUE_KEY => 'name',
+		),
 		'Parent' => array (
 			xPDOTransport::PRESERVE_KEYS => false,
 			xPDOTransport::UPDATE_OBJECT => true,
@@ -94,39 +97,6 @@ $vehicle = $builder->createVehicle($adaptersCategory, array(
 					xPDOTransport::UNIQUE_KEY => 'name',
 				),
 				'Chunks' => array (
-					xPDOTransport::PRESERVE_KEYS => false,
-					xPDOTransport::UPDATE_OBJECT => true,
-					xPDOTransport::UNIQUE_KEY => 'name',
-				),
-			),
-		),
-    ),
-));
-$builder->putVehicle($vehicle);
-
-$vehicle = $builder->createVehicle($category, array(
-    xPDOTransport::UNIQUE_KEY => 'category',
-    xPDOTransport::PRESERVE_KEYS => false,
-    xPDOTransport::UPDATE_OBJECT => true,
-    xPDOTransport::RELATED_OBJECTS => true,
-    xPDOTransport::RELATED_OBJECT_ATTRIBUTES => array (
-        'Snippets' => array(
-            xPDOTransport::PRESERVE_KEYS => false,
-            xPDOTransport::UPDATE_OBJECT => true,
-            xPDOTransport::UNIQUE_KEY => 'name',
-        ),
-		'Chunks' => array (
-			xPDOTransport::PRESERVE_KEYS => false,
-			xPDOTransport::UPDATE_OBJECT => true,
-			xPDOTransport::UNIQUE_KEY => 'name',
-		),
-		'Children' => array (
-			xPDOTransport::PRESERVE_KEYS => false,
-			xPDOTransport::UPDATE_OBJECT => true,
-			xPDOTransport::UNIQUE_KEY => 'category',
-			xPDOTransport::RELATED_OBJECTS => true,
-			xPDOTransport::RELATED_OBJECT_ATTRIBUTES => array (
-				'Snippets' => array(
 					xPDOTransport::PRESERVE_KEYS => false,
 					xPDOTransport::UPDATE_OBJECT => true,
 					xPDOTransport::UNIQUE_KEY => 'name',
@@ -150,6 +120,8 @@ $builder->putVehicle($vehicle);
 $modx->log(modX::LOG_LEVEL_INFO,'Packing up transport package zip...');
 $modx->log(modX::LOG_LEVEL_INFO,'Adding package attributes and setup options...');
 $builder->setPackageAttributes(array(
+	'name' => PKG_NAME,
+	'author' => 'HitkoDev', 
     'license' => file_get_contents($sources['git_root'] . 'LICENSE.md'),
     'readme' => file_get_contents($sources['git_root'] . 'README.md'),
     'changelog' => file_get_contents($sources['git_root'] . 'CHANGELOG.md'),
