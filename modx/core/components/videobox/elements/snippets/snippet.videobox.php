@@ -1,5 +1,4 @@
 <?php
-
 /**	
  *	@author		HitkoDev http://hitko.eu/videobox
  *	@copyright	Copyright (C) 2015 HitkoDev All Rights Reserved.
@@ -30,7 +29,7 @@ $v = $modx->parseChunk($videos, array());
 if($v) $videos = $v;
 $videos = explode('|,', $videos);
 
-require_once($vbCore . 'model/videobox/adapter.class.php');
+require_once($vbCore . 'model/adapters/adapter.class.php');
 $processors = explode(',', $processors);
 array_map('trim', $processors);
 $proc = array();
