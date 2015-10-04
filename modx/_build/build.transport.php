@@ -85,9 +85,6 @@ $builder->setPackageAttributes(array(
     'license' => file_get_contents($sources['git_root'] . 'LICENSE.md'),
     'readme' => file_get_contents($sources['git_root'] . 'README.md'),
     'changelog' => file_get_contents($sources['git_root'] . 'CHANGELOG.md'),
-    'setup-options' => array(
-        'source' => $sources['build'].'setup.options.php',
-    ),
 ));
 $builder->pack();
  
