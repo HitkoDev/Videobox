@@ -1,1 +1,1 @@
-<span class="vb_video_cont vb_box">[[+content]]</span>
+<span class="vb_video_cont vb_box [[+class]]" style="[[+style]]">[[+content]]</span>

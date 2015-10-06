@@ -64,6 +64,7 @@
 #vbResponsive {
 	position: relative;
 	display: block;
+    width: 100%;
 	height: 0;
 	padding: 0;
 	overflow: hidden;
@@ -180,11 +181,89 @@
 	transition: all .5s .6s ease-in-out, opacity .5s .1s ease-in-out;
 }
 
+/* Inline player */
+#vbiWrap {
+    width: 100%;
+    position: relative;
+	visibility: hidden;
+    color: #005723;
+	text-align: center;
+}
+
+#vbiWrap.visible {
+	visibility: visible;
+}
+
+#vbiResponsive {
+	position: relative;
+	display: block;
+    width: 100%;
+	height: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: #000;
+	padding-bottom: 56.25%;
+	pointer-events: all;
+}
+
+#vbiVideo {
+	background-color: #000;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	border: 0;
+}
+
+#vbiClose {
+	position: absolute;
+    top: 0;
+    right: 0;
+    width: 24px;
+    height: 24px;
+    margin: -15px -15px 0 0;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 3px;
+	opacity: 0;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    -ms-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+
+#vbiWrap:hover #vbiClose { 
+	opacity: 1; 
+}
+
+#vbiClose:hover,
+#vbiClose:focus {
+	color: #50bf82;
+}
+
+#vbiWrap,
+#vbiWrap.visible #vbiResponsive {
+	-webkit-transition: all .5s ease-in-out;
+	-moz-transition: all .5s ease-in-out;
+	-ms-transition: all .5s ease-in-out;
+	-o-transition: all .5s ease-in-out;
+	transition: all .5s ease-in-out;
+}
+
+
 /* Content */
 .vb_video_cont {
 	display: inline-block;
     vertical-align: top;
     text-align: center;
+}
+
+.vb_box #vbiWrap {
+	width: 1000vw;
 }
 
 .vb_video_cont img {
@@ -198,6 +277,7 @@
 	text-decoration: none;
     color: #005723;
 	display: inline-block;
+    width: 100%;
 }
 
 .vb_video_cont a:hover,
@@ -395,4 +475,16 @@
 }
 .vb-icon-circle-close:before {
 	content: "\e615";
+}
+.vb-icon-circle-close-invert {
+	position: relative;
+}
+.vb-icon-circle-close-invert:before {
+	content: "\e611";
+}
+.vb-icon-circle-close-invert:after {
+	content: "\e616";
+	color: #fff !important;
+    position: absolute;
+    left: 0;
 }
