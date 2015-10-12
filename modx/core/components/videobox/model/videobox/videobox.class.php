@@ -23,6 +23,7 @@ class Videobox {
 	
 	public $modx;
     public $config = array();
+	const VB_GALLERY_NUMBER = 'vb_gallery_number';
 
 	function __construct(modX &$modx, array $config = array()){
 		$this->modx =& $modx;
@@ -31,10 +32,11 @@ class Videobox {
 			'assets_path' => $modx->getOption('videobox.assets_path', null, MODX_ASSETS_PATH.'components/videobox/'),
 		), $config);
 		
-		$this->gallery = -1;
+		if($this->gallery == null) $this->gallery = -1;
+		
 		$this->pages = array();
 		if(isset($_GET['vbpages'])){
-			$p = explode(',', $_GET['vbpages']);
+			$p = explode(',', rawurldecode($_GET['vbpages']));
 			foreach($p as $page){
 				$this->pages[] = (int) $page;
 			}
@@ -302,8 +304,15 @@ class Videobox {
 		if($rq) unset($que[$rq]);
 		if($ra) unset($que[$ra]);
 		unset($que['vbpages']);
+		$pref = '';
+		$i = 0;
+		for(; $i < $this->gallery; $i++) $pref .= (isset($this->pages[$i]) ? $this->pages[$i] : 0) . ',';
+		$post = '';
+		$i++;
+		for(; $i < count($this->pages); $i++) $post .= ',' . (isset($this->pages[$i]) ? $this->pages[$i] : 0);
 		for($i = 0; $i < $pages; $i++){
-			$output .= '<li '.($i == $current ? 'class="active"' : '').'><a href="'.$modx->makeUrl($id, '', ($i == 0 ? $que : array_merge($que, array('vbpages' => $i)))).'">'.($i+1).'</a></li>';
+			$pg = preg_replace("/(^,)|((?<=,),+)|((?<=0)0+)|((,|,0)+$)/m", '', $pref . $i . $post);	//	clean 1) leading comas, 2) multiple comas, 3) multiple zeros, 4) trailing comas and zeros
+			$output .= '<li '.($i == $current ? 'class="active"' : '').'><a href="'.$modx->makeUrl($id, '', ($pg ? array_merge($que, array('vbpages' => $pg)) : $que)).'">'.($i+1).'</a></li>';
 		}
 		return '<ul class="pagination">'.$output.'</ul>';
 	}

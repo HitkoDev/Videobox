@@ -22,6 +22,8 @@ $vbCore = $modx->getOption('videobox.core_path', null, $modx->getOption('core_pa
 $videobox = $modx->getService('videobox', 'Videobox', $vbCore . 'model/videobox/', $scriptProperties);
 if(!($videobox instanceof Videobox)) return '';
 
+$scriptProperties['gallery_id'] = $videobox->gallery;
+$scriptProperties['gallery_page'] = $videobox->getPage();
 ksort($scriptProperties);
 $propHash = md5(serialize($scriptProperties));
 if(!isset($videos)) return;
@@ -95,6 +97,10 @@ if(count($videos) > 1){
 	if($display == 'gallery'){
 		$videobox->gallery++;
 		$start = $videobox->getPage();
+		$scriptProperties['gallery_id'] = $videobox->gallery;
+		$scriptProperties['gallery_page'] = $start;
+		ksort($scriptProperties);
+		$propHash = md5(serialize($scriptProperties));
 		$pagination = $videobox->pagination(count($videos), $start, $perPage);
 		$start = $start*$perPage;
 		if($player == 'vbinline'){
