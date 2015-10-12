@@ -381,6 +381,11 @@
 	margin: 7px 7px 8px 8px;
 }
 
+.vb_video_cont.vb_gal:empty {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
 @media (min-width: 768px) {
 	
 	.vb_gallery {

@@ -138,7 +138,8 @@ if(count($videos) > 1){
 			$so .= '<li class="galerija_item" style="flex: ' . $r . ' ' . $r . ' ' . $b . 'px;"><a class="galerija_slika_link" href="'.$slika['small'][0].'" rel="lightbox.gal"><img class="thumb" width="'.$slika['thumb'][1].'" height="'.$slika['thumb'][2].'" src="'.$slika['thumb'][0].'"></a></li>';
 		}
 		$b = 0.25*$maxW*$minR;*/
-		foreach($filtered as $n => $video){
+		$n = 0;
+		foreach($filtered as $video){
 			$v = $modx->parseChunk($tpl, array_merge($props, $video, array('thumb' => $video['thumb'][0], 'tWidth' => $video['thumb'][1], 'tHeight' => $video['thumb'][2])));
 			switch($display){
 				case 'links':
@@ -153,10 +154,11 @@ if(count($videos) > 1){
 					$v = $modx->parseChunk($galleryItemTpl, array_merge($scriptProperties, array('content' => $v, 'ratio' => $r, 'basis' => $b)));
 					break;
 			}
+			$n++;
 			$content .= $v;
 		}
 		$b = 0.25*$maxW*$minR;
-		if($display == 'gallery') for(; $n < $start + $perPage; $n++){
+		if($display == 'gallery') for(; $n < $perPage; $n++){
 			$v = $modx->parseChunk($galleryItemTpl, array('ratio' => 1, 'basis' => $b));
 			$content .= $v;
 		}
