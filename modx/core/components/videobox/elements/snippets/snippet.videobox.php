@@ -82,13 +82,17 @@ if(count($videos) < 1) return;
 $modx->regClientCSS($videobox->config['assets_url'] . 'css/videobox.css');
 $modx->regClientScript($videobox->config['assets_url'] . 'js/jquery.min.js');
 $modx->regClientScript($videobox->config['assets_url'] . 'js/videobox%20src.js');
+
+if(!isset($display) || !$display) $display = count($videos) > 1 ? $multipleDisplay : $singleDisplay;
+if($display == 'link') $display = 'links';
+if($display == 'links' && $player == 'vbinline') $player = 'videobox';		//	inline player isn't meant to be used with links
+
 if(count($videos) > 1){
-	if(isset($display)) $multipleDisplay = $display;
-	$tpl = $multipleDisplay == 'links' ? $linkTpl : $thumbTpl;
+	$tpl = $display == 'links' ? $linkTpl : $thumbTpl;
 	$start = 0;
 	$pagination = '';
 	
-	if($multipleDisplay == 'gallery'){
+	if($display == 'gallery'){
 		$videobox->gallery++;
 		$start = $videobox->getPage();
 		$pagination = $videobox->pagination(count($videos), $start, $perPage);
@@ -112,9 +116,9 @@ if(count($videos) > 1){
 			$filtered[] = array(
 				'title' => $video->getTitle(), 
 				'link' => $video->getPlayerLink(true), 
-				'thumb' => $videobox->videoThumbnail($video, $tWidth, $tHeight, $multipleDisplay == 'flow'),
+				'thumb' => $videobox->videoThumbnail($video, $tWidth, $tHeight, $display == 'flow'),
 			);
-			if($multipleDisplay == 'gallery' && $n == ($start + $perPage)) break;
+			if($display == 'gallery' && $n == ($start + $perPage)) break;
 		}
 		$maxR = 0;
 		$maxW = $tWidth;
@@ -137,7 +141,7 @@ if(count($videos) > 1){
 		$b = 0.25*$maxW*$minR;*/
 		foreach($filtered as $video){
 			$v = $modx->parseChunk($tpl, array_merge($props, $video, array('thumb' => $video['thumb'][0], 'tWidth' => $video['thumb'][1], 'tHeight' => $video['thumb'][2])));
-			switch($multipleDisplay){
+			switch($display){
 				case 'links':
 					$v = ($n == 1 ? '' : $separator) . $v;
 					break;
@@ -154,13 +158,13 @@ if(count($videos) > 1){
 			$content .= $v;
 		}
 		$b = 0.25*$maxW*$minR;
-		if($multipleDisplay == 'gallery') for(; $n < $start + $perPage; $n++){
+		if($display == 'gallery') for(; $n < $start + $perPage; $n++){
 			$v = $modx->parseChunk($galleryItemTpl, array('ratio' => 1, 'basis' => $b));
 			$content .= $v;
 		}
 		$modx->cacheManager->set($chacheKey, $content, 0);
 	}
-	switch($multipleDisplay){
+	switch($display){
 		case 'links':
 			return $content;
 		case 'slider':
@@ -169,20 +173,18 @@ if(count($videos) > 1){
 			return $modx->parseChunk($galleryTpl, array_merge($scriptProperties, array('content' => $content, 'pagination' => $pagination)));
 	}
 } else {
-	if(isset($display)) $singleDisplay = $display;
 	$content = '';
 	foreach($videos as $video){
 		$data = $modx->cacheManager->get($propHash);
 		if($data) return $data;
 		
-		$props = array_merge(array('rel' => $player, 'pWidth' => $pWidth, 'pHeight' => $pHeight, 'tWidth' => $tWidth, 'tHeight' => $tHeight), array('title' => $video->getTitle(), 'link' => $video->getPlayerLink($singleDisplay != 'player' || $autoPlay), 'ratio' => (100*$pHeight/$pWidth)));
-		switch($singleDisplay){
-			case 'link':
+		$props = array_merge(array('rel' => $player, 'pWidth' => $pWidth, 'pHeight' => $pHeight, 'tWidth' => $tWidth, 'tHeight' => $tHeight), array('title' => $video->getTitle(), 'link' => $video->getPlayerLink($display != 'player' || $autoPlay), 'ratio' => (100*$pHeight/$pWidth)));
+		switch($display){
+			case 'links':
 				$v = $modx->parseChunk($linkTpl, $props);
 				break;
 			case 'box':
 				$thumb = $videobox->videoThumbnail($video, $tWidth, $tHeight);
-				//$v = $modx->parseChunk($thumbTpl, array_merge($props, array('thumb' => $thumb[0], 'tWidth' => $thumb[1], 'tHeight' => $thumb[2])));
 				$v = $modx->parseChunk($boxTpl, array_merge($scriptProperties, $props, array('thumb' => $thumb[0], 'tWidth' => $thumb[1], 'tHeight' => $thumb[2])));
 				break;
 			default:

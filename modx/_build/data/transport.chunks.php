@@ -28,6 +28,14 @@ $chunks[] = $chunk;
 
 $chunk = $modx->newObject('modChunk');
 $chunk->fromArray(array(
+    'name' => 'vb.linkTpl',
+    'description' => 'Link template',
+    'snippet' => trim(file_get_contents($sources['source_core'].'/elements/chunks/chunk.link_tpl.tpl')),
+),'',true,true);
+$chunks[] = $chunk;
+
+$chunk = $modx->newObject('modChunk');
+$chunk->fromArray(array(
     'name' => 'vb.playerTpl',
     'description' => 'Player template',
     'snippet' => trim(file_get_contents($sources['source_core'].'/elements/chunks/chunk.player_tpl.tpl')),
