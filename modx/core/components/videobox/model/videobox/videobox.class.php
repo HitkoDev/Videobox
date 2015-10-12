@@ -77,6 +77,8 @@ class Videobox {
 			$img = array($this->config['assets_path'] . 'images/'.$nobg.'.png', IMAGETYPE_PNG);
 		}
 		
+		if(!is_dir($this->config['assets_path'] . 'cache')) $this->modx->cacheManager->writeTree($this->config['assets_path'] . 'cache');
+		
 		$target = $this->config['assets_path'] . 'cache/'.$hash.'.jpg';
 		
 		$img_hash = md5($target);

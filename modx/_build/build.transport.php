@@ -109,6 +109,9 @@ $modx->log(modX::LOG_LEVEL_INFO,'Adding file resolvers to category...');
 $vehicle->resolve('file',array(
     'source' => $sources['source_assets'],
     'target' => "return MODX_ASSETS_PATH . 'components/';",
+	xPDOTransport::FILE_RESOLVE_OPTIONS => array(
+		'copy_exclude_patterns' => array('/cache/'),
+	),
 ));
 $vehicle->resolve('file',array(
     'source' => $sources['source_core'],
