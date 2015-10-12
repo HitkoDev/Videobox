@@ -22,10 +22,6 @@ $vbCore = $modx->getOption('videobox.core_path', null, $modx->getOption('core_pa
 $videobox = $modx->getService('videobox', 'Videobox', $vbCore . 'model/videobox/', $scriptProperties);
 if(!($videobox instanceof Videobox)) return '';
 
-$scriptProperties['gallery_id'] = $videobox->gallery;
-$scriptProperties['gallery_page'] = $videobox->getPage();
-ksort($scriptProperties);
-$propHash = md5(serialize($scriptProperties));
 if(!isset($videos)) return;
 $v = $modx->parseChunk($videos, array());
 if($v) $videos = $v;
@@ -41,10 +37,8 @@ foreach($processors as $key => $processor){
 }
 $processors = $proc;
 
-$modx->cacheManager->get($chacheKey);
 $vid = array();
 foreach($videos as $key => $video){
-	$video_hash = md5($video, $propHash);
 	$video = explode('|', $video);
 	$title = '';
 	if(isset($video[1])) $title = trim($video[1]);
@@ -99,8 +93,6 @@ if(count($videos) > 1){
 		$start = $videobox->getPage();
 		$scriptProperties['gallery_id'] = $videobox->gallery;
 		$scriptProperties['gallery_page'] = $start;
-		ksort($scriptProperties);
-		$propHash = md5(serialize($scriptProperties));
 		$pagination = $videobox->pagination(count($videos), $start, $perPage);
 		$start = $start*$perPage;
 		if($player == 'vbinline'){
@@ -109,8 +101,9 @@ if(count($videos) > 1){
 		}
 	}
 	
-	$chacheKey = 'Videobox_page_'.$start.'_'.$propHash;
-	$content = $modx->cacheManager->get($chacheKey);
+	ksort($scriptProperties);
+	$propHash = 'Vb_gallery_' . md5(serialize($scriptProperties));
+	$content = $modx->cacheManager->get($propHash);
 	if(!$content){
 		$n = 0;
 		$content = '';
@@ -145,11 +138,11 @@ if(count($videos) > 1){
 			$so .= '<li class="galerija_item" style="flex: ' . $r . ' ' . $r . ' ' . $b . 'px;"><a class="galerija_slika_link" href="'.$slika['small'][0].'" rel="lightbox.gal"><img class="thumb" width="'.$slika['thumb'][1].'" height="'.$slika['thumb'][2].'" src="'.$slika['thumb'][0].'"></a></li>';
 		}
 		$b = 0.25*$maxW*$minR;*/
-		foreach($filtered as $video){
+		foreach($filtered as $n => $video){
 			$v = $modx->parseChunk($tpl, array_merge($props, $video, array('thumb' => $video['thumb'][0], 'tWidth' => $video['thumb'][1], 'tHeight' => $video['thumb'][2])));
 			switch($display){
 				case 'links':
-					$v = ($n == 1 ? '' : $separator) . $v;
+					$v = ($n == 0 ? '' : $separator) . $v;
 					break;
 				case 'slider':
 					$v = $modx->parseChunk($sliderItemTpl, array_merge($scriptProperties, array('content' => $v)));
@@ -160,7 +153,6 @@ if(count($videos) > 1){
 					$v = $modx->parseChunk($galleryItemTpl, array_merge($scriptProperties, array('content' => $v, 'ratio' => $r, 'basis' => $b)));
 					break;
 			}
-			
 			$content .= $v;
 		}
 		$b = 0.25*$maxW*$minR;
@@ -168,7 +160,7 @@ if(count($videos) > 1){
 			$v = $modx->parseChunk($galleryItemTpl, array('ratio' => 1, 'basis' => $b));
 			$content .= $v;
 		}
-		$modx->cacheManager->set($chacheKey, $content, 0);
+		$modx->cacheManager->set($propHash, $content, 0);
 	}
 	switch($display){
 		case 'links':
@@ -179,25 +171,24 @@ if(count($videos) > 1){
 			return $modx->parseChunk($galleryTpl, array_merge($scriptProperties, array('content' => $content, 'pagination' => $pagination)));
 	}
 } else {
-	$content = '';
-	foreach($videos as $video){
-		$data = $modx->cacheManager->get($propHash);
-		if($data) return $data;
-		
-		$props = array_merge(array('rel' => $player, 'pWidth' => $pWidth, 'pHeight' => $pHeight, 'tWidth' => $tWidth, 'tHeight' => $tHeight), array('title' => $video->getTitle(), 'link' => $video->getPlayerLink($display != 'player' || $autoPlay), 'ratio' => (100*$pHeight/$pWidth)));
-		switch($display){
-			case 'links':
-				$v = $modx->parseChunk($linkTpl, $props);
-				break;
-			case 'box':
-				$thumb = $videobox->videoThumbnail($video, $tWidth, $tHeight);
-				$v = $modx->parseChunk($boxTpl, array_merge($scriptProperties, $props, array('thumb' => $thumb[0], 'tWidth' => $thumb[1], 'tHeight' => $thumb[2])));
-				break;
-			default:
-				$v = $modx->parseChunk($playerTpl, $props);
-				break;
-		}
-		$modx->cacheManager->set($propHash, $v, 0);
-		return $v;
+	ksort($scriptProperties);
+	$propHash = 'Vb_video_' . md5(serialize($scriptProperties));
+	$data = $modx->cacheManager->get($propHash);
+	if($data) return $data;
+	$video = $videos[0];
+	$props = array_merge(array('rel' => $player, 'pWidth' => $pWidth, 'pHeight' => $pHeight, 'tWidth' => $tWidth, 'tHeight' => $tHeight), array('title' => $video->getTitle(), 'link' => $video->getPlayerLink($display != 'player' || $autoPlay), 'ratio' => (100*$pHeight/$pWidth)));
+	switch($display){
+		case 'links':
+			$v = $modx->parseChunk($linkTpl, $props);
+			break;
+		case 'box':
+			$thumb = $videobox->videoThumbnail($video, $tWidth, $tHeight);
+			$v = $modx->parseChunk($boxTpl, array_merge($scriptProperties, $props, array('thumb' => $thumb[0], 'tWidth' => $thumb[1], 'tHeight' => $thumb[2])));
+			break;
+		default:
+			$v = $modx->parseChunk($playerTpl, $props);
+			break;
 	}
+	$modx->cacheManager->set($propHash, $v, 0);
+	return $v;
 }
