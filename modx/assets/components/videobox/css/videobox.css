@@ -163,6 +163,12 @@
 	display: block;
 }
 
+.vb_line_fix {
+	white-space: nowrap;
+	max-width: 100%;
+	display: inline-block;
+}
+
 #vbOverlay,
 #vbWrap.visible #vbCenter,
 .vb_video_cont a {

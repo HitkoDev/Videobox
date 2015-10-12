@@ -1,1 +1,1 @@
-<a href="[[+link]]" rel="[[+rel]]" title="[[+title]]" data-videowidth="[[+pWidth]]" data-videoheight="[[+pHeight]]">[[+title]]</a>
+<a href="[[+link]]" class="vb_link" rel="[[+rel]]" title="[[+title]]" data-videowidth="[[+pWidth]]" data-videoheight="[[+pHeight]]">[[+title]]</a>

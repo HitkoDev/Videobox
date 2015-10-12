@@ -76,18 +76,22 @@
 		
 		return links.unbind("click").click(function(evt) {
 			
-			var link = this, startIndex = 0, mappedLinks = links.slice(), target = $(this).find(this.getAttribute("data-target"))[0] || this;
+			var link = this, startIndex = 0, mappedLinks = links.slice(), target = $($(this).find(this.getAttribute("data-target"))[0] || this);
 			
 			for(var i = 0; i < mappedLinks.length; i++){
 				if(mappedLinks[i] == link) startIndex = i;
 				mappedLinks[i] = linkMapper(mappedLinks[i], i);
 			}
 			
-			return $.videobox(mappedLinks, startIndex, _options, {
-				x: $(target).offset().left - win.scrollLeft() + $(target).innerWidth()/2,
-				y: $(target).offset().top - win.scrollTop() + $(target).innerHeight()/2,
-				w: $(target).innerWidth(),
-			});
+			target.toggleClass('vb_line_fix', true);		//	fix multi-line targets
+			var origin = {
+				x: target.offset().left - win.scrollLeft() + $(target).innerWidth()/2,
+				y: target.offset().top - win.scrollTop() + $(target).innerHeight()/2,
+				w: target.innerWidth(),
+			};
+			target.toggleClass('vb_line_fix', false);
+			
+			return $.videobox(mappedLinks, startIndex, _options, origin);
 		});
 		return false;
 	};
