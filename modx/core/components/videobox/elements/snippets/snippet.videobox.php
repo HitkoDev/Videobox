@@ -182,8 +182,8 @@ if(count($videos) > 1){
 				break;
 			case 'box':
 				$thumb = $videobox->videoThumbnail($video, $tWidth, $tHeight);
-				$v = $modx->parseChunk($thumbTpl, array_merge($props, array('thumb' => $thumb[0], 'tWidth' => $thumb[1], 'tHeight' => $thumb[2])));
-				$v = $modx->parseChunk($boxTpl, array_merge($scriptProperties, array('content' => $v)));
+				//$v = $modx->parseChunk($thumbTpl, array_merge($props, array('thumb' => $thumb[0], 'tWidth' => $thumb[1], 'tHeight' => $thumb[2])));
+				$v = $modx->parseChunk($boxTpl, array_merge($scriptProperties, $props, array('thumb' => $thumb[0], 'tWidth' => $thumb[1], 'tHeight' => $thumb[2])));
 				break;
 			default:
 				$v = $modx->parseChunk($playerTpl, $props);

@@ -242,7 +242,7 @@
 	 */
 	$.fn.vbinline = function(_options, linkMapper) {
 		linkMapper = linkMapper || function(el) {
-			return [el.getAttribute("href"), el.getAttribute("title"), el.getAttribute("data-videowidth"), el.getAttribute("data-videoheight")];
+			return [el.getAttribute("href"), el.getAttribute("title"), el.getAttribute("data-videowidth"), el.getAttribute("data-videoheight"), el.getAttribute("data-style"), el.getAttribute("data-class")];
 		};
 		
 		var links = this;
@@ -289,6 +289,8 @@
 	function changeVideo() {
 		if(activeVideo >= 0 && activeVideo < videos.length){
 			activeURL = videos[activeVideo][0];
+			$(wrap).attr('style', videos[activeVideo][4]);
+			$(wrap).attr('class', videos[activeVideo][5]);
 			
 			setup();
 			
