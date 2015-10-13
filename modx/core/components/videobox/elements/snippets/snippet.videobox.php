@@ -119,6 +119,7 @@ if(count($videos) > 1){
 			if($start > 0 && $n <= $start) continue;
 			$filtered[] = array(
 				'title' => $video->getTitle(), 
+				'linkText' => $video->getTitle(), 
 				'link' => $video->getPlayerLink(true), 
 				'thumb' => $videobox->videoThumbnail($video, $tWidth, $tHeight, $display == 'flow'),
 			);
