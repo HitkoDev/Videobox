@@ -91,7 +91,7 @@ if(count($videos) > 1){
 	if($display == 'gallery'){
 		$videobox->gallery++;
 		$start = $videobox->getPage();
-		$scriptProperties['gallery_id'] = $videobox->gallery;
+		$scriptProperties['gallery_number'] = $videobox->gallery;
 		$scriptProperties['gallery_page'] = $start;
 		$pagination = $videobox->pagination(count($videos), $start, $perPage);
 		$start = $start*$perPage;
