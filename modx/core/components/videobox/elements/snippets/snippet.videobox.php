@@ -82,6 +82,10 @@ $modx->regClientScript($videobox->config['assets_url'] . 'js/videobox%20src.js')
 if(!isset($display) || !$display) $display = count($videos) > 1 ? $multipleDisplay : $singleDisplay;
 if($display == 'link') $display = 'links';
 if($display == 'links' && $player == 'vbinline') $player = 'videobox';		//	inline player isn't meant to be used with links
+$scriptProperties['display'] = $display;
+$scriptProperties['palyer'] = $player;
+unset($scriptProperties['multipleDisplay']);
+unset($scriptProperties['singleDisplay']);
 
 if(count($videos) > 1){
 	$tpl = $display == 'links' ? $linkTpl : $thumbTpl;
