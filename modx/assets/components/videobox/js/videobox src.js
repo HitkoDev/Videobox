@@ -19,10 +19,10 @@
 
 (function($) {
 	
-	var videos, activeURL, activeVideo, win = $(window), options, open = false, 
+	var videos, activeURL, activeVideo, win = $(window), open = false, 
 	wrap, center, content, responsive, video, bottomContainer, bottom, caption, button, closeText,
 
-	defaults = {
+	options = defaults = {
 		videoWidth: 720,		//	default player width
 		videoHeight: 405,		//	default player height
 		closeText: 'Close',		//	text for the close button
@@ -77,7 +77,7 @@
 		
 		return links.unbind("click").click(function(evt) {
 			
-			var link = this, startIndex = 0, mappedLinks = links.slice(), target = $($(this).find(this.getAttribute("data-target"))[0] || this);
+			var link = this, startIndex = 0, mappedLinks = links.slice(), target = $($(this).find($(this).attr("data-target"))[0] || this);
 			
 			for(var i = 0; i < mappedLinks.length; i++){
 				if(mappedLinks[i] == link) startIndex = i;
@@ -199,10 +199,10 @@
 
 (function($) {
 	
-	var videos, activeURL, activeVideo, win = $(window), options, open = false, hidden = [], hvt = true, svt = false,
+	var videos, activeURL, activeVideo, win = $(window), open = false, hidden = [], hvt = true, svt = false,
 	wrap, responsive, video, caption, button, 
 
-	defaults = {
+	options = defaults = {
 		videoWidth: 720,		//	default player width
 		videoHeight: 405,		//	default player height
 		closeText: 'Close',		//	text for the close button
@@ -255,7 +255,7 @@
 		
 		return links.unbind("click").click(function(evt) {
 			
-			var link = this, startIndex = 0, mappedLinks = links.slice(), target = $($(link).find(link.getAttribute("data-target"))[0] || link);
+			var link = this, startIndex = 0, mappedLinks = links.slice(), target = $($(link).find($(link).attr("data-target"))[0] || link);
 			
 			for(var i = 0; i < mappedLinks.length; i++){
 				if(mappedLinks[i] == link) startIndex = i;
