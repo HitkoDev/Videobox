@@ -22,6 +22,7 @@ $vbCore = $modx->getOption('videobox.core_path', null, $modx->getOption('core_pa
 $videobox = $modx->getService('videobox', 'Videobox', $vbCore . 'model/videobox/', $scriptProperties);
 if(!($videobox instanceof Videobox)) return '';
 
+if(!isset($videos) && isset($video)) $videos = $video;
 if(!isset($videos)) return;
 $v = $modx->parseChunk($videos, array());
 if($v) $videos = $v;
@@ -185,6 +186,7 @@ if(count($videos) > 1){
 	$props = array_merge(array('rel' => $player, 'pWidth' => $pWidth, 'pHeight' => $pHeight, 'tWidth' => $tWidth, 'tHeight' => $tHeight), array('title' => $video->getTitle(), 'link' => $video->getPlayerLink($display != 'player' || $autoPlay), 'ratio' => (100*$pHeight/$pWidth)));
 	switch($display){
 		case 'links':
+			$props['linkText'] = isset($linkText) ? trim($linkText) : $props['title'];
 			$v = $modx->parseChunk($linkTpl, $props);
 			break;
 		case 'box':
