@@ -1,5 +1,5 @@
-<a href="https://cloud.githubusercontent.com/assets/4700881/10467953/b5fb0616-71fc-11e5-9847-0e2afd05ff1f.png" target="_blank"><img src="https://cloud.githubusercontent.com/assets/4700881/10467953/b5fb0616-71fc-11e5-9847-0e2afd05ff1f.png" alt="videobox logo" style="float: right; max-width: 200px;"></a>
-# [Videobox - a lightweight and versitile video player](http://hitko.eu/videobox)
+<img src="https://cloud.githubusercontent.com/assets/4700881/10467953/b5fb0616-71fc-11e5-9847-0e2afd05ff1f.png" alt="videobox logo" width="200">
+#[Videobox - a lightweight and versitile video player](http://hitko.eu/videobox)
 Videobox is a MODX extension for adding video (and audio) to your site. It supports videos from YouTube and Vimeo, as well as music from SoundCloud, and HTML5 supported video and audio formats. It offers several ways to insert a video, including direct player, pop-up player, and a video gallery. Just put the video link in the Videobox tag and you'll be up & running!
 
 ###Box display
