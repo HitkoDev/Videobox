@@ -379,6 +379,7 @@
 	margin: 8px -7px 7px -8px;
 	display: flex;
 	flex-flow: row wrap;
+	clear: both;
 }
 
 .vb_video_cont.vb_gal {
