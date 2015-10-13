@@ -39,6 +39,7 @@
 	 */
 	$.videobox = function(_videos, startVideo, _options, origin) {
 		options = $.extend(defaults, _options);
+		$.vbiClose();
 		setup(origin); 
 		videos = _videos;
 		changeVideo(startVideo);
@@ -221,6 +222,7 @@
 	 */
 	$.vbinline = function(_videos, startVideo, _options, target) {
 		options = $.extend(defaults, _options);
+		$.vbClose();
 		videos = _videos;
 		activeVideo = startVideo;
 		svt = true;
