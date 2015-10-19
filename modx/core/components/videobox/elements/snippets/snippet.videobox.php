@@ -29,8 +29,7 @@ if($v) $videos = $v;
 $videos = explode('|,', $videos);
 
 require_once($vbCore . 'model/adapters/adapter.class.php');
-$processors = explode(',', $processors);
-array_map('trim', $processors);
+$processors = array_map('trim', explode(',', $processors));
 $proc = array();
 foreach($processors as $key => $processor){
 	$p = $modx->getObject('modSnippet', array('name' => $processor));
