@@ -118,7 +118,7 @@ if(count($videos) > 1){
 			if($start > 0 && $n <= $start) continue;
 			$filtered[] = array(
 				'title' => $video->getTitle(), 
-				'linkText' => $video->getTitle(), 
+				'linkText' => $video->getTitle(true), 
 				'link' => $video->getPlayerLink(true), 
 				'thumb' => $videobox->videoThumbnail($video, $tWidth, $tHeight, $display == 'flow'),
 			);
@@ -186,7 +186,7 @@ if(count($videos) > 1){
 	$props = array_merge(array('rel' => $player, 'pWidth' => $pWidth, 'pHeight' => $pHeight, 'tWidth' => $tWidth, 'tHeight' => $tHeight), array('title' => $video->getTitle(), 'link' => $video->getPlayerLink($display != 'player' || $autoPlay), 'ratio' => (100*$pHeight/$pWidth)));
 	switch($display){
 		case 'links':
-			$props['linkText'] = isset($linkText) ? trim($linkText) : $props['title'];
+			$props['linkText'] = isset($linkText) ? trim($linkText) : $video->getTitle(true);
 			$v = $modx->parseChunk($linkTpl, $props);
 			break;
 		case 'box':
