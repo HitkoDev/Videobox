@@ -23,10 +23,7 @@ require_once('adapter.class.php');
 
 class SoundCloudVideo extends VideoboxAdapter {
 
-	function __construct($id, $title = '', $start = 0, $end = 0, $properties = array()){
-		parent::__construct($id, $title, $start, $end, $properties);
-		$this->type = 'a';
-	}
+	public $type = 'a';
 	
 	function getThumb(){
 		$data = json_decode(file_get_contents('http://soundcloud.com/oembed?url=' . rawurlencode($this->id) . '&format=json&maxheight=1000'));

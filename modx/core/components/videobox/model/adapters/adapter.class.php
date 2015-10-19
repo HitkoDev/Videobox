@@ -21,12 +21,13 @@
 
 class VideoboxAdapter {
 	
+	public $type = 'v';
+
 	function __construct($id, $title = '', $start = 0, $end = 0, $properties = array()){
 		$this->id = $id;
 		$this->title = $title;
 		$this->start = $start;
 		$this->end = $end;
-		$this->type = 'v';
 		$this->properties = $properties;
 	}
 	
