@@ -27,9 +27,10 @@ require_once($vbCore . 'model/adapters/vimeo.class.php');
  *		- link to the video (http://vimeo.com/4700344)
  */
 if(is_numeric($id)){
-	return new VimeoVideo($id, $title, $start, $end);
+	return new VimeoVideo($id, $title, $start, $end, $scriptProperties);
 }
 if(strpos($id, 'vimeo')!==false){
 	preg_match('/vimeo.com\/([0-9]*?)/isU', $id, $v_urls);
-	return new VimeoVideo($v_urls[1], $title, $start, $end);
+	return new VimeoVideo($v_urls[1], $title, $start, $end, $scriptProperties);
 }
+return false;

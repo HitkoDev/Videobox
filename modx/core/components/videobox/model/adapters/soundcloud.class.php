@@ -21,31 +21,34 @@
 
 require_once('adapter.class.php');
 
-class VimeoVideo extends VideoboxAdapter {
+class SoundCloudVideo extends VideoboxAdapter {
 
-	function getTitle($forced = false){
-		if($forced && $this->title==''){
-			return 'http://vimeo.com/' . $this->id;
-		} else {
-			return $this->title; 
-		}
+	function __construct($id, $title = '', $start = 0, $end = 0, $properties = array()){
+		parent::__construct($id, $title, $start, $end, $properties);
+		$this->type = 'a';
 	}
 	
 	function getThumb(){
-		$th = parent::getThumb();
-		if($th !== false) return $th;
-		$data = unserialize(file_get_contents('http://vimeo.com/api/v2/video/' . $this->id . '.php'));
-		$img = $data[0]['thumbnail_large'];
-		$im = @getimagesize($img);
-		if($im !== false) return array($img, $im[2]);
+		$data = json_decode(file_get_contents('http://soundcloud.com/oembed?url=' . rawurlencode($this->id) . '&format=json&maxheight=1000'));
+		if($data){
+			$data = explode('?', $data->thumbnail_url);
+			$img = $data[0];
+			$im = @getimagesize($img);
+			if($im !== false) return array($img, $im[2]);
+		}
 		return false;
 	}
 	
 	function getPlayerLink($autoplay = false){
 		$color = isset($this->properties['color']) ? $this->properties['color'] : '00a645';
-		$src = 'https://player.vimeo.com/video/' . $this->id . '?byline=0&portrait=0&color=' . $color;
-		if($autoplay) $src .= '&autoplay=1';
-		if($this->start != 0) $src .= '#t=' . $this->splitOffset($this->start);
+		$visual = isset($this->properties['scVisual']) ? $this->properties['scVisual'] : true;
+		$src = 'https://w.soundcloud.com/player/?url=' . rawurlencode($this->id) . '&show_artwork=true&color=' . $color;
+		if($autoplay) $src .= '&auto_play=true';
+		if($visual){
+			$src .= '&visual=true';
+		} else {
+			$src .= '&visual=false';
+		}
 		return $src;
 	}
 	

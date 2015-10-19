@@ -24,6 +24,8 @@ if(!($videobox instanceof Videobox)) return '';
 
 if(!isset($videos) && isset($video)) $videos = $video;
 if(!isset($videos)) return;
+$scriptProperties['color'] = trim(str_replace('#', '', $scriptProperties['color']));
+if(!$scriptProperties['color']) $scriptProperties['color'] = '00a645';
 $v = $modx->parseChunk($videos, array());
 if($v) $videos = $v;
 $videos = explode('|,', $videos);
