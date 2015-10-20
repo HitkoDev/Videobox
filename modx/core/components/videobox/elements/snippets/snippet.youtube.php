@@ -24,8 +24,8 @@ require_once($vbCore . 'model/adapters/youtube.class.php');
 /*
  *	$id - one of the following:
  *		- 11 characters YouTube video ID
- *		- link to the video (https://www.youtube.com/watch?v=KKWTdo5YW_I)
  *		- YouTube sharing link (http://youtu.be/KKWTdo5YW_I)
+ *		- link to the video (https://www.youtube.com/watch?v=KKWTdo5YW_I)
  */
 if(strlen($id)==11 && preg_match('/([a-zA-Z0-9_-]{11})/', $id)==1){
 	return new YouTubeVideo($id, $title, $start, $end, $scriptProperties);

@@ -42,9 +42,9 @@ class VimeoVideo extends VideoboxAdapter {
 	}
 	
 	function getPlayerLink($autoplay = false){
-		$color = isset($this->properties['color']) ? $this->properties['color'] : '00a645';
 		$src = 'https://player.vimeo.com/video/' . $this->id . '?byline=0&portrait=0&color=' . $color;
 		if($autoplay) $src .= '&autoplay=1';
+		if(isset($this->properties['color']) && $this->properties['color']) $src .= '&color=' . $this->properties['color'];
 		if($this->start != 0) $src .= '#t=' . $this->splitOffset($this->start);
 		return $src;
 	}

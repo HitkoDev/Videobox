@@ -26,6 +26,7 @@ if(!isset($videos) && isset($video)) $videos = $video;
 if(!isset($videos)) return;
 $scriptProperties['color'] = trim(str_replace('#', '', $scriptProperties['color']));
 if(!$scriptProperties['color']) $scriptProperties['color'] = '00a645';
+if(strlen($scriptProperties['color']) != 6) $scriptProperties['color'] = '';
 $v = $modx->parseChunk($videos, array());
 if($v) $videos = $v;
 $videos = explode('|,', $videos);

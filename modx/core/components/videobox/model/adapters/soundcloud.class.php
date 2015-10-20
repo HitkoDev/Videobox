@@ -37,14 +37,13 @@ class SoundCloudVideo extends VideoboxAdapter {
 	}
 	
 	function getPlayerLink($autoplay = false){
-		$color = isset($this->properties['color']) ? $this->properties['color'] : '00a645';
-		$visual = isset($this->properties['scVisual']) ? $this->properties['scVisual'] : true;
-		$src = 'https://w.soundcloud.com/player/?url=' . rawurlencode($this->id) . '&show_artwork=true&color=' . $color;
+		$src = 'https://w.soundcloud.com/player/?url=' . rawurlencode($this->id) . '&show_artwork=true';
 		if($autoplay) $src .= '&auto_play=true';
-		if($visual){
-			$src .= '&visual=true';
-		} else {
+		if(isset($this->properties['color']) && $this->properties['color']) $src .= '&color=' . $this->properties['color'];
+		if(isset($this->properties['scVisual']) && !$this->properties['scVisual']){
 			$src .= '&visual=false';
+		} else {
+			$src .= '&visual=true';
 		}
 		return $src;
 	}
