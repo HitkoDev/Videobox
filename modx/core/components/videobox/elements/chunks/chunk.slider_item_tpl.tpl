@@ -1,1 +1,0 @@
-<li class="vb_video_cont vb_gal" style="flex: [[+ratio]] [[+ratio]] [[+basis]]px">[[+content]]</li>

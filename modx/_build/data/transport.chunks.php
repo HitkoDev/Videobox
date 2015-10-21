@@ -44,14 +44,6 @@ $chunks[] = $chunk;
 
 $chunk = $modx->newObject('modChunk');
 $chunk->fromArray(array(
-    'name' => 'vb.sliderItemTpl',
-    'description' => 'Slider item template',
-    'snippet' => trim(file_get_contents($sources['source_core'].'/elements/chunks/chunk.slider_item_tpl.tpl')),
-),'',true,true);
-$chunks[] = $chunk;
-
-$chunk = $modx->newObject('modChunk');
-$chunk->fromArray(array(
     'name' => 'vb.sliderTpl',
     'description' => 'Slider template',
     'snippet' => trim(file_get_contents($sources['source_core'].'/elements/chunks/chunk.slider_tpl.tpl')),
