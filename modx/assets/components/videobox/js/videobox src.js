@@ -368,13 +368,13 @@
 			next: $('<div class="vb_slider_next"><i class="vb-icon-next"></i></div>').appendTo(outer),
 			el: [],
 			target: $(target),
-			originWidth: elements.css('width'),
 			showPrev: function(){
 				move(slider, 'r');
 			},
 			showNext: function(){
 				move(slider, 'l');
 			},
+			basis: $(target).attr('data-width') || elements.innerWidth(),
 			skip: function(){
 				if(!slider.rm) return;
 				var rm = slider.rm;
@@ -432,62 +432,59 @@
 		
 		var el = dir == 'l' ? slider.el.shift() : slider.el.pop();
 		dir == 'l' ? slider.target.append(el) : slider.target.prepend(el);
-		$(el).css('width', slider.width);
-		var w = $(el).outerWidth(true);
-		slider.cont.css('margin-left', dir == 'l' ? 0 : -w);
-		slider.cont.css('margin-right', -w);
+		
 		var attached = slider.target.children();
 		var fel = attached[dir == 'l' ? 0 : attached.length - 1];
 		if($(fel).find('#vbiWrap').length > 0) $.vbiClose();
 		$(fel).detach();
-		var h = slider.target.outerHeight(true);
+		var h = slider.target.innerHeight();
 		dir == 'l' ? slider.target.prepend(fel) : slider.target.append(fel);
+		
+		slider.cont.css('margin-left', dir == 'l' ? 0 : -slider.width);
+		slider.cont.css('margin-right', dir == 'l' ? -slider.width : 0);
 		setTimeout(function(){		// add some delay to let FF trigger transitions
 			slider.rm = dir;
 			slider.cont.toggleClass('animating', true);
 			slider.cont.css({
-				'margin-left': dir == 'l' ? -w : 0,
+				'margin-left': dir == 'l' ? -slider.width : 0,
+				'margin-right': dir == 'l' ? 0 : -slider.width,
 				'height': h,
 			});
 		}, 10);
 	}
 	
 	function setWidth(slider){
-		slider.target.children().css('width', slider.originWidth);
 		var w = slider.target.innerWidth();
-		var iw = slider.target.children().innerWidth();
-		var ow = slider.target.children().outerWidth(true);
-		var n = Math.floor(w/ow);
+		var b = slider.basis + slider.target.children().outerWidth(true) - slider.target.children().innerWidth();
+		var n = Math.floor(w/slider.basis);
 		if(n < 1){
 			n = 1;
 		} else {
-			var w1 = 2 - ow/(w/n);
-			var w2 = ow/(w/(n+1));
+			var w1 = 2 - b/(w/n);
+			var w2 = b/(w/(n+1));
 			if(w2 < w1) n++;
 		}
-		w = w/n + iw - ow;
-		slider.target.children().css('width', w);
+		w = w/n;
 		slider.width = w;
 		slider.count = n;
-		setAttached(slider, n);
+		setAttached(slider);
 		slider.slider.find('i').css('top', slider.elTarget ? (slider.target.find(slider.elTarget).outerHeight(true)/2) : '');
 	}
 	
-	function setAttached(slider, n){
+	function setAttached(slider){
 		var attached = slider.target.children();
-		if(attached.length < n){
-			for(var i = attached.length; i < n && slider.el.length > 0; i++){
+		if(attached.length < slider.count){
+			for(var i = attached.length; i < slider.count && slider.el.length > 0; i++){
 				var el = slider.el.shift();
 				slider.target.append(el);
-				$(el).css('width', slider.width);
 			}
-		} else if(attached.length > n){
-			for(var i = attached.length - 1; i >= n; i--){
+		} else if(attached.length > slider.count){
+			for(var i = attached.length - 1; i >= slider.count; i--){
 				slider.el.unshift(attached[i]);
 				$(attached[i]).detach();
 			}
 		}
-		var h = slider.target.outerHeight(true);
+		var h = slider.target.innerHeight();
 		slider.cont.css('height', h);
 	}
 

@@ -159,7 +159,9 @@ if(count($videos) > 1){
 					$v = ($n == 0 ? '' : $separator) . $v;
 					break;
 				case 'slider':
-					$v = $modx->parseChunk($sliderItemTpl, array_merge($scriptProperties, array('content' => $v, 'ratio' => 1, 'basis' => $tWidth/2)));
+					$r = $video['thumb'][1]/($maxR*$video['thumb'][2]);
+					$b = 0.25*$r*$maxW*$minR;
+					$v = $modx->parseChunk($sliderItemTpl, array_merge($scriptProperties, array('content' => $v, 'ratio' => $r, 'basis' => $b)));
 					break;
 				default:
 					$r = $video['thumb'][1]/($maxR*$video['thumb'][2]);
@@ -181,7 +183,7 @@ if(count($videos) > 1){
 		case 'links':
 			return $content;
 		case 'slider':
-			return $modx->parseChunk($sliderTpl, array_merge($scriptProperties, array('content' => $content)));
+			return $modx->parseChunk($sliderTpl, array_merge($scriptProperties, array('content' => $content, 'basis' => $tWidth/2)));
 		default:
 			return $modx->parseChunk($galleryTpl, array_merge($scriptProperties, array('content' => $content, 'pagination' => $pagination)));
 	}
