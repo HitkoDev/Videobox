@@ -386,13 +386,18 @@
 				if(attached.length < 1) return;
 				var el;
 				if(rm == 'l'){
-					el = attached[0];
-					slider.el.push(el);
+					for(i = 0; attached.length - i > slider.count; i++){
+						el = attached[0];
+						slider.el.push(el);
+						$(el).detach();
+					}
 				} else {
-					el = attached[attached.length - 1];
-					slider.el.unshift(el);
+					for(i = 0; attached.length - i > slider.count; i++){
+						el = attached[attached.length - 1 - i];
+						slider.el.unshift(el);
+						$(el).detach();
+					}
 				}
-				$(el).detach();
 				if(slider.stack.length > 0) move(slider, slider.stack.pop());
 			},
 			rm: false,
@@ -461,6 +466,7 @@
 		w = w/n + iw - ow;
 		slider.target.children().css('width', w);
 		slider.width = w;
+		slider.count = n;
 		setAttached(slider, n);
 	}
 	
