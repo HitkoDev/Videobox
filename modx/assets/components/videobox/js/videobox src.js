@@ -389,13 +389,13 @@
 					for(i = 0; attached.length - i > slider.count; i++){
 						el = attached[0];
 						slider.el.push(el);
-						$(el).detach();
+						detach(el);
 					}
 				} else {
 					for(i = 0; attached.length - i > slider.count; i++){
 						el = attached[attached.length - 1 - i];
 						slider.el.unshift(el);
-						$(el).detach();
+						detach(el);
 					}
 				}
 				if(slider.stack.length > 0) move(slider, slider.stack.pop());
@@ -435,8 +435,7 @@
 		
 		var attached = slider.target.children();
 		var fel = attached[dir == 'l' ? 0 : attached.length - 1];
-		if($(fel).find('#vbiWrap').length > 0) $.vbiClose();
-		$(fel).detach();
+		detach(fel);
 		var h = slider.target.innerHeight();
 		dir == 'l' ? slider.target.prepend(fel) : slider.target.append(fel);
 		
@@ -451,6 +450,12 @@
 				'height': h,
 			});
 		}, 10);
+	}
+	
+	// check for an active inline player before removing an element
+	function detach(el){
+		if($(el).find('#vbiWrap').length > 0) $.vbiClose();
+		$(el).detach();
 	}
 	
 	function setWidth(slider){
@@ -481,7 +486,7 @@
 		} else if(attached.length > slider.count){
 			for(var i = attached.length - 1; i >= slider.count; i--){
 				slider.el.unshift(attached[i]);
-				$(attached[i]).detach();
+				detach(attached[i]);
 			}
 		}
 		var h = slider.target.innerHeight();
