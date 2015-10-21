@@ -110,7 +110,7 @@ $vehicle->resolve('file',array(
     'source' => $sources['source_assets'],
     'target' => "return MODX_ASSETS_PATH . 'components/';",
 	xPDOTransport::FILE_RESOLVE_OPTIONS => array(
-		'copy_exclude_patterns' => array('/cache/'),
+		'copy_exclude_patterns' => array('/cache/', '/\.zip/'),
 	),
 ));
 $vehicle->resolve('file',array(
