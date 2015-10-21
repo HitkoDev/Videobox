@@ -363,9 +363,9 @@
 		var slider = {
 			wrap: wrap,
 			slider: outer,
-			prev: $('<div class="vb_slider_prev"></div>').prependTo(outer),
+			prev: $('<div class="vb_slider_prev"><i class="vb-icon-prev"></i></div>').prependTo(outer),
 			cont: $('<div class="vb_slider_cont"></div>').append(target).appendTo(wrap),
-			next: $('<div class="vb_slider_next"></div>').appendTo(outer),
+			next: $('<div class="vb_slider_next"><i class="vb-icon-next"></i></div>').appendTo(outer),
 			el: [],
 			target: $(target),
 			originWidth: elements.css('width'),

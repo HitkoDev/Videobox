@@ -195,7 +195,9 @@
 
 #vbCloseLink,
 #vbiClose,
-.vb_thub_wrap .vb-icon-play {
+.vb_thub_wrap .vb-icon-play,
+.vb_slider_outer .vb_slider_prev,
+.vb_slider_outer .vb_slider_next {
 	-webkit-transition: all .2s ease-in-out;
 	-moz-transition: all .2s ease-in-out;
 	-ms-transition: all .2s ease-in-out;
@@ -279,11 +281,38 @@
 	display: flex;
 	padding: 15px 0;
 	width: 100%;
+	color: #005723;
 }
 
 .vb_slider_outer .vb_slider_prev,
 .vb_slider_outer .vb_slider_next {
-	flex: 0 0 50px;
+	flex: 0 0 48px;
+	cursor: pointer;
+	font-size: 48px;
+	position: relative;
+}
+
+.vb_slider_outer .vb_slider_prev i,
+.vb_slider_outer .vb_slider_next i {
+	position: absolute;
+	top: 50%;
+	margin-top: -48px;
+	text-shadow: 0px 0px 10px #84d1a4;
+}
+
+.vb_slider_outer .vb_slider_prev {
+	margin-right: 12px;
+}
+
+.vb_slider_outer .vb_slider_next {
+	margin-left: 12px;
+}
+
+.vb_slider_outer .vb_slider_prev:hover,
+.vb_slider_outer .vb_slider_prev:focus,
+.vb_slider_outer .vb_slider_next:hover,
+.vb_slider_outer .vb_slider_next:focus {
+	color: #50bf82;
 }
 
 .vb_slider_outer .vb_slider_wrap {
@@ -587,4 +616,10 @@
 .vb-icon-circle-close-invert:after {
 	content: "\e616";
 	color: #fff !important;
+}
+.vb-icon-prev:before {
+	content: "\e617";
+}
+.vb-icon-next:before {
+	content: "\e618";
 }
