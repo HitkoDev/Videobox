@@ -107,6 +107,10 @@ if(count($videos) > 1){
 			$pHeight = $tHeight;
 		}
 	}
+
+	// if($display == 'slider'){ 
+		// $scriptProperties['class'] = isset($scriptProperties['class']) ? $scriptProperties['class'] . ' vb_slider' : 'vb_slider';
+	// }
 	
 	ksort($scriptProperties);
 	$propHash = 'Vb_gallery_' . md5(serialize($scriptProperties));
@@ -154,7 +158,7 @@ if(count($videos) > 1){
 					$v = ($n == 0 ? '' : $separator) . $v;
 					break;
 				case 'slider':
-					$v = $modx->parseChunk($sliderItemTpl, array_merge($scriptProperties, array('content' => $v)));
+					$v = $modx->parseChunk($sliderItemTpl, array_merge($scriptProperties, array('content' => $v, 'ratio' => 1, 'basis' => $tWidth/2)));
 					break;
 				default:
 					$r = $video['thumb'][1]/($maxR*$video['thumb'][2]);

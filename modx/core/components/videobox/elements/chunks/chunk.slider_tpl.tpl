@@ -1,0 +1,1 @@
+<ul class="vb_gallery vb_slider [[+class]]" style="[[+style]]">[[+content]]</ul>

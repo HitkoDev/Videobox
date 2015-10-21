@@ -1,2 +1,2 @@
-<ul class="vb_gallery">[[+content]]</ul>
+<ul class="vb_gallery [[+class]]" style="[[+style]]">[[+content]]</ul>
 [[+pagination]]

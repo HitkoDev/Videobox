@@ -200,7 +200,7 @@
 (function($) {
 	
 	var videos, activeURL, activeVideo, win = $(window), open = false, hidden = [], hvt = true, svt = false,
-	wrap, responsive, video, caption, button, 
+	wrap, responsive, video, caption, button, initialised = false,
 
 	options = defaults = {
 		videoWidth: 720,		//	default player width
@@ -347,5 +347,145 @@
 
 	// AUTOLOAD CODE BLOCK (MAY BE CHANGED OR REMOVED)
 	$("a[rel^='vbinline']").vbinline({ /* Put custom options here */ });
+	
+})(jQuery);
+
+(function($) {
+	
+	var sliders = [];
+	
+	$.vbSlider = function(target, _options){
+		
+		var elements = $(target).children();
+		var outer = $('<div class="vb_slider_outer"></div>').insertAfter(target);
+		var wrap = $('<div class="vb_slider_wrap"></div>').appendTo(outer);
+		
+		var slider = {
+			wrap: wrap,
+			slider: outer,
+			prev: $('<div class="vb_slider_prev"></div>').prependTo(outer),
+			cont: $('<div class="vb_slider_cont"></div>').append(target).appendTo(wrap),
+			next: $('<div class="vb_slider_next"></div>').appendTo(outer),
+			el: [],
+			target: $(target),
+			originWidth: elements.css('width'),
+			showPrev: function(){
+				move(slider, 'r');
+			},
+			showNext: function(){
+				move(slider, 'l');
+			},
+			skip: function(){
+				if(!slider.rm) return;
+				var rm = slider.rm;
+				slider.rm = false;
+				slider.cont.toggleClass('animating', false);
+				slider.cont.css('margin-left', 0);
+				slider.cont.css('margin-right', 0);
+				var attached = slider.target.children();
+				if(attached.length < 1) return;
+				var el;
+				if(rm == 'l'){
+					el = attached[0];
+					slider.el.push(el);
+				} else {
+					el = attached[attached.length - 1];
+					slider.el.unshift(el);
+				}
+				$(el).detach();
+				if(slider.stack.length > 0) move(slider, slider.stack.pop());
+			},
+			rm: false,
+			stack: [],
+		};
+		
+		setWidth(slider);
+		slider.prev.click(slider.showPrev);
+		slider.next.click(slider.showNext);
+		slider.cont.on('webkitTransitionEnd transitionend mozTransitionEnd oTransitionEnd', slider.skip);
+		sliders.push(slider);
+		
+		return [slider];
+	}
+	
+	$.fn.vbSlider = function(_options){
+		var sl = [];
+		for(var i = 0; i < this.length; i++) sl.concat($.vbSlider(this[i], _options));
+		return sl;
+	}
+	
+	function move(slider, dir){
+		if(slider.rm){
+			if(slider.stack.length > 0 && slider.stack[slider.stack.length - 1] != dir){
+				slider.stack.pop();
+			} else {
+				slider.stack.push(dir);
+			}
+			return;
+		}
+		
+		var el = dir == 'l' ? slider.el.shift() : slider.el.pop();
+		dir == 'l' ? slider.target.append(el) : slider.target.prepend(el);
+		$(el).css('width', slider.width);
+		var w = $(el).outerWidth(true);
+		slider.cont.css('margin-left', dir == 'l' ? 0 : -w);
+		slider.cont.css('margin-right', -w);
+		var attached = slider.target.children();
+		var fel = attached[dir == 'l' ? 0 : attached.length - 1];
+		$(fel).detach();
+		var h = slider.target.outerHeight(true);
+		dir == 'l' ? slider.target.prepend(fel) : slider.target.append(fel);
+		setTimeout(function(){		// add some delay to let FF trigger transitions
+			slider.rm = dir;
+			slider.cont.toggleClass('animating', true);
+			slider.cont.css({
+				'margin-left': dir == 'l' ? -w : 0,
+				'height': h,
+			});
+		}, 10);
+	}
+	
+	function setWidth(slider){
+		slider.target.children().css('width', slider.originWidth);
+		var w = slider.target.innerWidth();
+		var iw = slider.target.children().innerWidth();
+		var ow = slider.target.children().outerWidth(true);
+		var n = Math.floor(w/ow);
+		if(n < 1){
+			n = 1;
+		} else {
+			var w1 = 2 - ow/(w/n);
+			var w2 = ow/(w/(n+1));
+			if(w2 < w1) n++;
+		}
+		w = w/n + iw - ow;
+		slider.target.children().css('width', w);
+		slider.width = w;
+		setAttached(slider, n);
+	}
+	
+	function setAttached(slider, n){
+		var attached = slider.target.children();
+		if(attached.length < n){
+			for(var i = attached.length; i < n && slider.el.length > 0; i++){
+				var el = slider.el.shift();
+				slider.target.append(el);
+				$(el).css('width', slider.width);
+			}
+		} else if(attached.length > n){
+			for(var i = attached.length - 1; i >= n; i--){
+				slider.el.unshift(attached[i]);
+				$(attached[i]).detach();
+			}
+		}
+		var h = slider.target.outerHeight(true);
+		slider.cont.css('height', h);
+	}
+
+	$(window).on("resize", function() {
+		for(var i = 0; i < sliders.length; i++) setWidth(sliders[i]);
+	});
+	
+	$(".vb_slider").vbSlider({ /* Put custom options here */ });
 	
 })(jQuery);
