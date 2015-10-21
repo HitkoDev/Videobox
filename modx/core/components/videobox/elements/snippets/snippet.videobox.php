@@ -102,10 +102,11 @@ if(count($videos) > 1){
 		$scriptProperties['gallery_page'] = $start;
 		$pagination = $videobox->pagination(count($videos), $start, $perPage);
 		$start = $start*$perPage;
-		if($player == 'vbinline'){
-			$pWidth = $tWidth;
-			$pHeight = $tHeight;
-		}
+	}
+	
+	if($player == 'vbinline' && ($display == 'gallery' || $display == 'slider')){
+		$pWidth = $tWidth;
+		$pHeight = $tHeight;
 	}
 
 	// if($display == 'slider'){ 

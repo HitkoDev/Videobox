@@ -279,7 +279,6 @@
 /* Slider */
 .vb_slider_outer {
 	display: flex;
-	padding: 15px 0;
 	width: 100%;
 	color: #005723;
 }
@@ -290,6 +289,7 @@
 	cursor: pointer;
 	font-size: 48px;
 	position: relative;
+	margin: 15px 0;
 }
 
 .vb_slider_outer .vb_slider_prev i,
@@ -319,9 +319,13 @@
 	flex: 1 1 100%;
 }
 
-.vb_slider_wrap,
-.vb_slider_cont {
+.vb_slider_wrap {
 	overflow: hidden;
+	padding: 15px 0;
+}
+
+.vb_slider_cont {
+	display: table;
 }
 
 .vb_gallery.vb_slider {

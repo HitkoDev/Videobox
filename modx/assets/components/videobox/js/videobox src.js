@@ -438,6 +438,7 @@
 		slider.cont.css('margin-right', -w);
 		var attached = slider.target.children();
 		var fel = attached[dir == 'l' ? 0 : attached.length - 1];
+		if($(fel).find('#vbiWrap').length > 0) $.vbiClose();
 		$(fel).detach();
 		var h = slider.target.outerHeight(true);
 		dir == 'l' ? slider.target.prepend(fel) : slider.target.append(fel);
