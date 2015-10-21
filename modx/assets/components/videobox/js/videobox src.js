@@ -402,6 +402,7 @@
 			},
 			rm: false,
 			stack: [],
+			elTarget: $(target).attr("data-target"),
 		};
 		
 		setWidth(slider);
@@ -468,6 +469,7 @@
 		slider.width = w;
 		slider.count = n;
 		setAttached(slider, n);
+		slider.slider.find('i').css('top', slider.elTarget ? (slider.target.find(slider.elTarget).outerHeight(true)/2) : '');
 	}
 	
 	function setAttached(slider, n){
