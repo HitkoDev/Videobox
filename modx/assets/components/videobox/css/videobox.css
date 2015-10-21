@@ -297,7 +297,6 @@
 	position: absolute;
 	top: 50%;
 	margin-top: -24px;
-	text-shadow: 0px 0px 10px #84d1a4;
 }
 
 .vb_slider_outer .vb_slider_prev:hover,
@@ -317,9 +316,12 @@
 }
 
 .vb_gallery.vb_slider {
-	margin-top: -7px;
-	margin-bottom: -8px;
+	margin: -15px;
 }
+	
+	.vb_gallery.vb_slider .vb_video_cont.vb_gal {
+		margin: 15px 15px 8px;
+	}
 
 .vb_slider_wrap .vb_gallery.vb_slider {
 	flex-wrap: nowrap;
@@ -490,11 +492,6 @@
 	
 	.vb_video_cont.vb_gal {
 		margin: 15px 15px 8px;
-	}
-
-	.vb_gallery.vb_slider {
-		margin-top: -15px;
-		margin-bottom: -7px;
 	}
 	
 }

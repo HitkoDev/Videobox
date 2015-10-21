@@ -376,9 +376,9 @@
 			},
 			basis: $(target).attr('data-width') || elements.innerWidth(),
 			skip: function(){
-				if(!slider.rm) return;
+				if(!slider.rm || slider.rm == 'wait') return;
 				var rm = slider.rm;
-				slider.rm = false;
+				slider.rm = 'wait';
 				slider.cont.toggleClass('animating', false);
 				slider.cont.css('margin-left', 0);
 				slider.cont.css('margin-right', 0);
@@ -391,14 +391,15 @@
 						slider.el.push(el);
 						detach(el);
 					}
-				} else {
+				} else if(rm == 'r') {
 					for(i = 0; attached.length - i > slider.count; i++){
 						el = attached[attached.length - 1 - i];
 						slider.el.unshift(el);
 						detach(el);
 					}
 				}
-				if(slider.stack.length > 0) move(slider, slider.stack.pop());
+				slider.rm = false;
+				if(slider.stack.length > 0) setTimeout(function(){ move(slider, slider.stack.pop()); });
 			},
 			rm: false,
 			stack: [],
@@ -406,9 +407,9 @@
 		};
 		
 		setWidth(slider);
-		slider.prev.click(slider.showPrev);
-		slider.next.click(slider.showNext);
-		slider.cont.on('webkitTransitionEnd transitionend mozTransitionEnd oTransitionEnd', slider.skip);
+		slider.prev.click(function(){ setTimeout(slider.showPrev); });
+		slider.next.click(function(){ setTimeout(slider.showNext); });
+		slider.cont.on('webkitTransitionEnd transitionend mozTransitionEnd oTransitionEnd', function(){ setTimeout(slider.skip); });
 		sliders.push(slider);
 		
 		return [slider];
@@ -429,6 +430,7 @@
 			}
 			return;
 		}
+		slider.rm = 'wait';
 		
 		var el = dir == 'l' ? slider.el.shift() : slider.el.pop();
 		dir == 'l' ? slider.target.append(el) : slider.target.prepend(el);
@@ -439,9 +441,11 @@
 		var h = slider.target.innerHeight();
 		dir == 'l' ? slider.target.prepend(fel) : slider.target.append(fel);
 		
+		slider.cont.toggleClass('animating', false);
 		slider.cont.css('margin-left', dir == 'l' ? 0 : -slider.width);
 		slider.cont.css('margin-right', dir == 'l' ? -slider.width : 0);
-		setTimeout(function(){		// add some delay to let FF trigger transitions
+		setTimeout(function(){
+			if(slider.rm != 'wait') return;
 			slider.rm = dir;
 			slider.cont.toggleClass('animating', true);
 			slider.cont.css({
@@ -449,7 +453,7 @@
 				'margin-right': dir == 'l' ? 0 : -slider.width,
 				'height': h,
 			});
-		}, 10);
+		}, 20);
 	}
 	
 	// check for an active inline player before removing an element
