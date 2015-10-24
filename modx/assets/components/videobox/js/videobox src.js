@@ -38,7 +38,7 @@
 	 *	@param origin - {x, y, w} window coordinates where the pop-up should appear from (default is window center) and width (default 15%)
 	 */
 	$.videobox = function(_videos, startVideo, _options, origin) {
-		options = $.extend(defaults, _options);
+		$.extend(options, defaults, _options);
 		$.vbiClose();
 		setup(origin); 
 		videos = _videos;
@@ -221,7 +221,7 @@
 	 *	@param origin - {x, y, w} window coordinates where the pop-up should appear from (default is window center) and width (default 15%)
 	 */
 	$.vbinline = function(_videos, startVideo, _options, target) {
-		options = $.extend(defaults, _options);
+		$.extend(options, defaults, _options);
 		$.vbClose();
 		videos = _videos;
 		activeVideo = startVideo;
@@ -262,7 +262,7 @@
 				mappedLinks[i] = linkMapper(mappedLinks[i], i);
 			}
 			
-			_options = $.extend(_options, {
+			$.extend(_options, {
 				target: link,
 				baseWidth: target.width(),
 				baseHeight: target.height(),
@@ -352,7 +352,12 @@
 
 (function($) {
 	
-	var sliders = [];
+	var sliders = [], 
+	
+	defaults = {
+		move: 'single',		// move single or all
+		target: '',
+	};
 	
 	$.vbSlider = function(target, _options){
 		
@@ -388,24 +393,20 @@
 				if(attached.length < 1) return;
 				var el;
 				if(rm == 'l'){
-					for(i = 0; attached.length - i > slider.count; i++){
-						el = attached[0];
-						slider.el.push(el);
-						detach(el);
-					}
+					var el = attached.slice(0, attached.length - slider.count);
+					detach(el);
+					for(i = 0; i < el.length; i++) slider.el.push(el[i]);
 				} else if(rm == 'r') {
-					for(i = 0; attached.length - i > slider.count; i++){
-						el = attached[attached.length - 1 - i];
-						slider.el.unshift(el);
-						detach(el);
-					}
+					var el = attached.slice(slider.count);
+					detach(el);
+					for(i = el.length - 1; i >= 0; i--) slider.el.unshift(el[i]);
 				}
 				slider.rm = false;
 				if(slider.stack.length > 0) setTimeout(function(){ move(slider, slider.stack.pop()); });
 			},
 			rm: false,
 			stack: [],
-			elTarget: $(target).attr("data-target"),
+			options: $.extend({}, defaults, _options),
 		};
 		
 		slider.i = slider.slider.find('i');
@@ -421,7 +422,14 @@
 	
 	$.fn.vbSlider = function(_options){
 		var sl = [];
-		for(var i = 0; i < this.length; i++) sl.concat($.vbSlider(this[i], _options));
+		for(var i = 0; i < this.length; i++){
+			var target = this[i], _op = {}, tr = $(target).attr("data-target"), mo = $(target).attr("data-move");
+			
+			if(tr) _op.target = tr;
+			if(mo && mo.trim()) _op.move = mo.trim();
+			
+			sl.concat($.vbSlider(target, $.extend({}, _options, _op)));
+		}
 		return sl;
 	}
 	
@@ -436,30 +444,34 @@
 		}
 		slider.rm = 'wait';
 		
-		var el = dir == 'l' ? slider.el.shift() : slider.el.pop();
-		dir == 'l' ? slider.target.append(el) : slider.target.prepend(el);
+		
+		var n = slider.options.move == 'single' ? 1 : slider.count;
+		for(i = 0; i < n && slider.el; i++){
+			var el = dir == 'l' ? slider.el.shift() : slider.el.pop();
+			dir == 'l' ? slider.target.append(el) : slider.target.prepend(el);
+		}
 		
 		var attached = slider.target.children();
-		var fel = attached[dir == 'l' ? 0 : attached.length - 1];
+		var fel = dir == 'l' ? attached.slice(0, attached.length - slider.count) : attached.slice(slider.count);
 		detach(fel);
-		var h = slider.target.innerHeight();
+		var h = slider.target.innerHeight(), w = slider.width*n;
 		dir == 'l' ? slider.target.prepend(fel) : slider.target.append(fel);
 		
 		slider.cont.toggleClass('animating', false);
 		slider.cont.css({
-			'margin-left': dir == 'l' ? 0 : -slider.width,
-			'margin-right': dir == 'l' ? -slider.width : 0,
+			'margin-left': dir == 'l' ? 0 : -w,
+			'margin-right': dir == 'l' ? -w : 0,
 		});
 		setTimeout(function(){
 			if(slider.rm != 'wait') return;
 			slider.rm = dir;
 			slider.cont.toggleClass('animating', true);
 			slider.cont.css({
-				'margin-left': dir == 'l' ? -slider.width : 0,
-				'margin-right': dir == 'l' ? 0 : -slider.width,
+				'margin-left': dir == 'l' ? -w : 0,
+				'margin-right': dir == 'l' ? 0 : -w,
 				'height': h,
 			});
-			slider.i.css('top', slider.elTarget ? (slider.target.find(slider.elTarget).outerHeight(true)/2) : '');
+			slider.i.css('top', slider.options.target ? (slider.target.find(slider.options.target).outerHeight(true)/2) : '');
 		}, 20);
 	}
 	
@@ -486,7 +498,7 @@
 		setAttached(slider);
 		setTimeout(function(){
 			slider.cont.css('height', slider.target.innerHeight());
-			slider.i.css('top', slider.elTarget ? (slider.target.find(slider.elTarget).outerHeight(true)/2) : '');
+			slider.i.css('top', slider.options.target ? (slider.target.find(slider.options.target).outerHeight(true)/2) : '');
 		}, 20);
 	}
 	
