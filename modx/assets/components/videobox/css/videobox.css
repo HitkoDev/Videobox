@@ -319,12 +319,20 @@
 	margin: -15px;
 }
 	
-	.vb_gallery.vb_slider .vb_video_cont.vb_gal {
-		margin: 15px 15px 8px;
-	}
+.vb_gallery.vb_slider .vb_video_cont.vb_gal {
+	margin: 15px 15px 8px;
+}
 
 .vb_slider_wrap .vb_gallery.vb_slider {
 	flex-wrap: nowrap;
+}
+
+.vb_slider_cont.all.animating {
+	-webkit-transition: all 1s ease-in-out;
+	-moz-transition: all 1s ease-in-out;
+	-ms-transition: all 1s ease-in-out;
+	-o-transition: all 1s ease-in-out;
+	transition: all 1s ease-in-out;
 }
 
 /* Content */

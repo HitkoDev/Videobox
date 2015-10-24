@@ -410,6 +410,7 @@
 		};
 		
 		slider.i = slider.slider.find('i');
+		slider.cont.toggleClass(slider.options.move, true);
 		
 		setWidth(slider);
 		slider.prev.click(function(){ setTimeout(slider.showPrev); });
