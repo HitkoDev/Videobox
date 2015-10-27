@@ -80,6 +80,7 @@ $videos = $vid;
 if(count($videos) < 1) return;
 $modx->regClientCSS($videobox->config['assets_url'] . 'css/videobox.css');
 $modx->regClientScript($videobox->config['assets_url'] . 'js/jquery.min.js');
+$modx->regClientScript($videobox->config['assets_url'] . 'js/web-animations.min.js');
 $modx->regClientScript($videobox->config['assets_url'] . 'js/videobox%20src.js');
 
 if(!isset($display) || !$display) $display = count($videos) > 1 ? $multipleDisplay : $singleDisplay;
@@ -115,7 +116,7 @@ if(count($videos) > 1){
 	
 	ksort($scriptProperties);
 	$propHash = 'Vb_gallery_' . md5(serialize($scriptProperties));
-	$content = $modx->cacheManager->get($propHash);
+	$content = $cache ? $modx->cacheManager->get($propHash) : '';
 	if(!$content){
 		$n = 0;
 		$content = '';
@@ -156,7 +157,7 @@ if(count($videos) > 1){
 			$v = $modx->parseChunk($tpl, array_merge($props, $video, array('thumb' => $video['thumb'][0], 'tWidth' => $video['thumb'][1], 'tHeight' => $video['thumb'][2])));
 			switch($display){
 				case 'links':
-					$v = ($n == 0 ? '' : $separator) . $v;
+					$v = ($n == 0 ? '' : $delimiter) . $v;
 					break;
 				case 'slider':
 					$r = $video['thumb'][1]/($maxR*$video['thumb'][2]);
@@ -177,7 +178,7 @@ if(count($videos) > 1){
 			$v = $modx->parseChunk($galleryItemTpl, array('ratio' => 1, 'basis' => $b));
 			$content .= $v;
 		}
-		$modx->cacheManager->set($propHash, $content, 0);
+		if($cache) $modx->cacheManager->set($propHash, $content, 0);
 	}
 	switch($display){
 		case 'links':
@@ -190,7 +191,7 @@ if(count($videos) > 1){
 } else {
 	ksort($scriptProperties);
 	$propHash = 'Vb_video_' . md5(serialize($scriptProperties));
-	$data = $modx->cacheManager->get($propHash);
+	$data = $cache ? $modx->cacheManager->get($propHash) : '';
 	if($data) return $data;
 	$video = $videos[0];
 	$props = array_merge(array('rel' => $player, 'pWidth' => $pWidth, 'pHeight' => $pHeight, 'tWidth' => $tWidth, 'tHeight' => $tHeight), array('title' => $video->getTitle(), 'link' => $video->getPlayerLink($display != 'player' || $autoPlay), 'ratio' => (100*$pHeight/$pWidth)));
@@ -207,6 +208,6 @@ if(count($videos) > 1){
 			$v = $modx->parseChunk($playerTpl, $props);
 			break;
 	}
-	$modx->cacheManager->set($propHash, $v, 0);
+	if($cache) $modx->cacheManager->set($propHash, $v, 0);
 	return $v;
 }
