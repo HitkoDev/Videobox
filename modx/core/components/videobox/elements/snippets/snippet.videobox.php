@@ -189,12 +189,15 @@ if(count($videos) > 1){
 			return $modx->parseChunk($galleryTpl, array_merge($scriptProperties, array('content' => $content, 'pagination' => $pagination)));
 	}
 } else {
+	$autoPlay = isset($autoPlay) && $autoPlay && $display == 'player' && (!isset($videobox->autoPlay) || !$videobox->autoPlay);
+	$scriptProperties['autoPlay'] = $autoPlay;
+	$videobox->autoPlay = $autoPlay;
 	ksort($scriptProperties);
 	$propHash = 'Vb_video_' . md5(serialize($scriptProperties));
 	$data = $cache ? $modx->cacheManager->get($propHash) : '';
 	if($data) return $data;
 	$video = $videos[0];
-	$props = array_merge(array('rel' => $player, 'pWidth' => $pWidth, 'pHeight' => $pHeight, 'tWidth' => $tWidth, 'tHeight' => $tHeight), array('title' => $video->getTitle(), 'link' => $video->getPlayerLink($display != 'player' || $autoPlay), 'ratio' => (100*$pHeight/$pWidth)));
+	$props = array_merge(array('rel' => $player, 'pWidth' => $pWidth, 'pHeight' => $pHeight, 'tWidth' => $tWidth, 'tHeight' => $tHeight), array('title' => $video->getTitle(), 'link' => $video->getPlayerLink($autoPlay), 'ratio' => (100*$pHeight/$pWidth)));
 	switch($display){
 		case 'links':
 			$props['linkText'] = isset($linkText) ? trim($linkText) : $video->getTitle(true);
