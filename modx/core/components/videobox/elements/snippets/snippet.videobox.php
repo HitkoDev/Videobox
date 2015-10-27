@@ -80,7 +80,6 @@ $videos = $vid;
 if(count($videos) < 1) return;
 $modx->regClientCSS($videobox->config['assets_url'] . 'css/videobox.css');
 $modx->regClientScript($videobox->config['assets_url'] . 'js/jquery.min.js');
-$modx->regClientScript($videobox->config['assets_url'] . 'js/web-animations.min.js');
 $modx->regClientScript($videobox->config['assets_url'] . 'js/videobox%20src.js');
 
 if(!isset($display) || !$display) $display = count($videos) > 1 ? $multipleDisplay : $singleDisplay;
