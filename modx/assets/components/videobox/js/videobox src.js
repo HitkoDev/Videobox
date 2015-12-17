@@ -21,12 +21,19 @@
 	
 	var videos, activeURL, activeVideo, win = $(window), open = false, 
 	wrap, center, content, responsive, video, bottomContainer, bottom, caption, button, closeText,
+	animations = [],
 
 	options = defaults = {
 		videoWidth: 720,		//	default player width
 		videoHeight: 405,		//	default player height
 		closeText: 'Close',		//	text for the close button
 		padding: 30,			//	player padding
+		animation: {			//	animation properties (see web animations)
+			duration: 500,
+			iterations: 1,
+			delay: 0,
+			easing: 'ease-in-out'
+		},
 	};
 	
 	/**
@@ -40,9 +47,10 @@
 	$.videobox = function(_videos, startVideo, _options, origin) {
 		$.extend(options, defaults, _options);
 		$.vbiClose();
-		setup(origin); 
+		$.vbClose();
+		setup(); 
 		videos = _videos;
-		changeVideo(startVideo);
+		changeVideo(startVideo, origin);
 		return false;
 	}; 
 	
@@ -108,7 +116,7 @@
 		center = $('<div id="vbCenter" />').appendTo(wrap)[0];
 		content = $('<div id="vbContent" />').appendTo(center).append([
 			responsive = $('<div id="vbResponsive" />')[0],
-			bottomContainer = $('<div id="vbBottomContainer" />').on('webkitTransitionEnd transitionend mozTransitionEnd oTransitionEnd', showVideo)[0],
+			bottomContainer = $('<div id="vbBottomContainer" />')[0],
 		])[0];
 		video = $('<iframe id="vbVideo" frameborder="0" allowfullscreen="true" oallowfullscreen msallowfullscreen webkitallowfullscreen mozallowfullscreen />').css('display', 'none').appendTo(responsive)[0];
 		bottom = $('<div id="vbBottom" />').appendTo(bottomContainer).append([
@@ -119,17 +127,12 @@
 	});
 	
 	// set initial pop-up parameters
-	function setup(origin) {
+	function setup() {
 		$(closeText).html(options.closeText);
-		$(center).css({
-			top: origin ? -($(wrap).innerHeight()/2-origin.y) : 0,
-			left: origin ? -($(wrap).innerWidth()/2-origin.x) : 0,
-			padding: options.padding,
-			'max-width': origin ? origin.w+2*options.padding : '',
-		});
+		$(center).css('padding', options.padding);
 	}
 
-	function changeVideo(i) {
+	function changeVideo(i, origin) {
 		if(i >= 0 && i < videos.length){
 			activeVideo = i;
 			activeURL = videos[i][0];
@@ -140,15 +143,36 @@
 			
 			// animate player
 			open = true;
-			$([wrap, bottomContainer, overlay]).toggleClass('visible', true);
+			$([wrap, overlay]).toggleClass('visible', true);
 			$(wrap).toggleClass('animating', true);
-			setTimeout(function(){		// add some delay to let FF trigger transitions
-				$(center).css({
-					top: 0,
-					left: 0,
-					'max-width': parseInt(videos[activeVideo][2] || options.videoWidth) + 2*options.padding,
+			
+			var org = {
+				top: (origin ? -($(wrap).innerHeight()/2-origin.y) : 0) + 'px', 
+				left: (origin ? -($(wrap).innerWidth()/2-origin.x) : 0) + 'px', 
+				'max-width': (origin ? (origin.w+2*options.padding) + 'px' : '15%')
+			};
+			var dest = {
+				top: '0px',
+				left: '0px',
+				'max-width': (parseInt(videos[activeVideo][2] || options.videoWidth) + 2*options.padding) + 'px'
+			};
+			$(center).css(org);
+			var anim = center.animate([
+				org, dest
+			], options.animation);
+			anim.addEventListener('finish', function(){
+				$(center).css(dest);
+				var v1 = bottomContainer.animate([
+					{'max-height': '0px'},
+					{'max-height': '200px'}
+				], options.animation);
+				v1.addEventListener('finish', function(){
+					$(bottomContainer).toggleClass('visible', true);
+					showVideo();
 				});
-			}, 10);
+				animations.push(v1);
+			});
+			animations.push(anim);
 			
 		}
 		return false;
@@ -159,7 +183,6 @@
 		var width = parseInt(videos[activeVideo][2] || options.videoWidth);
 		var height = parseInt(videos[activeVideo][3] || options.videoHeight);
 		
-		// move player to the visible area
 		$(wrap).css({
 			top: win.scrollTop(),
 			left: win.scrollLeft()
@@ -183,6 +206,8 @@
 	}
 
 	function stop() {
+		for(var i = 0; i < animations.length; i++) animations[i].cancel();
+		animations = [];
 		open = false;
 		video.src = "";
 		$(video).hide();
@@ -199,8 +224,8 @@
 
 (function($) {
 	
-	var videos, activeURL, activeVideo, win = $(window), open = false, hidden = [], hvt = true, svt = false,
-	wrap, responsive, video, caption, button, initialised = false,
+	var videos = [], activeURL, activeVideo, win = $(window), open = false, hidden = [], hvt = true, svt = false,
+	wrap, responsive, video, caption, button, initialised = false, animations = [],
 
 	options = defaults = {
 		videoWidth: 720,		//	default player width
@@ -209,7 +234,13 @@
 		padding: 30,			//	player padding
 		baseWidth: 200,			//	initial player width
 		baseHeight: 150,		//	initial player height
-		target: ''				//	empty target
+		target: '',				//	empty target
+		animation: {			//	animation properties (see web animations)
+			duration: 500,
+			iterations: 1,
+			delay: 0,
+			easing: 'ease-in-out'
+		},
 	};
 	
 	/**
@@ -234,8 +265,8 @@
 	 *	Closes the Videobox
 	 */
 	$.vbiClose = function(){
-		if(activeVideo >= 0) activeVideo = -1;
 		stop();
+		if(activeVideo >= 0) activeVideo = -1;
 		return false;
 	};
 
@@ -276,18 +307,16 @@
 	// create vbInline elements
 	$(function() {
 		wrap = $('<div id="vbiWrap" />').append([
-			responsive = $('<div id="vbiResponsive" />').on('webkitTransitionEnd transitionend mozTransitionEnd oTransitionEnd', showVideo)[0],
+			responsive = $('<div id="vbiResponsive" />')[0],
 			caption = $('<span class="vb_video_title"></span>')[0],
 			button = $('<div id="vbiClose"><i class="vb-icon-circle-close-invert"></i></div>').click($.vbiClose)[0],
-		]).on('webkitTransitionEnd transitionend mozTransitionEnd oTransitionEnd', hideVideo)[0];
+		])[0];
 		video = $('<iframe id="vbiVideo" frameborder="0" allowfullscreen="true" oallowfullscreen msallowfullscreen webkitallowfullscreen mozallowfullscreen />').css('display', 'none').appendTo(responsive)[0];
 	});
 	
 	// set player parameters
 	function setup() {
 		$(options.target).after(wrap);
-		$(responsive).css('padding-bottom', (options.baseHeight*100)/options.baseWidth + '%');
-		$(wrap).css('max-width', options.baseWidth);
 		$(options.target).hide();
 		hidden = [options.target];
 	}
@@ -302,17 +331,34 @@
 			
 			$(caption).html(videos[activeVideo][1] || "");
 			$(wrap).toggleClass('visible', true);
-			
 			open = true;
 			
-			setTimeout(function(){		// add some delay to let FF trigger transitions
+			var org = {
+				'max-width': options.baseWidth + 'px'
+			};
+			var dest = {
+				'max-width': (parseInt(videos[activeVideo][2] || options.videoWidth) + 2*options.padding) + 'px'
+			};
+			var v1 = wrap.animate([org, dest], options.animation);
+			v1.addEventListener('finish', function(){
+				$(wrap).css(dest);
+			});
+			animations.push(v1);
 			
-				$(wrap).css('max-width', parseInt(videos[activeVideo][2] || options.videoWidth) + 2*options.padding);
-				var width = parseInt(videos[activeVideo][2] || options.videoWidth);
-				var height = parseInt(videos[activeVideo][3] || options.videoHeight);
-				$(responsive).css('padding-bottom', (height*100)/width + '%');
-				
-			}, 10);
+			var org2 = {
+				'padding-bottom': (options.baseHeight*100)/options.baseWidth + '%'
+			};
+			var width = parseInt(videos[activeVideo][2] || options.videoWidth);
+			var height = parseInt(videos[activeVideo][3] || options.videoHeight);
+			var dest2 = {
+				'padding-bottom': (height*100)/width + '%'
+			};
+			var v2 = responsive.animate([org2, dest2], options.animation);
+			v2.addEventListener('finish', function(){
+				$(responsive).css(dest2);
+				showVideo();
+			});
+			animations.push(v2);
 		}
 	}
 
@@ -320,29 +366,48 @@
 		if(!open || $(video).attr('src') != '') return;
 		$(video).show();
 		video.src = activeURL;
-		$(wrap).toggleClass('animating', false);
-	}
-	
-	function hideVideo(){
-		if(hvt) return;
-		hvt = true;
-		$(wrap).detach();
-		$(wrap).toggleClass('visible', false);
-		for(a in hidden) $(hidden[a]).show();
-		if(svt){
-			svt = false;
-			changeVideo();
-		}
 	}
 
 	function stop() {
+		for(var i = 0; i < animations.length; i++) animations[i].cancel();
+		animations = [];
 		open = false;
 		video.src = "";
 		$(video).hide();
-		hvt = false;
-		$(responsive).css('padding-bottom', (options.baseHeight*100)/options.baseWidth + '%');
-		$(wrap).css('max-width', options.baseWidth);
-		setTimeout(function(){ if(!hvt) hideVideo(); }, 600);
+		
+		if($(wrap).parent().length > 0){
+			var org = {
+				'max-width': (parseInt(videos[activeVideo][2] || options.videoWidth) + 2*options.padding) + 'px'
+			};
+			var dest = {
+				'max-width': options.baseWidth + 'px'
+			};
+			var v1 = wrap.animate([org, dest], options.animation);
+			animations.push(v1);
+			
+			var width = parseInt(videos[activeVideo][2] || options.videoWidth);
+			var height = parseInt(videos[activeVideo][3] || options.videoHeight);
+			var org2 = {
+				'padding-bottom': (height*100)/width + '%'
+			};
+			var dest2 = {
+				'padding-bottom': (options.baseHeight*100)/options.baseWidth + '%'
+			};
+			var v2 = responsive.animate([org2, dest2], options.animation);
+			v2.addEventListener('finish', function(){
+				$(wrap).detach();
+				$(wrap).toggleClass('visible', false);
+				for(a in hidden) $(hidden[a]).show();
+				if(svt){
+					svt = false;
+					changeVideo();
+				}
+			});
+			animations.push(v2);
+		} else if(svt){
+			svt = false;
+			changeVideo();
+		}
 	}
 
 	// AUTOLOAD CODE BLOCK (MAY BE CHANGED OR REMOVED)
@@ -352,11 +417,19 @@
 
 (function($) {
 	
-	var sliders = [], 
+	var sliders = [],
 	
 	defaults = {
-		move: 'single',		// move single or all
-		target: '',
+		move: 'single',				//	move single or all
+		target: '',					//	empty target
+		singleDuration: 500,		//	duartion for single element
+		doubleClickTimeout: 200,	//	clicks within this period are joined
+		animation: {				//	animation properties (see web animations)
+			duration: 500,
+			iterations: 1,
+			delay: 0,
+			easing: 'ease-in-out'
+		},
 	};
 	
 	$.vbSlider = function(target, _options){
@@ -374,17 +447,13 @@
 			el: [],
 			target: $(target),
 			showPrev: function(){
-				move(slider, 'r');
+				queueMove(slider, 'r');
 			},
 			showNext: function(){
-				move(slider, 'l');
+				queueMove(slider, 'l');
 			},
 			basis: $(target).attr('data-width') || elements.innerWidth(),
-			skip: function(){
-				if(!slider.rm || slider.rm == 'wait') return;
-				var rm = slider.rm;
-				slider.rm = 'wait';
-				slider.cont.toggleClass('animating', false);
+			skip: function(dir){
 				slider.cont.css({
 					'margin-left': 0,
 					'margin-right': 0,
@@ -392,30 +461,30 @@
 				var attached = slider.target.children();
 				if(attached.length < 1) return;
 				var el;
-				if(rm == 'l'){
+				if(dir == 'l'){
 					var el = attached.slice(0, attached.length - slider.count);
 					detach(el);
 					for(i = 0; i < el.length; i++) slider.el.push(el[i]);
-				} else if(rm == 'r') {
+				} else if(dir == 'r') {
 					var el = attached.slice(slider.count);
 					detach(el);
 					for(i = el.length - 1; i >= 0; i--) slider.el.unshift(el[i]);
 				}
 				slider.rm = false;
-				if(slider.stack.length > 0) setTimeout(function(){ move(slider, slider.stack.pop()); });
+				if(slider.stack.length > 0) move(slider, slider.stack.pop());
 			},
 			rm: false,
 			stack: [],
 			options: $.extend({}, defaults, _options),
+			timeout: false,
 		};
 		
 		slider.i = slider.slider.find('i');
 		slider.cont.toggleClass(slider.options.move, true);
 		
 		setWidth(slider);
-		slider.prev.click(function(){ setTimeout(slider.showPrev); });
-		slider.next.click(function(){ setTimeout(slider.showNext); });
-		slider.cont.on('webkitTransitionEnd transitionend mozTransitionEnd oTransitionEnd', function(){ setTimeout(slider.skip); });
+		slider.prev.click(function(){ slider.showPrev(); });
+		slider.next.click(function(){ slider.showNext(); });
 		sliders.push(slider);
 		
 		return [slider];
@@ -434,6 +503,19 @@
 		return sl;
 	}
 	
+	function queueMove(slider, dir){
+		if(slider.stack.length > 0 && slider.stack[slider.stack.length - 1] != dir){
+			slider.stack.pop();
+		} else {
+			slider.stack.push(dir);
+		}
+		if(slider.timeout) clearTimeout(slider.timeout);
+		slider.timeout = setTimeout(function(){
+			slider.timeout = false;
+			if(slider.stack.length > 0) move(slider, slider.stack.pop());
+		}, slider.options.doubleClickTimeout);
+	}
+	
 	function move(slider, dir){
 		if(slider.rm){
 			if(slider.stack.length > 0 && slider.stack[slider.stack.length - 1] != dir){
@@ -443,10 +525,17 @@
 			}
 			return;
 		}
-		slider.rm = 'wait';
+		slider.rm = true;
 		
+		var mult = 1;
+		while(slider.stack.length > 0 && slider.stack[slider.stack.length - 1] == dir){
+			slider.stack.pop();
+			mult++;
+		}
 		
 		var n = slider.options.move == 'single' ? 1 : slider.count;
+		n *= mult;
+		n = n % (slider.count + slider.el.length);
 		for(i = 0; i < n && slider.el; i++){
 			var el = dir == 'l' ? slider.el.shift() : slider.el.pop();
 			dir == 'l' ? slider.target.append(el) : slider.target.prepend(el);
@@ -458,22 +547,22 @@
 		var h = slider.target.innerHeight(), w = slider.width*n;
 		dir == 'l' ? slider.target.prepend(fel) : slider.target.append(fel);
 		
-		slider.cont.toggleClass('animating', false);
-		slider.cont.css({
-			'margin-left': dir == 'l' ? 0 : -w,
-			'margin-right': dir == 'l' ? -w : 0,
+		var org = {
+			'margin-left': (dir == 'l' ? 0 : -w) + 'px',
+			'margin-right': (dir == 'l' ? -w : 0) + 'px',
+			height: slider.cont.css('height'),
+		};
+		var dest = {
+			'margin-left': (dir == 'l' ? -w : 0) + 'px',
+			'margin-right': (dir == 'l' ? 0 : -w) + 'px',
+			height: h + 'px',
+		};
+		var v1 = slider.cont[0].animate([org, dest], slider.options.singleDuration ? $.extend({}, slider.options.animation, {duration: slider.options.singleDuration * n}) : slider.options.animation);
+		v1.addEventListener('finish', function(){
+			slider.cont.css('height', h);
+			slider.skip(dir);
 		});
-		setTimeout(function(){
-			if(slider.rm != 'wait') return;
-			slider.rm = dir;
-			slider.cont.toggleClass('animating', true);
-			slider.cont.css({
-				'margin-left': dir == 'l' ? -w : 0,
-				'margin-right': dir == 'l' ? 0 : -w,
-				'height': h,
-			});
-			slider.i.css('top', slider.options.target ? (slider.target.find(slider.options.target).outerHeight(true)/2) : '');
-		}, 20);
+		slider.i.css('top', slider.options.target ? (slider.target.find(slider.options.target).outerHeight(true)/2) : '');
 	}
 	
 	// check for an active inline player before removing an element
