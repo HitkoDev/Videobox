@@ -19,9 +19,8 @@
 
 (function($) {
 	
-	var videos, activeURL, activeVideo, win = $(window), open = false, 
+	var videos, activeURL, activeVideo, win = $(window), open = false, animations = [],
 	wrap, center, content, responsive, video, bottomContainer, bottom, caption, button, closeText,
-	animations = [],
 
 	options = defaults = {
 		videoWidth: 720,		//	default player width
@@ -72,7 +71,7 @@
 	/**
 	 *	Maps Videobox to elements
 	 *
-	 *	@param this - list of elements, for example $(selector)
+	 *	@this - list of elements, for example $(selector)
 	 *	@param _options - Videobox options, see defaults for details
 	 *	@callback linkMapper - receives an element, returns array of video attributes [player_url, title, player_width, player_height]
 	 */
@@ -134,18 +133,18 @@
 
 	function changeVideo(i, origin) {
 		if(i >= 0 && i < videos.length){
+			stop();
+			
+			// prepare to change video
 			activeVideo = i;
 			activeURL = videos[i][0];
-			stop();
 			$(caption).html(videos[activeVideo][1] || "");
-			
 			setPlayer();
-			
-			// animate player
 			open = true;
+			
+			// animate
 			$([wrap, overlay]).toggleClass('visible', true);
 			$(wrap).toggleClass('animating', true);
-			
 			var org = {
 				top: (origin ? -($(wrap).innerHeight()/2-origin.y) : 0) + 'px', 
 				left: (origin ? -($(wrap).innerWidth()/2-origin.x) : 0) + 'px', 
@@ -224,8 +223,8 @@
 
 (function($) {
 	
-	var videos = [], activeURL, activeVideo, win = $(window), open = false, hidden = [], hvt = true, svt = false,
-	wrap, responsive, video, caption, button, initialised = false, animations = [],
+	var videos = [], activeURL, activeVideo, win = $(window), open = false, hidden = [], hvt = false, svt = false, animations = [],
+	wrap, responsive, video, caption, button,
 
 	options = defaults = {
 		videoWidth: 720,		//	default player width
@@ -273,7 +272,7 @@
 	/**
 	 *	Maps Videobox to elements
 	 *
-	 *	@param this - list of elements, for example $(selector)
+	 *	@this - list of elements, for example $(selector)
 	 *	@param _options - Videobox options, see defaults for details
 	 *	@callback linkMapper - receives an element, returns array of video attributes [player_url, title, player_width, player_height]
 	 */
@@ -322,17 +321,18 @@
 	}
 
 	function changeVideo() {
+		hvt = svt = false;
 		if(activeVideo >= 0 && activeVideo < videos.length){
+			setup();
+			
+			// set player
 			activeURL = videos[activeVideo][0];
 			$(wrap).attr('style', videos[activeVideo][4]);
 			$(wrap).attr('class', videos[activeVideo][5]);
-			
-			setup();
-			
 			$(caption).html(videos[activeVideo][1] || "");
-			$(wrap).toggleClass('visible', true);
 			open = true;
 			
+			// animate
 			var org = {
 				'max-width': options.baseWidth + 'px'
 			};
@@ -356,7 +356,7 @@
 			var v2 = responsive.animate([org2, dest2], options.animation);
 			v2.addEventListener('finish', function(){
 				$(responsive).css(dest2);
-				showVideo();
+				showVideo();	// show video when animations end
 			});
 			animations.push(v2);
 		}
@@ -369,45 +369,39 @@
 	}
 
 	function stop() {
+		if(hvt) return;		// return if player is already being closed
+		
+		// stop any ongoing actions
 		for(var i = 0; i < animations.length; i++) animations[i].cancel();
 		animations = [];
 		open = false;
 		video.src = "";
 		$(video).hide();
 		
+		// hide player if attached, then change video if needed
 		if($(wrap).parent().length > 0){
-			var org = {
+			hvt = true;
+			var v1 = wrap.animate([{
 				'max-width': (parseInt(videos[activeVideo][2] || options.videoWidth) + 2*options.padding) + 'px'
-			};
-			var dest = {
+			}, {
 				'max-width': options.baseWidth + 'px'
-			};
-			var v1 = wrap.animate([org, dest], options.animation);
+			}], options.animation);
 			animations.push(v1);
 			
 			var width = parseInt(videos[activeVideo][2] || options.videoWidth);
 			var height = parseInt(videos[activeVideo][3] || options.videoHeight);
-			var org2 = {
+			var v2 = responsive.animate([{
 				'padding-bottom': (height*100)/width + '%'
-			};
-			var dest2 = {
+			}, {
 				'padding-bottom': (options.baseHeight*100)/options.baseWidth + '%'
-			};
-			var v2 = responsive.animate([org2, dest2], options.animation);
+			}], options.animation);
 			v2.addEventListener('finish', function(){
 				$(wrap).detach();
-				$(wrap).toggleClass('visible', false);
 				for(a in hidden) $(hidden[a]).show();
-				if(svt){
-					svt = false;
-					changeVideo();
-				}
+				if(svt) changeVideo();
 			});
 			animations.push(v2);
-		} else if(svt){
-			svt = false;
-			changeVideo();
-		}
+		} else if(svt) changeVideo();
 	}
 
 	// AUTOLOAD CODE BLOCK (MAY BE CHANGED OR REMOVED)
@@ -422,7 +416,7 @@
 	defaults = {
 		move: 'single',				//	move single or all
 		target: '',					//	empty target
-		singleDuration: 500,		//	duartion for single element
+		singleDuration: 500,		//	duration for single element
 		doubleClickTimeout: 200,	//	clicks within this period are joined
 		animation: {				//	animation properties (see web animations)
 			duration: 500,
@@ -432,8 +426,22 @@
 		},
 	};
 	
+	/**
+	 *	Make slider from a DOM element
+	 *
+	 *	@param target - container DOM element, first-level children will be treated as slider elements
+	 *	@param _options - slider options, see defaults for details
+	 *	@return Slider element
+	 */
 	$.vbSlider = function(target, _options){
 		
+		// update and return an existing slider
+		for(var i = 0; i < sliders.length; i++) if(sliders[i].target == target){
+			sliders[i].options = $.extend({}, defaults, _options);
+			return sliders[i];
+		}
+		
+		// make new slider if it doesn't exist
 		var elements = $(target).children();
 		var outer = $('<div class="vb_slider_outer"></div>').insertAfter(target);
 		var wrap = $('<div class="vb_slider_wrap"></div>').appendTo(outer);
@@ -454,13 +462,8 @@
 			},
 			basis: $(target).attr('data-width') || elements.innerWidth(),
 			skip: function(dir){
-				slider.cont.css({
-					'margin-left': 0,
-					'margin-right': 0,
-				});
-				var attached = slider.target.children();
-				if(attached.length < 1) return;
-				var el;
+				// remove any excess items
+				var el, attached = slider.target.children();
 				if(dir == 'l'){
 					var el = attached.slice(0, attached.length - slider.count);
 					detach(el);
@@ -470,11 +473,22 @@
 					detach(el);
 					for(i = el.length - 1; i >= 0; i--) slider.el.unshift(el[i]);
 				}
-				slider.rm = false;
-				if(slider.stack.length > 0) move(slider, slider.stack.pop());
+				
+				// set margin to 0 (there are no items to hide)
+				slider.target.css({
+					'margin-left': 0,
+					'margin-right': 0,
+				});
+				
+				// continue moving if there are any queued clicks and double click isn't pending
+				if(slider.queue.length > 0 && !slider.timeout){
+					move(slider, slider.queue.pop());
+				} else {
+					slider.rm = false;
+				}
 			},
 			rm: false,
-			stack: [],
+			queue: [],
 			options: $.extend({}, defaults, _options),
 			timeout: false,
 		};
@@ -482,14 +496,21 @@
 		slider.i = slider.slider.find('i');
 		slider.cont.toggleClass(slider.options.move, true);
 		
-		setWidth(slider);
+		setCount(slider);
 		slider.prev.click(function(){ slider.showPrev(); });
 		slider.next.click(function(){ slider.showNext(); });
 		sliders.push(slider);
 		
-		return [slider];
+		return slider;
 	}
 	
+	/**
+	 *	Make sliders from elements
+	 *
+	 *	@this list of elements, for example $(selector)
+	 *	@param _options - slider options, see defaults for details
+	 *	@return array of Slider elements, corresponding to elements in @this
+	 */
 	$.fn.vbSlider = function(_options){
 		var sl = [];
 		for(var i = 0; i < this.length; i++){
@@ -498,69 +519,72 @@
 			if(tr) _op.target = tr;
 			if(mo && mo.trim()) _op.move = mo.trim();
 			
-			sl.concat($.vbSlider(target, $.extend({}, _options, _op)));
+			sl.push($.vbSlider(target, $.extend({}, _options, _op)));
 		}
 		return sl;
 	}
 	
+	// add move to queue, process moves after the last click
 	function queueMove(slider, dir){
-		if(slider.stack.length > 0 && slider.stack[slider.stack.length - 1] != dir){
-			slider.stack.pop();
+		if(slider.queue.length > 0 && slider.queue[slider.queue.length - 1] != dir){
+			slider.queue.pop();
 		} else {
-			slider.stack.push(dir);
+			slider.queue.push(dir);
 		}
 		if(slider.timeout) clearTimeout(slider.timeout);
 		slider.timeout = setTimeout(function(){
 			slider.timeout = false;
-			if(slider.stack.length > 0) move(slider, slider.stack.pop());
+			if(!slider.rm && slider.queue.length > 0) move(slider, slider.queue.pop());
 		}, slider.options.doubleClickTimeout);
 	}
 	
 	function move(slider, dir){
-		if(slider.rm){
-			if(slider.stack.length > 0 && slider.stack[slider.stack.length - 1] != dir){
-				slider.stack.pop();
-			} else {
-				slider.stack.push(dir);
-			}
-			return;
-		}
 		slider.rm = true;
 		
+		// parse queued moves
 		var mult = 1;
-		while(slider.stack.length > 0 && slider.stack[slider.stack.length - 1] == dir){
-			slider.stack.pop();
-			mult++;
+		while(slider.queue.length > 0) mult += slider.queue.pop() == dir ? 1 : -1;
+		if(mult == 0) return;
+		if(mult < 0){
+			mult = 0 - mult;
+			dir = dir == 'l' ? 'r' : 'l';
 		}
 		
-		var n = slider.options.move == 'single' ? 1 : slider.count;
-		n *= mult;
+		// get new items
+		var n = (slider.options.move == 'single' ? 1 : slider.count) * mult;	
 		n = n % (slider.count + slider.el.length);
 		for(i = 0; i < n && slider.el; i++){
 			var el = dir == 'l' ? slider.el.shift() : slider.el.pop();
 			dir == 'l' ? slider.target.append(el) : slider.target.prepend(el);
 		}
 		
+		// calculate new slider height
 		var attached = slider.target.children();
 		var fel = dir == 'l' ? attached.slice(0, attached.length - slider.count) : attached.slice(slider.count);
 		detach(fel);
-		var h = slider.target.innerHeight(), w = slider.width*n;
+		var h = slider.target.innerHeight(), w = 100*n/slider.count;
 		dir == 'l' ? slider.target.prepend(fel) : slider.target.append(fel);
 		
+		// animate
 		var org = {
-			'margin-left': (dir == 'l' ? 0 : -w) + 'px',
-			'margin-right': (dir == 'l' ? -w : 0) + 'px',
-			height: slider.cont.css('height'),
+			'margin-left': (dir == 'l' ? 0 : -w) + '%',
+			'margin-right': (dir == 'l' ? -w : 0) + '%',
 		};
 		var dest = {
-			'margin-left': (dir == 'l' ? -w : 0) + 'px',
-			'margin-right': (dir == 'l' ? 0 : -w) + 'px',
-			height: h + 'px',
+			'margin-left': (dir == 'l' ? -w : 0) + '%',
+			'margin-right': (dir == 'l' ? 0 : -w) + '%',
 		};
-		var v1 = slider.cont[0].animate([org, dest], slider.options.singleDuration ? $.extend({}, slider.options.animation, {duration: slider.options.singleDuration * n}) : slider.options.animation);
+		var anim = slider.options.singleDuration ? $.extend({}, slider.options.animation, {duration: slider.options.singleDuration * n}) : slider.options.animation;
+		var v1 = slider.target[0].animate([org, dest], anim);
 		v1.addEventListener('finish', function(){
-			slider.cont.css('height', h);
 			slider.skip(dir);
+		});
+		var v2 = slider.cont[0].animate([
+			{height: slider.cont.css('height')},
+			{height: h + 'px'}
+		], anim);
+		v2.addEventListener('finish', function(){
+			slider.cont.css('height', h);
 		});
 		slider.i.css('top', slider.options.target ? (slider.target.find(slider.options.target).outerHeight(true)/2) : '');
 	}
@@ -571,9 +595,13 @@
 		$(el).detach();
 	}
 	
-	function setWidth(slider){
+	// calculate number of visible items and show them
+	function setCount(slider){
+		var current = slider.count;
 		var w = slider.target.innerWidth();
-		var b = slider.basis + slider.target.children().outerWidth(true) - slider.target.children().innerWidth();
+		var b = slider.basis + slider.target.children().outerWidth(true) - slider.target.children().innerWidth();	// base width including any offset
+		
+		// calculate number of displayed items
 		var n = Math.floor(w/slider.basis);
 		if(n < 1){
 			n = 1;
@@ -582,16 +610,19 @@
 			var w2 = b/(w/(n+1));
 			if(w2 < w1) n++;
 		}
-		w = w/n;
-		slider.width = w;
-		slider.count = n;
-		setAttached(slider);
-		setTimeout(function(){
-			slider.cont.css('height', slider.target.innerHeight());
-			slider.i.css('top', slider.options.target ? (slider.target.find(slider.options.target).outerHeight(true)/2) : '');
-		}, 20);
+		
+		// add or remove visible items if needed
+		if(n != current){
+			slider.count = n;
+			setAttached(slider);
+		}
+		
+		// set new size
+		slider.cont.css('height', slider.target.innerHeight());
+		slider.i.css('top', slider.options.target ? (slider.target.find(slider.options.target).outerHeight(true)/2) : '');
 	}
 	
+	// make sure slider shows exactly slider.count items
 	function setAttached(slider){
 		var attached = slider.target.children();
 		if(attached.length < slider.count){
@@ -608,7 +639,7 @@
 	}
 
 	$(window).on("resize", function() {
-		for(var i = 0; i < sliders.length; i++) setWidth(sliders[i]);
+		for(var i = 0; i < sliders.length; i++) setCount(sliders[i]);
 	});
 	
 	$(".vb_slider").vbSlider({ /* Put custom options here */ });

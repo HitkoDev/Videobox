@@ -210,13 +210,8 @@
 #vbiWrap {
 	width: 100%;
 	position: relative;
-	visibility: hidden;
 	color: #005723;
 	text-align: center;
-}
-
-#vbiWrap.visible {
-	visibility: visible;
 }
 
 #vbiResponsive {
@@ -305,6 +300,10 @@
 }
 
 .vb_gallery.vb_slider {
+	margin: 0;
+}
+
+.vb_slider_cont {
 	margin: -15px;
 }
 	
