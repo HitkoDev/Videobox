@@ -1,4 +1,5 @@
 /**	
+ *  @preserve
  *	@author		HitkoDev http://hitko.eu/videobox
  *	@copyright	Copyright (C) 2015 HitkoDev All Rights Reserved.
  *	@license	http://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
@@ -44,9 +45,11 @@
 	 *	@param origin - {x, y, w} window coordinates where the pop-up should appear from (default is window center) and width (default 15%)
 	 */
 	$.videobox = function(_videos, startVideo, _options, origin) {
-		$.extend(options, defaults, _options);
 		$.vbiClose();
 		$.vbClose();
+		
+		$.extend(options, defaults, _options);
+		
 		setup(); 
 		videos = _videos;
 		changeVideo(startVideo, origin);
@@ -59,11 +62,10 @@
 	$.vbClose = function() {
 		stop();
 		$([wrap, bottomContainer, overlay]).toggleClass('visible', false);
-		$(wrap).toggleClass('animating', false);
-		$(wrap).css({
-			top: 0,
-			left: 0
-		});
+		// $(wrap).css({
+			// top: 0,
+			// left: 0
+		// });
 		if(activeVideo >= 0) activeVideo = -1;
 		return false;
 	};
@@ -120,7 +122,7 @@
 		video = $('<iframe id="vbVideo" frameborder="0" allowfullscreen="true" oallowfullscreen msallowfullscreen webkitallowfullscreen mozallowfullscreen />').css('display', 'none').appendTo(responsive)[0];
 		bottom = $('<div id="vbBottom" />').appendTo(bottomContainer).append([
 			button = $('<a id="vbCloseLink" href="#" ><span id="vbCloseText">' + defaults.closeText + '</span><i class="vb-icon-close"></i></a>').click($.vbClose)[0], 
-			caption = $('<span id="vbCaption" />')[0]
+			caption = $('<strong id="vbCaption" />')[0]
 		])[0];
 		closeText = $(bottom).find('#vbCloseText')[0];
 	});
@@ -133,18 +135,17 @@
 
 	function changeVideo(i, origin) {
 		if(i >= 0 && i < videos.length){
-			stop();
 			
 			// prepare to change video
 			activeVideo = i;
 			activeURL = videos[i][0];
 			$(caption).html(videos[activeVideo][1] || "");
+			
 			setPlayer();
+			
 			open = true;
 			
 			// animate
-			$([wrap, overlay]).toggleClass('visible', true);
-			$(wrap).toggleClass('animating', true);
 			var org = {
 				top: (origin ? -($(wrap).innerHeight()/2-origin.y) : 0) + 'px', 
 				left: (origin ? -($(wrap).innerWidth()/2-origin.x) : 0) + 'px', 
@@ -155,7 +156,8 @@
 				left: '0px',
 				'max-width': (parseInt(videos[activeVideo][2] || options.videoWidth) + 2*options.padding) + 'px'
 			};
-			$(center).css(org);
+			$([wrap, overlay]).toggleClass('visible', true);
+			$(wrap).toggleClass('animating', true);
 			var anim = center.animate([
 				org, dest
 			], options.animation);
@@ -210,10 +212,11 @@
 		open = false;
 		video.src = "";
 		$(video).hide();
+		$(wrap).toggleClass('animating', false);
 	}
 
 	win.on("resize", function() {
-		if(activeVideo >= 0) setPlayer();
+		if(open && activeVideo >= 0) setPlayer();
 	});
 
 	// AUTOLOAD CODE BLOCK (MAY BE CHANGED OR REMOVED)
@@ -253,19 +256,45 @@
 	$.vbinline = function(_videos, startVideo, _options, target) {
 		$.extend(options, defaults, _options);
 		$.vbClose();
-		videos = _videos;
-		activeVideo = startVideo;
-		svt = true;
-		stop();
+		$.vbiClose(function(){
+			videos = _videos;
+			activeVideo = startVideo;
+			changeVideo();
+		});
 		return false;
 	}; 
 	
 	/**
 	 *	Closes the Videobox
 	 */
-	$.vbiClose = function(){
+	$.vbiClose = function(callback){
 		stop();
-		if(activeVideo >= 0) activeVideo = -1;
+		
+		// hide player if attached, then execute callback (if available)
+		if(!hvt){
+			if($(wrap).parent().length > 0){
+				hvt = true;
+				var v1 = wrap.animate([{
+					'max-width': (parseInt(videos[activeVideo][2] || options.videoWidth) + 2*options.padding) + 'px'
+				}, {
+					'max-width': options.baseWidth + 'px'
+				}], options.animation);
+				var width = parseInt(videos[activeVideo][2] || options.videoWidth);
+				var height = parseInt(videos[activeVideo][3] || options.videoHeight);
+				var v2 = responsive.animate([{
+					'padding-bottom': (height*100)/width + '%'
+				}, {
+					'padding-bottom': (options.baseHeight*100)/options.baseWidth + '%'
+				}], options.animation);
+				v2.addEventListener('finish', function(){
+					$(wrap).detach();
+					for(a in hidden) $(hidden[a]).show();
+					hidden = [];
+					hvt = false;
+					if(typeof callback == "function") callback(); 
+				});
+			} else if(typeof callback == "function") callback(); 
+		}
 		return false;
 	};
 
@@ -321,7 +350,6 @@
 	}
 
 	function changeVideo() {
-		hvt = svt = false;
 		if(activeVideo >= 0 && activeVideo < videos.length){
 			setup();
 			
@@ -369,39 +397,11 @@
 	}
 
 	function stop() {
-		if(hvt) return;		// return if player is already being closed
-		
-		// stop any ongoing actions
 		for(var i = 0; i < animations.length; i++) animations[i].cancel();
 		animations = [];
 		open = false;
 		video.src = "";
 		$(video).hide();
-		
-		// hide player if attached, then change video if needed
-		if($(wrap).parent().length > 0){
-			hvt = true;
-			var v1 = wrap.animate([{
-				'max-width': (parseInt(videos[activeVideo][2] || options.videoWidth) + 2*options.padding) + 'px'
-			}, {
-				'max-width': options.baseWidth + 'px'
-			}], options.animation);
-			animations.push(v1);
-			
-			var width = parseInt(videos[activeVideo][2] || options.videoWidth);
-			var height = parseInt(videos[activeVideo][3] || options.videoHeight);
-			var v2 = responsive.animate([{
-				'padding-bottom': (height*100)/width + '%'
-			}, {
-				'padding-bottom': (options.baseHeight*100)/options.baseWidth + '%'
-			}], options.animation);
-			v2.addEventListener('finish', function(){
-				$(wrap).detach();
-				for(a in hidden) $(hidden[a]).show();
-				if(svt) changeVideo();
-			});
-			animations.push(v2);
-		} else if(svt) changeVideo();
 	}
 
 	// AUTOLOAD CODE BLOCK (MAY BE CHANGED OR REMOVED)

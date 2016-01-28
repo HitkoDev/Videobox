@@ -9,7 +9,7 @@ set_time_limit(0);
 define('PKG_NAME','Videobox');
 define('PKG_NAME_LOWER','videobox');
 define('PKG_VERSION','5.0.0');
-define('PKG_RELEASE','beta-2');
+define('PKG_RELEASE','beta-3');
  
 /* define build paths */
 $root = dirname(dirname(__FILE__)).'/';
@@ -68,6 +68,16 @@ $chunks = include $sources['data'].'transport.chunks.php';
 if (empty($chunks)) $modx->log(modX::LOG_LEVEL_ERROR,'Could not package in chunks.');
 $category->addMany($chunks);
  
+/* compress css */
+$css = array(
+	'css/videobox'
+);
+foreach($css as $file) exec('cleancss "' . $sources['source_assets'] . '/' . $file . '.css" -o "' . $sources['source_assets'] . '/' . $file . '.min.css"');
+$js = array(
+	'js/videobox'
+);
+foreach($js as $file) exec('uglifyjs "' . $sources['source_assets'] . '/' . $file . '.js" -o "' . $sources['source_assets'] . '/' . $file . '.min.js"  --comments');
+ 
 /* create category vehicle */
 $vehicle = $builder->createVehicle($adaptersCategory, array(
     xPDOTransport::UNIQUE_KEY => 'category',
@@ -110,7 +120,7 @@ $vehicle->resolve('file',array(
     'source' => $sources['source_assets'],
     'target' => "return MODX_ASSETS_PATH . 'components/';",
 	xPDOTransport::FILE_RESOLVE_OPTIONS => array(
-		'copy_exclude_patterns' => array('/cache/', '/\.zip/'),
+		'copy_exclude_patterns' => array('/cache/', '/\.zip/', '/(?<!\.min)\.(js|css)/'),
 	),
 ));
 $vehicle->resolve('file',array(
