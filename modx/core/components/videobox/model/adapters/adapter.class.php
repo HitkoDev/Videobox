@@ -1,5 +1,4 @@
 <?php
-
 /**	
  *	@author		HitkoDev http://hitko.eu/videobox
  *	@copyright	Copyright (C) 2015 HitkoDev All Rights Reserved.
@@ -58,6 +57,14 @@ class VideoboxAdapter {
 		if($this->start != 0) $src .= '&start=' . $this->splitOffset($this->start);
 		if($this->end != 0) $src .= '&end=' . $this->splitOffset($this->end);
 		return $src;
+	}
+	
+	function getSourceUrl(){
+		return '';
+	}
+	
+	function getSourceFormats(){
+		return array();
 	}
 	
 	final function getID(){

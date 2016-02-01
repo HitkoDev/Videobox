@@ -28,5 +28,15 @@ $properties = include $sources['data'].'properties/properties.soundcloud.php';
 $snippet->setProperties($properties);
 $snippets[] = $snippet;
 
+$snippet = $modx->newObject('modSnippet');
+$snippet->fromArray(array(
+    'name' => 'HTML5',
+    'description' => 'HTML5 video adapter',
+    'snippet' => getSnippetContent($sources['elements'].'snippets/snippet.html5.php'),
+), '', true, true);
+$properties = include $sources['data'].'properties/properties.htm5.php';
+$snippet->setProperties($properties);
+$snippets[] = $snippet;
+
 unset($snippet);
 return $snippets;

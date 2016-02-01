@@ -165,31 +165,31 @@ class Videobox {
 			$imagedata[0] -= $b_l + $b_r;
 			$imagedata[1] -= $b_t + $b_b;
 			
-			// Calculate new size and offset
-			$new_w = $imagedata[0];
-			$new_h = $imagedata[1];		
-			
-			$new_w = ($tHeight*$new_w) / $new_h;
-			$new_h = $tHeight;
-			if($new_w > $tWidth){
-				$new_h = ($tWidth*$new_h) / $new_w;
-				$new_w = $tWidth;
-			}		
-			
-			$new_w = (int)$new_w;
-			$new_h = (int)$new_h;
-			$off_w = (int)(($tWidth - $new_w)/2);
-			$off_h = (int)(($tHeight - $new_h)/2);
-			
 			// Copy and crop
 			if($no_border){
-				$tWidth = $new_w;
-				$tHeight = $new_h;
+				$tWidth = $imagedata[0];
+				$tHeight = $imagedata[1];
 				$newimg = imagecreatetruecolor($tWidth, $tHeight);
 				$black = imagecolorallocate($newimg, 0, 0, 0);
 				imagefilledrectangle($newimg, 0, 0, $tWidth, $tHeight, $black);
-				imagecopyresampled($newimg, $src_img, 0, 0, $b_l, $b_t, $new_w, $new_h, $imagedata[0], $imagedata[1]);
+				imagecopyresampled($newimg, $src_img, 0, 0, $b_l, $b_t, $tWidth, $tHeight, $tWidth, $tHeight);
 			} else {
+			
+				// Calculate new size and offset
+				$new_w = $imagedata[0];
+				$new_h = $imagedata[1];		
+				
+				$new_w = ($tHeight*$new_w) / $new_h;
+				$new_h = $tHeight;
+				if($new_w > $tWidth){
+					$new_h = ($tWidth*$new_h) / $new_w;
+					$new_w = $tWidth;
+				}		
+				
+				$new_w = (int)$new_w;
+				$new_h = (int)$new_h;
+				$off_w = (int)(($tWidth - $new_w)/2);
+				$off_h = (int)(($tHeight - $new_h)/2);
 				$newimg = imagecreatetruecolor($tWidth, $tHeight);
 				$black = imagecolorallocate($newimg, 0, 0, 0);
 				imagefilledrectangle($newimg, 0, 0, $tWidth, $tHeight, $black);
@@ -254,29 +254,29 @@ class Videobox {
 			$imagedata[1] -= $b_t + $b_b;
 			
 			$imgM->cropImage($imagedata[0], $imagedata[1], $b_l, $b_t);
-			
-			// Calculate new size and offset
-			$new_w = $imagedata[0];
-			$new_h = $imagedata[1];		
-			
-			$new_w = ($tHeight*$new_w) / $new_h;
-			$new_h = $tHeight;
-			if($new_w > $tWidth){
-				$new_h = ($tWidth*$new_h) / $new_w;
-				$new_w = $tWidth;
-			}		
-			
-			$new_w = (int)$new_w;
-			$new_h = (int)$new_h;
-			$off_w = (int)(($tWidth - $new_w)/2);
-			$off_h = (int)(($tHeight - $new_h)/2);
-			
-			$imgM->setImageBackgroundColor(new ImagickPixel("rgb(0, 0, 0)"));
-			$imgM->resizeImage($new_w, $new_h, imagick::FILTER_CATROM, 1);
 			if($no_border){
-				$tWidth = $new_w;
-				$tHeight = $new_h;
+				$tWidth = $imagedata[0];
+				$tHeight = $imagedata[1];
 			} else {
+				
+				// Calculate new size and offset
+				$new_w = $imagedata[0];
+				$new_h = $imagedata[1];		
+				
+				$new_w = ($tHeight*$new_w) / $new_h;
+				$new_h = $tHeight;
+				if($new_w > $tWidth){
+					$new_h = ($tWidth*$new_h) / $new_w;
+					$new_w = $tWidth;
+				}		
+				
+				$new_w = (int)$new_w;
+				$new_h = (int)$new_h;
+				$off_w = (int)(($tWidth - $new_w)/2);
+				$off_h = (int)(($tHeight - $new_h)/2);
+				
+				$imgM->setImageBackgroundColor(new ImagickPixel("rgb(0, 0, 0)"));
+				$imgM->resizeImage($new_w, $new_h, imagick::FILTER_CATROM, 1);
 				$imgM->extentImage($tWidth, $tHeight, -$off_w, -$off_h);
 			}
 			$imgM->setImageFormat('jpeg');

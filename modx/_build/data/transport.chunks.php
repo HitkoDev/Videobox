@@ -58,5 +58,13 @@ $chunk->fromArray(array(
 ),'',true,true);
 $chunks[] = $chunk;
 
+$chunk = $modx->newObject('modChunk');
+$chunk->fromArray(array(
+    'name' => 'vb.html5player',
+    'description' => 'Template for the HTML5 player',
+    'snippet' => trim(file_get_contents($sources['source_core'].'/elements/chunks/chunk.html5player.tpl')),
+),'',true,true);
+$chunks[] = $chunk;
+
 unset($chunk);
 return $chunks;

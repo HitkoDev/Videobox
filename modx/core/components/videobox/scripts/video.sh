@@ -1,0 +1,3 @@
+(test -f "$2.mp4"  || test -f "$2.mp4__"  || (avconv -loglevel quiet -i "$1" -strict experimental    -f mp4   -y "$2.mp4__"  && mv "$2.mp4__"  "$2.mp4"))  || rm "$2.mp4__"  &
+(test -f "$2.webm" || test -f "$2.webm__" || (avconv -loglevel quiet -i "$1" -qmax 42 -qmin 10       -f webm  -y "$2.webm__" && mv "$2.webm__" "$2.webm")) || rm "$2.webm__" &
+(test -f "$2.ogv"  || test -f "$2.ogv__"  || (avconv -loglevel quiet -i "$1" -q:v 6 -q:a 5           -f ogg   -y "$2.ogv__"  && mv "$2.ogv__"  "$2.ogv"))  || rm "$2.ogv__"  &
