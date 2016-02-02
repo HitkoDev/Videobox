@@ -5,11 +5,11 @@
 	<title>[[+title]]</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<script src="/video.js/build/temp/ie8/videojs-ie8.js"></script>
-	<link href="/video.js/build/temp/video-js.css" rel="stylesheet" type="text/css">
-	<script src="/video.js/build/temp/video.js"></script>
+	<link href="[[+assets]]/css/videobox.css" rel="stylesheet" type="text/css">
+	<link href="[[+assets]]/videojs/video-js.css" rel="stylesheet" type="text/css">
+	<script src="[[+assets]]/videojs/video.js"></script>
 	<script>
-		videojs.options.flash.swf = '/video.js/build/temp/video-js.swf';
+		videojs.options.flash.swf = '[[+assets]]/videojs/video-js.swf';
 	</script>
 
 	<style>
