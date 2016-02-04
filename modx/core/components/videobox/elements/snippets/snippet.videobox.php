@@ -75,7 +75,11 @@ if($req_video){
 			'poster' => $thumb[0],
 			'url' => $video->getSourceUrl(),
 			'assets' => $videobox->config['assets_url'],
-			'title' => $video->getTitle()
+			'title' => $video->getTitle(),
+			'type' => $video->type == 'a' ? 'vjs-audio' : '',
+			'start' => $video->start,
+			'end' => $video->end > $video->start ? $video->end : 0,
+			'auto' => $autoplay ? 1 : 0
 		);
 		$sources = '';
 		foreach($video->getSourceFormats() as $source){

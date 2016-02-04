@@ -15615,7 +15615,7 @@ var Tech = (function (_Component) {
 
     if (!_globalWindow2['default']['WebVTT'] && this.el().parentNode != null) {
       var script = _globalDocument2['default'].createElement('script');
-      script.src = this.options_['vtt.js'] || '../node_modules/videojs-vtt.js/dist/vtt.js';
+      script.src = this.options_['vtt.js'] || 'https://cdn.rawgit.com/gkatsev/vtt.js/vjs-v0.12.1/dist/vtt.min.js';
       this.el().parentNode.appendChild(script);
       _globalWindow2['default']['WebVTT'] = true;
     }

@@ -1,6 +1,7 @@
 ### 5.0.0 beta 3 - **
   * js optimisation
   * bug fixes
+  * HTML5 player
 
 ### 5.0.0 beta 2 - *17. December 2015*
   * moved from CSS transitions to Web Animations for better performance

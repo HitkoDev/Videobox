@@ -5,13 +5,7 @@
 	<title>[[+title]]</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link href="[[+assets]]/css/videobox.css" rel="stylesheet" type="text/css">
-	<link href="[[+assets]]/videojs/video-js.css" rel="stylesheet" type="text/css">
-	<script src="[[+assets]]/videojs/video.js"></script>
-	<script>
-		videojs.options.flash.swf = '[[+assets]]/videojs/video-js.swf';
-	</script>
-
+	<link href="[[+assets]]videojs/video-js.min.css" rel="stylesheet" type="text/css">
 	<style>
 		body, html,
 		video, #vid1 {
@@ -30,10 +24,32 @@
 </head>
 <body>
 
-	<video id="vid1" class="video-js vjs-default-skin" controls="controls" preload="auto" poster="[[+poster]]" data-setup='{}'>
+	<video id="vid1" class="video-js [[+type]] vjs-default-skin" controls="controls" preload="auto" poster="[[+poster]]" data-setup='{ starttime: 15 }'>
 		[[+sources]]
 		<p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
 	</video>
+
+	<script src="[[+assets]]videojs/video.min.js"></script>
+	<script>
+		videojs.options.flash.swf = '[[+assets]]/videojs/video-js.swf';
+		
+		var vid = videojs("vid1");
+		
+		vid.on('loadedmetadata', function(){
+			vid.currentTime([[+start]]);
+			var auto = [[+auto]];
+			if(auto) vid.play();
+		});
+		
+		var end = [[+end]];
+		var onEnd = function(){
+			if(vid.currentTime() >= end) {
+				vid.pause();
+				vid.off('timeupdate', onEnd);
+			}
+		};
+		if(end > 0) vid.on('timeupdate', onEnd);
+	</script>
 	
 </body>
 </html>
