@@ -63,7 +63,7 @@ class HTML5Video extends VideoboxAdapter {
 	}
 	
 	function getSourceUrl(){
-		if($this->properties['local'] && $this->properties['convert']){
+		if($this->properties['local'] && $this->properties['h5Convert']){
 			$orig = $this->properties['paths']['pathAbsoluteWithPath'] . '.' . $this->properties['ext'];
 			$dest = $this->properties['paths']['pathAbsoluteWithPath'];
 			if($this->type == 'a'){
