@@ -34,7 +34,7 @@ $snippet->fromArray(array(
     'description' => 'HTML5 video adapter',
     'snippet' => getSnippetContent($sources['elements'].'snippets/snippet.html5.php'),
 ), '', true, true);
-$properties = include $sources['data'].'properties/properties.htm5.php';
+$properties = include $sources['data'].'properties/properties.html5.php';
 $snippet->setProperties($properties);
 $snippets[] = $snippet;
 
