@@ -88,30 +88,39 @@ class Videobox {
 		$ret = $this->modx->cacheManager->get($img_hash);
 		if($ret) return $ret;
 		
-		$target_info = getimagesize($target);
+		try{
+            $target_info = getimagesize($target);
+        } catch (Exception $ex){
+            
+        }
 		if($target_info){
 			$ret = array($this->config['assets_url'] . 'cache/'.$hash.'.jpg', $target_info[0], $target_info[1]);
 			$this->modx->cacheManager->set($img_hash, $ret, 0);
 			return $ret;
 		}
+			
+        $tmpn = tempnam($this->config['assets_url'] . 'cache/', 'vb_');
+        file_put_contents($tmpn, fopen($img[0], 'r'));
 		
 		if(!extension_loaded('imagick')){
 		
 			try {
 				switch($img[1]){
 					case IMAGETYPE_JPEG: 
-						$src_img = imagecreatefromjpeg($img[0]);
+						$src_img = imagecreatefromjpeg($tmpn);
 						break;
 					case IMAGETYPE_PNG: 
-						$src_img = imagecreatefrompng($img[0]);
+						$src_img = imagecreatefrompng($tmpn);
 						break;
 					case IMAGETYPE_GIF: 
-						$src_img = imagecreatefromgif($img[0]);
+						$src_img = imagecreatefromgif($tmpn);
 						break;
 					default:
+                        unlink($tmpn);
 						return $this->videoThumbnail($nobg, $tWidth, $tHeight, $no_border, $n + 1);
 				}
 			} catch (Exception $e) {
+                unlink($tmpn);
 				return $this->videoThumbnail($nobg, $tWidth, $tHeight, $no_border, $n + 1);
 			}
 			if(!$src_img) return $this->videoThumbnail($nobg, $tWidth, $tHeight, $no_border, $n + 1);
@@ -159,6 +168,7 @@ class Videobox {
 				}
 
 			} else {
+                unlink($tmpn);
 				return $this->videoThumbnail($nobg, $tWidth, $tHeight, $no_border, $n + 1);
 			}
 			
@@ -202,9 +212,13 @@ class Videobox {
 			imagedestroy($newimg);
 			
 		} else {
-			
-			$imgM = new Imagick($img[0]);
-			$imagedata = array($imgM->getImageWidth(), $imgM->getImageHeight());
+            
+            try {
+                $imgM = @new Imagick($tmpn);
+                $imagedata = array($imgM->getImageWidth(), $imgM->getImageHeight());
+            } catch(Exception $ex) {
+                $imagedata = array(0, 0);
+            }
 			
 			$b_t = 0;
 			$b_b = 0;
@@ -247,6 +261,7 @@ class Videobox {
 				}
 
 			} else {
+                unlink($tmpn);
 				return $this->videoThumbnail($nobg, $tWidth, $tHeight, $no_border, $n + 1);
 			}
 			
@@ -288,6 +303,7 @@ class Videobox {
 		rename($target.'__', $target);
 		$ret = array($this->config['assets_url'] . 'cache/'.$hash.'.jpg', $tWidth, $tHeight);
 		$this->modx->cacheManager->set($img_hash, $ret, 0);
+        unlink($tmpn);
 		return $ret;
 	}
 	

@@ -34,9 +34,10 @@
 		videojs.options.flash.swf = '[[+assets]]/videojs/video-js.swf';
 		
 		var vid = videojs("vid1");
-		
+
+		var start = [[+start]];
 		vid.on('loadedmetadata', function(){
-			vid.currentTime([[+start]]);
+			if(start > 0) vid.currentTime(start);
 			var auto = [[+auto]];
 			if(auto) vid.play();
 		});

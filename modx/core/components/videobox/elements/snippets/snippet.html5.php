@@ -44,7 +44,7 @@ if(in_array(strtolower($ext), HTML5Video::$vid[0]) || in_array(strtolower($ext),
 	$source->initialize();
 	$paths = $source->getBases($file);
 	if($local){
-		$paths['urlFullWithPath'] = rtrim($modx->getOption('site_url'), '/') . '/' . ltrim($paths['urlAbsoluteWithPath'], '/');
+		$paths['urlFullWithPath'] = $paths['urlAbsoluteWithPath'];
 	} else {
 		$paths['urlFullWithPath'] = $file;
 	}

@@ -1,0 +1,10 @@
+{
+  "license": "GPL-3.0",
+  "readme": "README.md",
+  "version": "5.0.0",
+  "name": "Videobox",
+  "copyright": "Hitko",
+  "dependencies": {
+    "videobox-js": "git+https://github.com/HitkoDev/Videobox-js.git"
+  }
+}

@@ -6,6 +6,7 @@ modx/assets/components/videobox/cache/*
 modx/_build/build.config.php
 modx/assets/components/videobox/css/videobox.min.css
 modx/assets/components/videobox/js/videobox.min.js
+node_modules
 
 
 #################

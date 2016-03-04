@@ -61,6 +61,12 @@ $modx->log(modX::LOG_LEVEL_INFO,'Packaging in adapter snippets...');
 $snippets = include $sources['data'].'transport.snippets.adapters.php';
 if (empty($snippets)) $modx->log(modX::LOG_LEVEL_ERROR,'Could not package in adapter snippets.');
 $adaptersCategory->addMany($snippets);
+
+/* add adapter plugins */
+$modx->log(modX::LOG_LEVEL_INFO,'Packaging in adapter plugins...');
+$plugins = include $sources['data'].'transport.plugins.adapters.php';
+if (empty($plugins)) $modx->log(modX::LOG_LEVEL_ERROR,'Could not package in adapter plugins.');
+$adaptersCategory->addMany($plugins);
  
 /* add chunks */
 $modx->log(modX::LOG_LEVEL_INFO,'Packaging in chunks...');
@@ -69,14 +75,11 @@ if (empty($chunks)) $modx->log(modX::LOG_LEVEL_ERROR,'Could not package in chunk
 $category->addMany($chunks);
  
 /* compress css */
-$css = array(
-	'css/videobox'
-);
-foreach($css as $file) exec('cleancss "' . $sources['source_assets'] . '/' . $file . '.css" -o "' . $sources['source_assets'] . '/' . $file . '.min.css"');
-$js = array(
-	'js/videobox'
-);
-foreach($js as $file) exec('uglifyjs "' . $sources['source_assets'] . '/' . $file . '.js" -o "' . $sources['source_assets'] . '/' . $file . '.min.js"  --comments');
+$baseDir = realpath(dirname(__FILE__).'/../../') . '/';
+copy($baseDir . 'node_modules/videobox-js/dist/videobox.css', $baseDir . 'modx/assets/components/videobox/css/videobox.css');
+copy($baseDir . 'node_modules/videobox-js/dist/videobox.min.css', $baseDir . 'modx/assets/components/videobox/css/videobox.min.css');
+copy($baseDir . 'node_modules/videobox-js/dist/videobox.js', $baseDir . 'modx/assets/components/videobox/js/videobox.js');
+copy($baseDir . 'node_modules/videobox-js/dist/videobox.min.js', $baseDir . 'modx/assets/components/videobox/js/videobox.min.js');
  
 /* create category vehicle */
 $vehicle = $builder->createVehicle($adaptersCategory, array(
