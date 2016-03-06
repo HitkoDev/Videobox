@@ -152,7 +152,6 @@
         button = $('<div id="vbiClose"><i class="vb-icon-circle-close-invert"></i></div>').click($.vbiClose)[0],
     ])[0];
     video = $('<iframe id="vbiVideo" frameborder="0" allowfullscreen="true" oallowfullscreen msallowfullscreen webkitallowfullscreen mozallowfullscreen />').css('display', 'none').appendTo(responsive)[0];
-    $("a[rel^='vbinline']").vbinline({});
 })(jQuery);
 
 /// <reference path="headers.d.ts" />
@@ -362,7 +361,6 @@
         for (var i = 0; i < sliders.length; i++)
             sliders[i].setCount();
     });
-    $(".vb_slider").vbSlider({});
 })(jQuery);
 
 /// <reference path="headers.d.ts" />
@@ -387,6 +385,18 @@
         $.vbClose();
         $.extend(options, defaults, _options);
         setup();
+        if (_videos[startVideo].origin && _videos[startVideo].origin.target) {
+            var link = _videos[startVideo].origin.target;
+            var target = $($(link).find($(link).attr("data-target"))[0] || link);
+            var bw = wrap.getBoundingClientRect();
+            var bt = target[0].getBoundingClientRect();
+            target.toggleClass('vb_line_fix', true);
+            _videos[startVideo].origin.x = _videos[startVideo].origin.x || (bt.left - bw.left + target.innerWidth() / 2);
+            _videos[startVideo].origin.y = _videos[startVideo].origin.y || (bt.top - bw.top + target.innerHeight() / 2);
+            _videos[startVideo].origin.width = _videos[startVideo].origin.width || target.innerWidth();
+            _videos[startVideo].origin.height = _videos[startVideo].origin.height || target.innerHeight();
+            target.toggleClass('vb_line_fix', false);
+        }
         videos = _videos;
         changeVideo(startVideo);
         return false;
@@ -416,28 +426,15 @@
         }; }
         var links = this;
         links.unbind("click").click(function (evt) {
-            var link = this, startIndex = 0, mappedLinks = [], target = $($(this).find($(this).attr("data-target"))[0] || this);
+            var link = this, startIndex = 0, mappedLinks = [];
             for (var i = 0; i < links.length; i++) {
                 if (links[i] == link)
                     startIndex = i;
                 mappedLinks.push(linkMapper(links[i], i));
             }
-            $.extend(options, defaults, _options);
-            $(wrap).css({
-                top: $(options.root).scrollTop(),
-                left: $(options.root).scrollLeft()
-            });
-            var bw = wrap.getBoundingClientRect();
-            var bt = target[0].getBoundingClientRect();
-            target.toggleClass('vb_line_fix', true);
             mappedLinks[startIndex].origin = {
-                x: bt.left - bw.left + target.innerWidth() / 2,
-                y: bt.top - bw.top + target.innerHeight() / 2,
-                width: target.innerWidth(),
-                height: target.innerHeight(),
-                target: target[0]
+                target: link
             };
-            target.toggleClass('vb_line_fix', false);
             return $.videobox(mappedLinks, startIndex, _options);
         });
         return false;
@@ -446,6 +443,10 @@
         $(closeText).html(options.closeText);
         $(center).css('padding', options.padding);
         $(options.root).append([overlay, wrap]);
+        $(wrap).css({
+            top: $(options.root).scrollTop(),
+            left: $(options.root).scrollLeft()
+        });
     }
     function changeVideo(i) {
         if (i < 0 || i >= videos.length)
@@ -541,10 +542,16 @@
             return;
         setPlayerSizePosition();
     });
+})(jQuery);
+
+/// <reference path="headers.d.ts" />
+(function ($) {
     var r = $(".mdl-layout.mdl-js-layout")[0];
     if (!r)
         r = $("body")[0];
     $("a[rel^='videobox']").videobox({
         root: r
     });
+    $("a[rel^='vbinline']").vbinline({});
+    $(".vb_slider").vbSlider({});
 })(jQuery);
