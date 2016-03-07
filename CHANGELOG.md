@@ -1,4 +1,4 @@
-### 5.0.0 beta 4 - **
+### 5.0.0 beta 4 - *7. March 2016*
   * moved to TS and SASS
   * bug fixes
   * updated HTML5 player
