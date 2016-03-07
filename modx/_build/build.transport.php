@@ -88,6 +88,11 @@ $vehicle = $builder->createVehicle($adaptersCategory, array(
     xPDOTransport::UPDATE_OBJECT => true,
     xPDOTransport::RELATED_OBJECTS => true,
     xPDOTransport::RELATED_OBJECT_ATTRIBUTES => array (
+		'Plugins' => array (
+			xPDOTransport::PRESERVE_KEYS => false,
+			xPDOTransport::UPDATE_OBJECT => BUILD_PLUGIN_UPDATE,
+			xPDOTransport::UNIQUE_KEY => 'name',
+		),
         'Snippets' => array(
             xPDOTransport::PRESERVE_KEYS => false,
             xPDOTransport::UPDATE_OBJECT => true,
@@ -130,6 +135,12 @@ $vehicle->resolve('file',array(
     'source' => $sources['source_core'],
     'target' => "return MODX_CORE_PATH . 'components/';",
 ));
+
+$modx->log(modX::LOG_LEVEL_INFO,'Adding in PHP resolvers...');
+$vehicle->resolve('php',array(
+    'source' => $sources['resolvers'] . 'resolve.events.php',
+));
+
 $builder->putVehicle($vehicle);
  
 /* zip up package */
