@@ -100,7 +100,8 @@ class Videobox {
 		}
 			
         $tmpn = tempnam($this->config['assets_url'] . 'cache/', 'vb_');
-        file_put_contents($tmpn, fopen($img[0], 'r'));
+        copy($img[0], $tmpn);
+        // file_put_contents($tmpn, fopen($img[0], 'r'));
 		
 		if(!extension_loaded('imagick')){
 		

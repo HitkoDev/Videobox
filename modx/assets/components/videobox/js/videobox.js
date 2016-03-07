@@ -332,7 +332,7 @@
             }
         };
         return _vbSlider;
-    })();
+    }());
     var sliders = [];
     $.vbSlider = function (target, _options) {
         if (_options === void 0) { _options = {}; }

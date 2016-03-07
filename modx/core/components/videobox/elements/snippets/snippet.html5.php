@@ -32,6 +32,10 @@ HTML5Video::$aud = array(
 	array('mp3', 'oga', 'wav', 'webm'), 
 	array('audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/webm')
 );
+HTML5Video::$img = array(
+	array('jpg', 'jpeg', 'png', 'gif'), 
+	array(IMAGETYPE_JPEG, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_GIF)
+); 
 $ext = pathinfo($id);
 $file = $ext['dirname'] . '/' . $ext['filename'];
 $ext = $ext['extension'];

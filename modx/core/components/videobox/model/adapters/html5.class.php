@@ -25,6 +25,7 @@ class HTML5Video extends VideoboxAdapter {
 	
 	public static $vid;
 	public static $aud;
+    public static $img;
 	
 	function __construct($id, $title = '', $start = 0, $end = 0, $properties = array()) {
 		parent::__construct($id, $title, $start, $end, $properties);
@@ -45,9 +46,16 @@ class HTML5Video extends VideoboxAdapter {
 			$dest = $this->properties['paths']['pathAbsoluteWithPath'];
 			if(!is_file($dest . '.jpg')) shell_exec($this->properties['scriptsDir'] . 'thumb_' . $this->type . '.sh ' . escapeshellarg($orig) . ' ' . escapeshellarg($dest));
 			if(is_file($dest . '.jpg')) return array($dest . '.jpg', IMAGETYPE_JPEG);
-		} else {
-			return array($this->properties['paths']['urlFullWithPath'] . '.jpg', IMAGETYPE_JPEG);
-		}
+		} 
+        for($i = 0; $i < count(self::$img[0]) && $i < count(self::$img[1]); $i++){
+            if($this->properties['local']){
+                $dest = $this->properties['paths']['pathAbsoluteWithPath'];
+                if(is_file($dest . '.' . self::$img[0][$i])) return array($dest . '.' . self::$img[0][$i], self::$img[1][$i]);
+            } else {
+                $dest = $this->properties['paths']['urlFullWithPath'];
+                if(self::is_file_remote($dest . '.' . self::$img[0][$i])) return array($dest . '.' . self::$img[0][$i], self::$img[1][$i]);
+            }
+        }
 		return '';
 	}
 	
@@ -79,15 +87,62 @@ class HTML5Video extends VideoboxAdapter {
 		$ret = array();
 		if($this->type == 'v'){
 			for($i = 0; $i < count(self::$vid[0]) && $i < count(self::$vid[1]); $i++){
-				if($this->properties['local'] && is_file($this->properties['paths']['pathAbsoluteWithPath'] . '.' . self::$vid[0][$i])) $ret[] = array(self::$vid[0][$i], self::$vid[1][$i]);
+				if($this->properties['local']){
+                    if(is_file($this->properties['paths']['pathAbsoluteWithPath'] . '.' . self::$vid[0][$i])) $ret[] = array(self::$vid[0][$i], self::$vid[1][$i]);
+                } else {
+                    if(self::is_file_remote($this->properties['paths']['urlFullWithPath'] . '.' . self::$vid[0][$i])) $ret[] = array(self::$vid[0][$i], self::$vid[1][$i]);
+                }
 			}
 		}
 		if($this->type == 'a'){
 			for($i = 0; $i < count(self::$aud[0]) && $i < count(self::$aud[1]); $i++){
-				if($this->properties['local'] && is_file($this->properties['paths']['pathAbsoluteWithPath'] . '.' . self::$aud[0][$i])) $ret[] = array(self::$aud[0][$i], self::$aud[1][$i]);
+				if($this->properties['local']){
+                    if(is_file($this->properties['paths']['pathAbsoluteWithPath'] . '.' . self::$aud[0][$i])) $ret[] = array(self::$aud[0][$i], self::$aud[1][$i]);
+                } else {
+                    if(self::is_file_remote($this->properties['paths']['urlFullWithPath'] . '.' . self::$aud[0][$i])) $ret[] = array(self::$aud[0][$i], self::$aud[1][$i]);
+                }
 			}
 		}
 		return $ret;
 	}
+    
+    static function is_file_remote($url){
+        stream_context_set_default(array(
+            'http' => array(
+                'method' => 'HEAD'
+            )
+        ));
+        $headers = get_headers($url);
+        stream_context_set_default(array(
+            'http' => array(
+                'method' => 'GET'
+            )
+        ));
+        return self::parseHeaders($headers)['status'] == 200;
+    }
+    
+    static function parseHeaders(array $headers, $header = null){
+        $output = array();
+
+        if ('HTTP' === substr($headers[0], 0, 4)) {
+            list(, $output['status'], $output['status_text']) = explode(' ', $headers[0]);
+            unset($headers[0]);
+        }
+
+        foreach ($headers as $v) {
+            $h = preg_split('/:\s*/', $v);
+            $output[strtolower($h[0])] = $h[1];
+        }
+
+        if (null !== $header) {
+            if (isset($output[strtolower($header)])) {
+                return $output[strtolower($header)];
+            }
+
+            return;
+        }
+
+        return $output;
+    }
 	
 }

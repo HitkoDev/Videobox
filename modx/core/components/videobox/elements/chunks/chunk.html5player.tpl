@@ -1,39 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html class="vb-html5-player">
 <head>
 	<meta charset="utf-8" />
 	<title>[[+title]]</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link href="[[+assets]]videojs/video-js.min.css" rel="stylesheet" type="text/css">
-	<style>
-		body, html,
-		video, #vid1 {
-			margin: 0;
-			padding: 0;
-			position: fixed;
-			top: 0;
-			bottom: 0;
-			left: 0;
-			right: 0;
-			width: 100%;
-			height: 100%;
-		}
-	</style>
-
+	<link href="[[+assets]]css/videobox.min.css" rel="stylesheet" type="text/css">
 </head>
-<body>
+<body class="vb-html5-player">
 
-	<video id="vid1" class="video-js [[+type]] vjs-default-skin" controls="controls" preload="auto" poster="[[+poster]]" data-setup='{ starttime: 15 }'>
+	<video id="vb-html5-video" class="video-js [[+type]] vjs-default-skin" controls="controls" preload="auto" poster="[[+poster]]" data-setup='{}'>
 		[[+sources]]
 		<p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
 	</video>
 
-	<script src="[[+assets]]videojs/video.min.js"></script>
+	<script src="[[+assets]]video-js/video.min.js"></script>
 	<script>
-		videojs.options.flash.swf = '[[+assets]]/videojs/video-js.swf';
+		videojs.options.flash.swf = '[[+assets]]/video-js/video-js.swf';
 		
-		var vid = videojs("vid1");
+		var vid = videojs("vb-html5-video");
 
 		var start = [[+start]];
 		vid.on('loadedmetadata', function(){

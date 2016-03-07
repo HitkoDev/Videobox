@@ -80,6 +80,9 @@ copy($baseDir . 'node_modules/videobox-js/dist/videobox.css', $baseDir . 'modx/a
 copy($baseDir . 'node_modules/videobox-js/dist/videobox.min.css', $baseDir . 'modx/assets/components/videobox/css/videobox.min.css');
 copy($baseDir . 'node_modules/videobox-js/dist/videobox.js', $baseDir . 'modx/assets/components/videobox/js/videobox.js');
 copy($baseDir . 'node_modules/videobox-js/dist/videobox.min.js', $baseDir . 'modx/assets/components/videobox/js/videobox.min.js');
+copy($baseDir . 'node_modules/videobox-js/dist/video-js/video.js', $baseDir . 'modx/assets/components/videobox/video-js/video.js');
+copy($baseDir . 'node_modules/videobox-js/dist/video-js/video.min.js', $baseDir . 'modx/assets/components/videobox/video-js/video.min.js');
+copy($baseDir . 'node_modules/videobox-js/dist/video-js/video-js.swf', $baseDir . 'modx/assets/components/videobox/video-js/video-js.swf');
  
 /* create category vehicle */
 $vehicle = $builder->createVehicle($adaptersCategory, array(
