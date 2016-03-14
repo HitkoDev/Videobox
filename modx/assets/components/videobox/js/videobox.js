@@ -165,12 +165,14 @@
         video.src = "";
         $(video).hide();
     }
-    wrap = $('<div id="vbiWrap" />').append([
-        responsive = $('<div id="vbiResponsive" />')[0],
-        caption = $('<span class="vb_video_title"></span>')[0],
-        button = $('<div id="vbiClose"><i class="vb-icon-circle-close-invert"></i></div>').click($.vbiClose)[0],
-    ])[0];
-    video = $('<iframe id="vbiVideo" frameborder="0" allowfullscreen="true" oallowfullscreen msallowfullscreen webkitallowfullscreen mozallowfullscreen />').css('display', 'none').appendTo(responsive)[0];
+    $(window).on('load', function () {
+        wrap = $('<div id="vbiWrap" />').append([
+            responsive = $('<div id="vbiResponsive" />')[0],
+            caption = $('<span class="vb_video_title"></span>')[0],
+            button = $('<div id="vbiClose"><i class="vb-icon-circle-close-invert"></i></div>').click($.vbiClose)[0],
+        ])[0];
+        video = $('<iframe id="vbiVideo" frameborder="0" allowfullscreen="true" oallowfullscreen msallowfullscreen webkitallowfullscreen mozallowfullscreen />').css('display', 'none').appendTo(responsive)[0];
+    });
 })(jQuery);
 
 /// <reference path="headers.d.ts" />
@@ -541,36 +543,40 @@
         $(video).hide();
         $(wrap).toggleClass('animating', false);
     }
-    $(defaults.root).append($([
-        overlay = $('<div id="vbOverlay" />').click($.vbClose)[0],
-        wrap = $('<div id="vbWrap" />')[0]
-    ]));
-    center = $('<div id="vbCenter" />').appendTo(wrap)[0];
-    content = $('<div id="vbContent" />').appendTo(center).append([
-        responsive = $('<div id="vbResponsive" />')[0],
-        bottomContainer = $('<div id="vbBottomContainer" />')[0],
-    ])[0];
-    video = $('<iframe id="vbVideo" frameborder="0" allowfullscreen="true" oallowfullscreen msallowfullscreen webkitallowfullscreen mozallowfullscreen />').css('display', 'none').appendTo(responsive)[0];
-    bottom = $('<div id="vbBottom" />').appendTo(bottomContainer).append([
-        button = $('<a id="vbCloseLink" href="#" ><span id="vbCloseText">' + defaults.closeText + '</span><i class="vb-icon-close"></i></a>').click($.vbClose)[0],
-        caption = $('<strong id="vbCaption" />')[0]
-    ])[0];
-    closeText = $(bottom).find('#vbCloseText')[0];
-    win.on("resize", function () {
-        if (!open || !activeVideo)
-            return;
-        setPlayerSizePosition();
+    $(window).on('load', function () {
+        $(defaults.root).append($([
+            overlay = $('<div id="vbOverlay" />').click($.vbClose)[0],
+            wrap = $('<div id="vbWrap" />')[0]
+        ]));
+        center = $('<div id="vbCenter" />').appendTo(wrap)[0];
+        content = $('<div id="vbContent" />').appendTo(center).append([
+            responsive = $('<div id="vbResponsive" />')[0],
+            bottomContainer = $('<div id="vbBottomContainer" />')[0],
+        ])[0];
+        video = $('<iframe id="vbVideo" frameborder="0" allowfullscreen="true" oallowfullscreen msallowfullscreen webkitallowfullscreen mozallowfullscreen />').css('display', 'none').appendTo(responsive)[0];
+        bottom = $('<div id="vbBottom" />').appendTo(bottomContainer).append([
+            button = $('<a id="vbCloseLink" href="#" ><span id="vbCloseText">' + defaults.closeText + '</span><i class="vb-icon-close"></i></a>').click($.vbClose)[0],
+            caption = $('<strong id="vbCaption" />')[0]
+        ])[0];
+        closeText = $(bottom).find('#vbCloseText')[0];
+        win.on("resize", function () {
+            if (!open || !activeVideo)
+                return;
+            setPlayerSizePosition();
+        });
     });
 })(jQuery);
 
 /// <reference path="headers.d.ts" />
 (function ($) {
-    var r = $(".mdl-layout.mdl-js-layout")[0];
-    if (!r)
-        r = $("body")[0];
-    $("a[rel^='videobox']").videobox({
-        root: r
+    $(window).on('load', function () {
+        var r = $(".mdl-layout.mdl-js-layout")[0];
+        if (!r)
+            r = $("body")[0];
+        $("a[rel^='videobox']").videobox({
+            root: r
+        });
+        $("a[rel^='vbinline']").vbinline({});
+        $(".vb_slider").vbSlider({});
     });
-    $("a[rel^='vbinline']").vbinline({});
-    $(".vb_slider").vbSlider({});
 })(jQuery);
