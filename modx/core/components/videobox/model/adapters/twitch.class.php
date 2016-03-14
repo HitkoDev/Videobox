@@ -21,11 +21,19 @@
 
 require_once('adapter.class.php');
 
-class YouTubeVideo extends VideoboxAdapter {
+class TwitchVideo extends VideoboxAdapter {
+	
+	public $type = 'c';
+
+	function __construct($channel, $video = '', $title = '', $start = 0, $end = 0, $properties = array()){
+		$this->channel = $channel;
+		$this->type = $video ? 'v' : 'c';
+		parent::__construct($video ? $video : $channel, $title, $start, $end, $properties);
+	}
 
 	function getTitle($forced = false){
-		if($forced && $this->title==''){
-			return 'http://youtu.be/' . $this->id;
+		if($forced && $this->title == ''){
+			return $this->type == 'v' ? 'https://www.twitch.tv/' . $this-channel . '/v/' . $this->id : 'https://www.twitch.tv/' . $this-channel;
 		} else {
 			return $this->title; 
 		}
@@ -34,15 +42,18 @@ class YouTubeVideo extends VideoboxAdapter {
 	function getThumb(){
 		$th = parent::getThumb();
 		if($th !== false) return $th;
-		$img = 'http://i2.ytimg.com/vi/' . $this->id . '/hqdefault.jpg';
-		return array($img, IMAGETYPE_JPEG);
+		$data = json_decode(file_get_contents('https://api.twitch.tv/kraken/' . ($this->type == 'v' ? 'videos/v' : 'channels/') . $this->id));
+		$chImg = $this->properties['channelImage'];
+		$img = $this->type == 'v' ? $data->thumbnails[0]['url'] : $data->$chImg;
+		$im = @getimagesize($img);
+		if($im !== false) return array($img, $im[2]);
+		return false;
 	}
 	
 	function getPlayerLink($autoplay = false){
-		$src = 'https://www.youtube.com/embed/' . $this->id . '?wmode=transparent&rel=0&fs=1';
-		if($autoplay) $src .= '&autoplay=1';
-		if($this->start != 0) $src .= '&start=' . $this->start;
-		if($this->end != 0) $src .= '&end=' . $this->end;
+		$src = 'https://player.twitch.tv/?' . ($this->type == 'v' ? 'video=v' : 'channel=') . $this->id;
+		if(!$autoplay) $src .= '&autoplay=false';
+		if($this->start != 0) $src .= '&time=' . $this->splitOffset($this->start);
 		return $src;
 	}
 	

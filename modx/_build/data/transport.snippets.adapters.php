@@ -38,5 +38,15 @@ $properties = include $sources['data'].'properties/properties.html5.php';
 $snippet->setProperties($properties);
 $snippets[] = $snippet;
 
+$snippet = $modx->newObject('modSnippet');
+$snippet->fromArray(array(
+    'name' => 'Twitch',
+    'description' => 'Twitch video & channel adapter',
+    'snippet' => getSnippetContent($sources['elements'].'snippets/snippet.twitch.php'),
+), '', true, true);
+$properties = include $sources['data'].'properties/properties.twitch.php';
+$snippet->setProperties($properties);
+$snippets[] = $snippet;
+
 unset($snippet);
 return $snippets;

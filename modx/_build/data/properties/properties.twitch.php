@@ -1,0 +1,3 @@
+<?php
+$properties = json_decode('[{"name":"channelImage","desc":"Image to be used as a thumbnail when linking to a Twitch channel","xtype":"list","options":[{"text":"Logo","value":"logo","name":"Logo"},{"text":"Video banner","value":"video_banner","name":"Video banner"},{"text":"Profile banner","value":"profile_banner","name":"Profile banner"}],"value":"logo","lexicon":"","overridden":false,"desc_trans":"Image to be used as a thumbnail when linking to a Twitch channel","area":"","area_trans":"","menu":null}]', true);
+return $properties;

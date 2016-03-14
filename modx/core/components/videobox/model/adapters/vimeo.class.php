@@ -2,7 +2,7 @@
 
 /**	
  *	@author		HitkoDev http://hitko.eu/videobox
- *	@copyright	Copyright (C) 2015 HitkoDev All Rights Reserved.
+ *	@copyright	Copyright (C) 2016 HitkoDev All Rights Reserved.
  *	@license	http://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  *
  *	This program is free software: you can redistribute it and/or modify

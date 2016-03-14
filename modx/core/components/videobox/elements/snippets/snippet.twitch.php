@@ -19,23 +19,15 @@
  */
 
 $vbCore = $modx->getOption('videobox.core_path', null, $modx->getOption('core_path').'components/videobox/');
-require_once($vbCore . 'model/adapters/youtube.class.php');
+require_once($vbCore . 'model/adapters/twitch.class.php');
 
 /*
- *	$id - one of the following:
- *		- 11 characters YouTube video ID
- *		- YouTube sharing link (http://youtu.be/KKWTdo5YW_I)
- *		- link to the video (https://www.youtube.com/watch?v=KKWTdo5YW_I)
+ *	$id - Twitch channel or video url
  */
-if(strlen($id)==11 && preg_match('/([a-zA-Z0-9_-]{11})/', $id)==1){
-	return new YouTubeVideo($id, $title, $start, $end, $scriptProperties);
+if(preg_match("/twitch\.tv\/([^\/]+)\/v\/(\d+)/isu", $id, $matches) > 0){
+	return new TwitchVideo($matches[1], $matches[2], $title, $start, $end, $scriptProperties);
 }
-if(strpos($id, 'youtube')!==false){
-	preg_match('/v=([a-zA-Z0-9_-]{11}?)/isU', $id, $v_urls);
-	return new YouTubeVideo($v_urls[1], $title, $start, $end, $scriptProperties);
-}
-if(strpos($id, 'youtu.be')!==false){
-	preg_match('/youtu\.be\/([a-zA-Z0-9_-]{11}?)/isU', $id, $v_urls);
-	return new YouTubeVideo($v_urls[1], $title, $start, $end, $scriptProperties);
+if(preg_match("/twitch\.tv\/([^\/]+)(\/.*)?/isu", $id, $matches) > 0){
+	return new TwitchVideo($matches[1], '', $title, $start, $end, $scriptProperties);
 }
 return false;

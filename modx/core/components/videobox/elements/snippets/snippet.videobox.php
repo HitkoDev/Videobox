@@ -1,7 +1,7 @@
 <?php
 /**	
  *	@author		HitkoDev http://hitko.eu/videobox
- *	@copyright	Copyright (C) 2015 HitkoDev All Rights Reserved.
+ *	@copyright	Copyright (C) 2016 HitkoDev All Rights Reserved.
  *	@license	http://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
  *
  *	This program is free software: you can redistribute it and/or modify
@@ -143,7 +143,7 @@ if(count($videos) > 1){
 		$minR = 0.6;
 		foreach($filtered as $video){
 			$r = $video['thumb'][1]/($maxR*$video['thumb'][2]);
-			if($r < $minR) $minR = $r;
+			if($r && $r < $minR) $minR = $r;
 		}
 		$minR = 1 - log($minR);
 	/*	foreach($slike as $slika){

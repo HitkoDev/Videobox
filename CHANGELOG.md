@@ -1,3 +1,6 @@
+### 5.0.0 rc 1 - *14. March 2016*
+  * added Twitch adapter
+
 ### 5.0.0 beta 4 - *7. March 2016*
   * moved to TS and SASS
   * bug fixes
