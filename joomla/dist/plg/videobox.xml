@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.1" type="plugin" group="system">
+    <name>plg_system_videobox</name>
+    <author>HitkoDev</author>
+    <creationDate>August 2012</creationDate>
+    <copyright>Copyright (C) 2016 HtikoDev</copyright>
+    <license>GNU General Public License version 3 or later</license>
+    <authorEmail>development@hitko.si</authorEmail>
+    <authorUrl>hitko.eu</authorUrl>
+    <version>5.0.0</version>
+    <description>Video plugin for Joomla!</description>
+    <files>
+        <filename plugin="videobox">videobox.php</filename>
+    </files>
+    <languages>
+        <language tag="en-GB">language/en-GB/en-GB.plg_system_videobox.ini</language>
+        <language tag="en-GB">language/en-GB/en-GB.plg_system_videobox.sys.ini</language>
+    </languages>
+    <config>
+        <fields name="params">
+            <fieldset name="basic" addfieldpath="/libraries/videobox/fields">
+                <field name="property_sets" 
+                    type="PropertySet" 
+                    description="PLG_SYSTEM_VIDEOBOX_PROPERTY_SETS_DESC" 
+                    label="PLG_SYSTEM_VIDEOBOX_PROPERTY_SETS"
+                    namedescription="PLG_SYSTEM_VIDEOBOX_PROPERTY_SETS_NAME_DESC" 
+                    namelabel="PLG_SYSTEM_VIDEOBOX_PROPERTY_SETS_NAME"
+                    keydescription="PLG_SYSTEM_VIDEOBOX_PROPERTY_SETS_KEY_DESC" 
+                    keylabel="PLG_SYSTEM_VIDEOBOX_PROPERTY_SETS_KEY"
+                    contentlabel="PLG_SYSTEM_VIDEOBOX_PROPERTY_SETS_CONTENT">
+                    
+                    <field name="search_archived" type="radio" default="0" description="JFIELD_PLG_SEARCH_ARCHIVED_DESC" label="JFIELD_PLG_SEARCH_ARCHIVED_LABEL">
+                        <option value="0">JOFF</option>
+                        <option value="1">JON</option>
+                    </field>
+                    
+                    <field name="search_content" type="radio" default="0" description="JFIELD_PLG_SEARCH_ALL_DESC" label="JFIELD_PLG_SEARCH_ALL_LABEL">
+                        <option value="0">JOFF</option>
+                        <option value="1">JON</option>
+                    </field>
+                    
+                </field>
+            </fieldset>
+        </fields>
+    </config>
+</extension>

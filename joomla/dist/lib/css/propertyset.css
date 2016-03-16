@@ -28,7 +28,7 @@
   -webkit-flex-grow: 1;
   flex-grow: 1;
 }
-.prop-set-items li:hover {
+.prop-set-items li:hover, .prop-set-items li.set-active {
   background-color: #eee;
 }
 .prop-set-items li:last-child {
@@ -39,4 +39,10 @@
 }
 .prop-set-items li:last-child:hover {
   background: none;
+}
+
+.prop-set-content-label label {
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 1.3em;
 }

@@ -14,20 +14,27 @@ class JFormFieldPropertySet extends JFormField {
     
 	public function setup(SimpleXMLElement $element, $value, $group = null) {
 		parent::setup($element, $value, $group);
+        
+        $attrs = array();
+        foreach($element->attributes() as $key => $value) {
+            $attrs[$key] = (string)$value;
+        }
+        
 		$this->setName = 'propSet-' . $this->id;
 		$xml = '<form><fieldset name="' . $this->setName . '">';
 		$xml.= '<field 
             name="__key" 
             type="text"
-            description="JFIELD_PLG_SEARCH_ARCHIVED_DESC"
-            label="JFIELD_PLG_SEARCH_ARCHIVED_LABEL"
+            description="' . (isset($attrs['keydescription']) ? htmlspecialchars($attrs['keydescription']) : '') . '"
+            label="' . (isset($attrs['keylabel']) ? htmlspecialchars($attrs['keylabel']) : '') . '"
         />';
 		$xml.= '<field 
             name="__name" 
             type="text"
-            description="JFIELD_PLG_SEARCH_ARCHIVED_DESC"
-            label="JFIELD_PLG_SEARCH_ARCHIVED_LABEL"
+            description="' . (isset($attrs['namedescription']) ? htmlspecialchars($attrs['namedescription']) : '') . '"
+            label="' . (isset($attrs['namelabel']) ? htmlspecialchars($attrs['namelabel']) : '') . '"
         />';
+        $xml .= '<field type="spacer" name="key-name-spacer" class="prop-set-content-label" ' . (isset($attrs['contentlabel']) ? 'label="' . htmlspecialchars($attrs['contentlabel']) . '"' : 'hr="true"') . ' />';
 		foreach($this->element->children() as $chl) {
 			$xml.= $chl->asXML();
 		}

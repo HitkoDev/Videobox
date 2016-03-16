@@ -30,7 +30,8 @@
             }
         }
         
-        &:hover {
+        &:hover,
+        &.set-active {
             background-color: #eee;
         }
         
@@ -45,4 +46,10 @@
             }
         }
     }
+}
+
+.prop-set-content-label label {
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 1.3em;
 }

@@ -42,6 +42,9 @@
                     values[key]['__name'] = '';
                     values[key]['__key'] = '';
                 }
+                // set active item
+                $(list).find('li.set-active').toggleClass('set-active', false);
+                $(list).find('li[data-set="' + key + '"]').toggleClass('set-active', true);
                 // set values according to the selected set
                 $.each(values[key], function (k, val) {
                     setVal($('*[name="' + k + '"]'), val);
@@ -82,7 +85,7 @@
                     var item = $(list).find('li[data-set="' + key + '"]');
                     // create new item if neccesary
                     if (item.length < 1) {
-                        item = $('<li data-set="' + key + '"><span class="set-name">' + (values[key]['__name'] ? values[key]['__name'] : key) + '</span><span class="icon-cancel btn btn-small"></span></li>');
+                        item = $('<li data-set="' + key + '" class="set-active"><span class="set-name">' + (values[key]['__name'] ? values[key]['__name'] : key) + '</span><span class="icon-cancel btn btn-small"></span></li>');
                         item.insertBefore($(list).children(':last-child'));
                     }
                     // update the key in the values array and the coresponding list time
