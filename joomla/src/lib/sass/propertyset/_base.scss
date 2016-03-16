@@ -1,0 +1,48 @@
+.prop-set-items {
+    max-width: 220px;
+    margin: 0 0 24px;
+    
+    .icon-cancel:before {
+        color: #942a25;
+    }
+    
+    .icon-new:before {
+        color: #378137;
+    }
+    
+    li {
+        line-height: 26px;
+        min-height: 26px;
+        padding: 3px;
+        padding-left: 12px;
+        
+        @include display-flex(flex);
+        @include align-items(center);
+        @include justify-content(space-between);
+        
+        span {
+            display: inline-block;
+            
+            &.set-name {
+                cursor: pointer;
+                
+                @include flex-grow(1);
+            }
+        }
+        
+        &:hover {
+            background-color: #eee;
+        }
+        
+        &:last-child {
+            padding: 6px;
+            min-height: 0;
+            
+            @include justify-content(space-around);
+            
+            &:hover {
+                background: none;
+            }
+        }
+    }
+}
