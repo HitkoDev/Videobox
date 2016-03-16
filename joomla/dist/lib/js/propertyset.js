@@ -94,6 +94,8 @@
                         values[key] = undefined;
                         key = newVal;
                         item.attr('data-set', newVal);
+                        if (!values[key]['__name'])
+                            item.find('.set-name').html(key);
                     }
                     // update the coresponding list item
                     if (k == '__name') {

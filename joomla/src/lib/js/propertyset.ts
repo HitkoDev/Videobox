@@ -115,6 +115,7 @@
                         values[key] = undefined;
                         key = newVal;
                         item.attr('data-set', newVal);
+                        if (!values[key]['__name']) item.find('.set-name').html(key);
                     }
                     
                     // update the coresponding list item
@@ -135,7 +136,7 @@
             });
             
             // remove set on remove button
-            $(list).on('click', 'li .icon-cancel', function (evt) {
+            $(list).on('click', 'li .icon-cancel', function(evt) {
                 var element = this;
                 var k = $(element).parent().attr('data-set');
                 if (values[k]) values[k] = undefined;
