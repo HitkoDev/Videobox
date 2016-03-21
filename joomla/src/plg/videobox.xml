@@ -19,27 +19,48 @@
     <config>
         <fields name="params">
             <fieldset name="basic" addfieldpath="/libraries/videobox/fields">
-                <field name="property_sets" 
-                    type="PropertySet" 
-                    description="PLG_SYSTEM_VIDEOBOX_PROPERTY_SETS_DESC" 
-                    label="PLG_SYSTEM_VIDEOBOX_PROPERTY_SETS"
-                    namedescription="PLG_SYSTEM_VIDEOBOX_PROPERTY_SETS_NAME_DESC" 
-                    namelabel="PLG_SYSTEM_VIDEOBOX_PROPERTY_SETS_NAME"
-                    keydescription="PLG_SYSTEM_VIDEOBOX_PROPERTY_SETS_KEY_DESC" 
-                    keylabel="PLG_SYSTEM_VIDEOBOX_PROPERTY_SETS_KEY"
-                    contentlabel="PLG_SYSTEM_VIDEOBOX_PROPERTY_SETS_CONTENT">
+            
+                <field name="property_sets" type="PropertySet" default="" label="PLG_SYSTEM_VIDEOBOX_PROPERTY_SETS" description="PLG_SYSTEM_VIDEOBOX_PROPERTY_SETS_DESC" />
                     
-                    <field name="search_archived" type="radio" default="0" description="JFIELD_PLG_SEARCH_ARCHIVED_DESC" label="JFIELD_PLG_SEARCH_ARCHIVED_LABEL">
-                        <option value="0">JOFF</option>
-                        <option value="1">JON</option>
-                    </field>
-                    
-                    <field name="search_content" type="radio" default="0" description="JFIELD_PLG_SEARCH_ALL_DESC" label="JFIELD_PLG_SEARCH_ALL_LABEL">
-                        <option value="0">JOFF</option>
-                        <option value="1">JON</option>
-                    </field>
-                    
+            </fieldset>
+            
+            <fieldset name="main">
+                
+                <field name="multipleDisplay" type="list" default="gallery" label="PLG_SYSTEM_VIDEOBOX_MULTIPLE_DISPLAY" description="PLG_SYSTEM_VIDEOBOX_MULTIPLE_DISPLAY_DESC" >
+                    <option value="gallery">Gallery</option>
+                    <option value="links">Links</option>
+                    <option value="slider">Slider</option>
                 </field>
+                
+                <field name="singleDisplay" type="list" default="player" label="PLG_SYSTEM_VIDEOBOX_SINGLE_DISPLAY" description="PLG_SYSTEM_VIDEOBOX_SINGLE_DISPLAY_DESC" >
+                    <option value="player">Direct player</option>
+                    <option value="box">Box</option>
+                    <option value="links">Link</option>
+                </field>
+                
+                <field name="player" type="list" default="videobox" label="PLG_SYSTEM_VIDEOBOX_PLAYER" description="PLG_SYSTEM_VIDEOBOX_PLAYER_DESC" >
+                    <option value="videobox">Lightbox</option>
+                    <option value="vbinline">Inline</option>
+                </field>
+                
+                <field name="pWidth" type="number" default="720" min="1" step="1" label="PLG_SYSTEM_VIDEOBOX_PLAYER_WIDTH" description="PLG_SYSTEM_VIDEOBOX_PLAYER_WIDTH_DESC" />
+                
+                <field name="pHeight" type="number" default="405" min="1" step="1" label="PLG_SYSTEM_VIDEOBOX_PLAYER_HEIGHT" description="PLG_SYSTEM_VIDEOBOX_PLAYER_HEIGHT_DESC" />
+                
+                <field name="tWidth" type="number" default="480" min="1" step="1" label="PLG_SYSTEM_VIDEOBOX_THUMBNAIL_WIDTH" description="PLG_SYSTEM_VIDEOBOX_THUMBNAIL_WIDTH_DESC" />
+                
+                <field name="tHeight" type="number" default="360" min="1" step="1" label="PLG_SYSTEM_VIDEOBOX_THUMBNAIL_HEIGHT" description="PLG_SYSTEM_VIDEOBOX_THUMBNAIL_HEIGHT_DESC" />
+                
+                <field name="perPage" type="number" default="12" min="1" step="1" label="PLG_SYSTEM_VIDEOBOX_PER_PAGE" description="PLG_SYSTEM_VIDEOBOX_PER_PAGE_DESC" />
+                
+                <field name="color" type="color" default="#50bf82" label="PLG_SYSTEM_VIDEOBOX_COLOR" description="PLG_SYSTEM_VIDEOBOX_COLOR_DESC" />
+                
+                <field name="delimiter" type="text" default=", " label="PLG_SYSTEM_VIDEOBOX_DELIMITER" description="PLG_SYSTEM_VIDEOBOX_DELIMITER_DESC" />
+                
+            </fieldset>
+            
+            <fieldset name="templates">
+                
             </fieldset>
         </fields>
     </config>
