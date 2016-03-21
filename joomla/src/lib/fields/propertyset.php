@@ -17,8 +17,10 @@ class JFormFieldPropertySet extends JFormFieldText {
 		$set = $jinput->get('property_set', 'default', 'STRING');
 		
 		$fields = array();
+		$keymap = array();
 		foreach($this->form->getFieldsets($this->group) as $fldset){
 			foreach($this->form->getFieldset($fldset->name) as $field){
+				$keymap[$field->name] = $field->fieldname;
 				if($field->name != $this->name) $fields[$field->name] = $field->value;
 			}
 		}
@@ -31,9 +33,7 @@ class JFormFieldPropertySet extends JFormFieldText {
 		
 		$data = array_merge($fields, isset($value[$set]) ? $value[$set] : array());
 		foreach($data as $key => $val){
-			preg_match('/jform\[' . $this->group . '\]\[([^\]]*)\]/', $key, $matches);
-			if($matches[1]) $key = $matches[1];
-			$this->form->setValue($key, $this->group, $val);
+			if($keymap[$key]) $this->form->setValue($keymap[$key], $this->group, $val);
 		}
 		
 		$document = JFactory::getDocument();
@@ -71,7 +71,7 @@ class JFormFieldPropertySet extends JFormFieldText {
 			$uri = JURI::buildQuery($query);
 			$out.= '<li data-set="' . htmlspecialchars($key) . '"><a href="' . JURI::current() . '?' . $uri . '" title="' . $key . '">' . $key . '</a>' . ($key != 'default' ? '<span class="icon-cancel btn btn-small"></span>' : '') . '</li>';
 		}
-		if($set == 'new') {
+		if($set == 'new'){
 			$out.= '<li data-set="new">__new_set</li>';
 		}
 		$query['property_set'] = 'new';
@@ -82,7 +82,15 @@ class JFormFieldPropertySet extends JFormFieldText {
 			'property_set' => 'new'
 		);
 		
-		return '<input type="hidden" class="vb-prop-set" id="' . $this->id . '" name="' . $this->name . '" value="' . htmlspecialchars(json_encode($value)) . '" data-key="' . htmlspecialchars($set) . '" >' . $out . $keyInput;
+		$prefix = $this->name;
+		$i = strpos($prefix, '['.$this->fieldname.']');
+		if($i){
+			$prefix = substr($prefix, 0, $i);
+		} else {
+			$prefix = '';
+		}
+		
+		return '<input type="hidden" class="vb-prop-set" id="' . $this->id . '" name="' . $this->name . '" value="' . htmlspecialchars(json_encode($value)) . '" data-key="' . htmlspecialchars($set) . '" data-prefix="' . $prefix . '" >' . $out . $keyInput;
 		
 	}
 }
