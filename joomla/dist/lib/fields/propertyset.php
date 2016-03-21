@@ -16,22 +16,25 @@ class JFormFieldPropertySet extends JFormFieldText {
 		$jinput = JFactory::getApplication()->input;
 		$set = $jinput->get('property_set', 'default', 'STRING');
 		
-		$value = json_decode($this->value, true);
-		if(!$value) $value = array();
-		if(!$value['default']) $value['default'] = array(
-			'property_set' => 'default'
-		);
-		if(isset($value[$set])){
-			foreach($value[$set] as $key => $val){
-				preg_match('/jform\[' . $this->group . '\]\[([^\]]*)\]/', $key, $matches);
-				if($matches[1]) $key = $matches[1];
-				$this->form->setValue($key, $this->group, $val);
+		$fields = array();
+		foreach($this->form->getFieldsets($this->group) as $fldset){
+			foreach($this->form->getFieldset($fldset->name) as $field){
+				if($field->name != $this->name) $fields[$field->name] = $field->value;
 			}
 		}
 		
-		if($set == 'new') $value['new'] = array(
-			'property_set' => 'new'
-		);
+		$value = json_decode($this->value, true);
+		if(!$value) $value = array();
+		if(!$value['default']) $value['default'] = array_merge($fields, array(
+			'property_set' => 'default'
+		));
+		
+		$data = array_merge($fields, isset($value[$set]) ? $value[$set] : array());
+		foreach($data as $key => $val){
+			preg_match('/jform\[' . $this->group . '\]\[([^\]]*)\]/', $key, $matches);
+			if($matches[1]) $key = $matches[1];
+			$this->form->setValue($key, $this->group, $val);
+		}
 		
 		$document = JFactory::getDocument();
 		JHtml::script(JUri::base() . '../libraries/videobox/js/propertyset.min.js');
@@ -39,10 +42,7 @@ class JFormFieldPropertySet extends JFormFieldText {
 		
 		$keyInput = '';
 		
-		$this->value = json_encode($value);
-		
 		if($set != 'default'){
-			$val = $this->value;
 			$name = $this->name;
 			$id = $this->id;
 			
@@ -52,7 +52,7 @@ class JFormFieldPropertySet extends JFormFieldText {
 			
 			$keyInput = parent::getInput();
 			
-			$this->value = $val;
+			$this->value = json_encode($value);
 			$this->name = $name;
 			$this->id = $id;
 		}
@@ -72,13 +72,17 @@ class JFormFieldPropertySet extends JFormFieldText {
 			$out.= '<li data-set="' . htmlspecialchars($key) . '"><a href="' . JURI::current() . '?' . $uri . '" title="' . $key . '">' . $key . '</a>' . ($key != 'default' ? '<span class="icon-cancel btn btn-small"></span>' : '') . '</li>';
 		}
 		if($set == 'new') {
-			$out.= '<li data-set="new"></li>';
+			$out.= '<li data-set="new">__new_set</li>';
 		}
 		$query['property_set'] = 'new';
 		$uri = JURI::buildQuery($query);
 		$out.= '<li data-set=""><a href="' . JURI::current() . '?' . $uri . '" title="New set">New set</a></li></ul>';
 		
-		return '<input type="hidden" class="vb-prop-set" id="' . $this->id . '" name="' . $this->name . '" value="' . htmlspecialchars($this->value) . '" data-key="' . htmlspecialchars($set) . '" >' . $out . $keyInput;
+		if($set == 'new') $value['new'] = array(
+			'property_set' => 'new'
+		);
+		
+		return '<input type="hidden" class="vb-prop-set" id="' . $this->id . '" name="' . $this->name . '" value="' . htmlspecialchars(json_encode($value)) . '" data-key="' . htmlspecialchars($set) . '" >' . $out . $keyInput;
 		
 	}
 }
