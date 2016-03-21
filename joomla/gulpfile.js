@@ -5,15 +5,15 @@ var rename = require('gulp-rename');
 var compass = require('gulp-compass');
 var cssnano = require('gulp-cssnano');
 
-gulp.task('default', function () {
+gulp.task('default', function() {
 
 });
 
 gulp.task('dist', [
     'lib',
     'plg'
-], function () {
-    
+], function() {
+
     // compress JS and CSS
     gulp.src(['./dist/**/*.js', '!./dist/**/*.min.js'])
         .pipe(uglify({
@@ -35,13 +35,13 @@ gulp.task('dist', [
 
 gulp.task('install', [
     'dist'
-], function () {
-    
+], function() {
+
     // install library
     gulp.src('./dist/lib/**')
         .pipe(gulp.dest('../../joomla/libraries/videobox'));
-        
-        
+
+
     // install system plugin
     gulp.src('./dist/plg/language/**')
         .pipe(gulp.dest('../../joomla/administrator/language'));
@@ -51,7 +51,7 @@ gulp.task('install', [
 
 });
 
-gulp.task('lib', function () {
+gulp.task('lib', function() {
     var tsResult = gulp.src('./src/lib/**/*.ts')
         .pipe(typescript({
             declaration: true,
@@ -83,7 +83,7 @@ gulp.task('lib', function () {
         .pipe(gulp.dest('./dist/lib/video-js'));
 });
 
-gulp.task('plg', function () {
+gulp.task('plg', function() {
 
     gulp.src('./src/plg/**')
         .pipe(gulp.dest('./dist/plg'));
