@@ -18,6 +18,8 @@
  *	You should have received a copy of the GNU General Public License
  *	along with this program. If not, see <http://www.gnu.org/licenses/>
  */
+ 
+require_once(dirname(dirname(__FILE__)) . '/adapters/adapter.class.php');
 
 class Videobox {
 	
@@ -27,10 +29,7 @@ class Videobox {
 
 	function __construct(modX &$modx, array $config = array()){
 		$this->modx =& $modx;
-		$this->config = array_merge(array(
-			'assets_url' => $modx->getOption('videobox.assets_url', null, $modx->getOption('assets_url').'components/videobox/'),
-			'assets_path' => $modx->getOption('videobox.assets_path', null, MODX_ASSETS_PATH.'components/videobox/'),
-		), $config);
+		$this->setConfig($config);
 		
 		if($this->gallery == null) $this->gallery = -1;
 		
@@ -41,6 +40,58 @@ class Videobox {
 				$this->pages[] = (int) $page;
 			}
 		}
+	}
+	
+	function setConfig(array $config = array()){
+		$this->config = array_merge(array(
+			'assets_url' => $this->modx->getOption('videobox.assets_url', null, $this->modx->getOption('assets_url').'components/videobox/'),
+			'assets_path' => $this->modx->getOption('videobox.assets_path', null, MODX_ASSETS_PATH.'components/videobox/'),
+			'core_path' => $this->modx->getOption('videobox.core_path', null, $this->modx->getOption('core_path').'components/videobox/')
+		), $config);
+		$this->processors = null;
+	}
+	
+	function getProcessors(){
+		if($this->processors) return $this->processors;
+		
+		$processors = array_map('trim', explode(',', $this->config['processors']));
+		$this->processors = array();
+		foreach($processors as $key => $processor){
+			$p = $this->modx->getObject('modSnippet', array('name' => $processor));
+			if($p) $this->processors[] = $processor;
+		}
+		
+		return $this->processors;
+	}
+	
+	function getVideo(array $props = array()){
+		$prop = array_merge($this->config, $props);
+		foreach($this->getProcessors() as $processor){
+			$v = $this->modx->runSnippet($processor, $prop);
+			if($v) return $v;
+		}
+		return false;
+	}
+	
+	function loadAssets(){
+		$this->modx->regClientCSS($_GET['dev'] ? '/Videobox-js/dist/videobox.css' : $this->config['assets_url'] . 'css/videobox.min.css');
+		$this->modx->regClientScript($this->config['assets_url'] . 'js/jquery.min.js');
+		$this->modx->regClientScript($this->config['assets_url'] . 'js/web-animations.min.js');
+		$this->modx->regClientScript($_GET['dev'] ? '/Videobox-js/dist/videobox.js' : $this->config['assets_url'] . 'js/videobox.min.js');
+	}
+	
+	function setCache($key, $data){
+		if(!$this->config['cache']) return;
+		$this->modx->cacheManager->set($key, $data, 0);
+	}
+	
+	function getCache($key){
+		if(!$this->config['cache']) return '';
+		return $this->modx->cacheManager->get($key);
+	}
+	
+	function parseTemplate($tpl, $properties = array()){
+		return $this->modx->parseChunk($tpl, $properties);
 	}
 	
 	function getPage(){
@@ -56,9 +107,12 @@ class Videobox {
 		return str_replace(array('<', '>', '"'), array('&lt;', '&gt;', '&quot;'), $string);
 	}
 
-	function videoThumbnail($video, $tWidth, $tHeight, $no_border = false, $n = 0) {
+	function videoThumbnail($video, $no_border = false, $n = 0) {
 		// Prevent infinite loop
 		if($n > 1) return '';
+		
+		$tWidth = $this->config['tWidth'];
+		$tHeight = $this->config['tHeight'];
 		
 		// Get name suffixes
 		$name = '';
@@ -101,7 +155,6 @@ class Videobox {
 			
         $tmpn = tempnam($this->config['assets_url'] . 'cache/', 'vb_');
         copy($img[0], $tmpn);
-        // file_put_contents($tmpn, fopen($img[0], 'r'));
 		
 		if(!extension_loaded('imagick')){
 		

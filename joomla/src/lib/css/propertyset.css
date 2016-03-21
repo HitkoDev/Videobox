@@ -46,3 +46,8 @@
   font-weight: bold;
   line-height: 1.3em;
 }
+
+textarea.vb-tpl {
+  width: auto;
+  max-width: calc(100% - 14px);
+}

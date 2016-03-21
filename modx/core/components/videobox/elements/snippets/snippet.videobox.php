@@ -21,24 +21,18 @@
 $vbCore = $modx->getOption('videobox.core_path', null, $modx->getOption('core_path').'components/videobox/');
 $videobox = $modx->getService('videobox', 'Videobox', $vbCore . 'model/videobox/', $scriptProperties);
 if(!($videobox instanceof Videobox)) return '';
+$videobox->setConfig($scriptProperties);
 
 if(!isset($videos) && isset($video)) $videos = $video;
 if(!isset($videos)) return;
 $scriptProperties['color'] = trim(str_replace('#', '', $scriptProperties['color']));
 if(!$scriptProperties['color']) $scriptProperties['color'] = '00a645';
 if(strlen($scriptProperties['color']) != 6) $scriptProperties['color'] = '';
-$v = $modx->parseChunk($videos, array());
+$v = $videobox->parseTemplate($videos);
 if($v) $videos = $v;
 $videos = explode('|,', $videos);
 
-require_once($vbCore . 'model/adapters/adapter.class.php');
-$processors = array_map('trim', explode(',', $processors));
-$proc = array();
-foreach($processors as $key => $processor){
-	$p = $modx->getObject('modSnippet', array('name' => $processor));
-	if($p) $proc[] = $processor;
-}
-$processors = $proc;
+$processors = $videobox->getProcessors();
 
 $vid = array();
 foreach($videos as $key => $video){
@@ -67,32 +61,25 @@ foreach($videos as $key => $video){
 		}
 	}
 	$prop = array_merge($scriptProperties, array('id' => $id, 'title' => $title, 'start' => $start, 'end' => $end));
-	foreach($processors as $processor){
-		$v = $modx->runSnippet($processor, $prop);
-		if($v){
-			$vid[] = $v;
-			break;
-		}
-	}
+	
+	$v = $videobox->getVideo(array('id' => $id, 'title' => $title, 'start' => $start, 'end' => $end));
+	if($v) $vid[] = $v;
+	
 }
 $videos = $vid;
 
 if(count($videos) < 1) return;
-$modx->regClientCSS($_GET['dev'] ? '/Videobox-js/dist/videobox.css' : $videobox->config['assets_url'] . 'css/videobox.min.css');
-$modx->regClientScript($videobox->config['assets_url'] . 'js/jquery.min.js');
-$modx->regClientScript($videobox->config['assets_url'] . 'js/web-animations.min.js');
-$modx->regClientScript($_GET['dev'] ? '/Videobox-js/dist/videobox.js' : $videobox->config['assets_url'] . 'js/videobox.min.js');
+$videobox->loadAssets();
 
-if(!isset($display) || !$display) $display = count($videos) > 1 ? $multipleDisplay : $singleDisplay;
+if(!isset($display) || !$display) $display = count($videos) > 1 ? $scriptProperties['multipleDisplay'] : $scriptProperties['singleDisplay'];
 if($display == 'link') $display = 'links';
-if($display == 'links' && $player == 'vbinline') $player = 'videobox';		//	inline player isn't meant to be used with links
+if($display == 'links' && $scriptProperties['player'] == 'vbinline') $scriptProperties['player'] = 'videobox';
 $scriptProperties['display'] = $display;
-$scriptProperties['palyer'] = $player;
 unset($scriptProperties['multipleDisplay']);
 unset($scriptProperties['singleDisplay']);
 
 if(count($videos) > 1){
-	$tpl = $display == 'links' ? $linkTpl : $thumbTpl;
+	$tpl = $display == 'links' ? $scriptProperties['linkTpl'] : $scriptProperties['thumbTpl'];
 	$start = 0;
 	$pagination = '';
 	
@@ -101,13 +88,13 @@ if(count($videos) > 1){
 		$start = $videobox->getPage();
 		$scriptProperties['gallery_number'] = $videobox->gallery;
 		$scriptProperties['gallery_page'] = $start;
-		$pagination = $videobox->pagination(count($videos), $start, $perPage);
-		$start = $start*$perPage;
+		$pagination = $videobox->pagination(count($videos), $start, $scriptProperties['perPage']);
+		$start = $start*$scriptProperties['perPage'];
 	}
 	
-	if($player == 'vbinline' && ($display == 'gallery' || $display == 'slider')){
-		$pWidth = $tWidth;
-		$pHeight = $tHeight;
+	if($scriptProperties['player'] == 'vbinline' && ($display == 'gallery' || $display == 'slider')){
+		$scriptProperties['pWidth'] = $scriptProperties['tWidth'];
+		$scriptProperties['pHeight'] = $scriptProperties['tHeight'];
 	}
 
 	// if($display == 'slider'){ 
@@ -116,11 +103,11 @@ if(count($videos) > 1){
 	
 	ksort($scriptProperties);
 	$propHash = 'Vb_gallery_' . md5(serialize($scriptProperties));
-	$content = $cache ? $modx->cacheManager->get($propHash) : '';
+	$content = $videobox->getCache($propHash);
 	if(!$content){
 		$n = 0;
 		$content = '';
-		$props = array('rel' => $player, 'pWidth' => $pWidth, 'pHeight' => $pHeight);
+		$props = array('rel' => $scriptProperties['player'], 'pWidth' => $scriptProperties['pWidth'], 'pHeight' => $scriptProperties['pHeight']);
 		$filtered = array();
 		foreach($videos as $video){
 			$n++;
@@ -129,12 +116,12 @@ if(count($videos) > 1){
 				'title' => $video->getTitle(), 
 				'linkText' => $video->getTitle(true), 
 				'link' => $video->getPlayerLink(true), 
-				'thumb' => $videobox->videoThumbnail($video, $tWidth, $tHeight, $display == 'flow'),
+				'thumb' => $videobox->videoThumbnail($video, $display == 'flow'),
 			);
-			if($display == 'gallery' && $n == ($start + $perPage)) break;
+			if($display == 'gallery' && $n == ($start + $scriptProperties['perPage'])) break;
 		}
 		$maxR = 0;
-		$maxW = $tWidth;
+		$maxW = $scriptProperties['tWidth'];
 		foreach($filtered as $video){
 			$r = $video['thumb'][1]/$video['thumb'][2];
 			if($r > $maxR) $maxR = $r;
@@ -154,39 +141,39 @@ if(count($videos) > 1){
 		$b = 0.25*$maxW*$minR;*/
 		$n = 0;
 		foreach($filtered as $video){
-			$v = $modx->parseChunk($tpl, array_merge($props, $video, array('thumb' => $video['thumb'][0], 'tWidth' => $video['thumb'][1], 'tHeight' => $video['thumb'][2])));
+			$v = $videobox->parseTemplate($tpl, array_merge($props, $video, array('thumb' => $video['thumb'][0], 'tWidth' => $video['thumb'][1], 'tHeight' => $video['thumb'][2])));
 			switch($display){
 				case 'links':
-					$v = ($n == 0 ? '' : $delimiter) . $v;
+					$v = ($n == 0 ? '' : $scriptProperties['delimiter']) . $v;
 					break;
 				case 'slider':
 					$r = $video['thumb'][1]/($maxR*$video['thumb'][2]);
 					$b = 0.25*$r*$maxW*$minR;
-					$v = $modx->parseChunk($sliderItemTpl, array_merge($scriptProperties, array('content' => $v, 'ratio' => $r, 'basis' => $b)));
+					$v = $videobox->parseTemplate($scriptProperties['sliderItemTpl'], array_merge($scriptProperties, array('content' => $v, 'ratio' => $r, 'basis' => $b)));
 					break;
 				default:
 					$r = $video['thumb'][1]/($maxR*$video['thumb'][2]);
 					$b = 0.25*$r*$maxW*$minR;
-					$v = $modx->parseChunk($galleryItemTpl, array_merge($scriptProperties, array('content' => $v, 'ratio' => $r, 'basis' => $b)));
+					$v = $videobox->parseTemplate($scriptProperties['galleryItemTpl'], array_merge($scriptProperties, array('content' => $v, 'ratio' => $r, 'basis' => $b)));
 					break;
 			}
 			$n++;
 			$content .= $v;
 		}
 		$b = 0.25*$maxW*$minR;
-		if($display == 'gallery') for(; $n < $perPage; $n++){
-			$v = $modx->parseChunk($galleryItemTpl, array('ratio' => 1, 'basis' => $b));
+		if($display == 'gallery') for(; $n < $scriptProperties['perPage']; $n++){
+			$v = $videobox->parseTemplate($scriptProperties['galleryItemTpl'], array('ratio' => 1, 'basis' => $b));
 			$content .= $v;
 		}
-		if($cache) $modx->cacheManager->set($propHash, $content, 0);
+		$videobox->setCache($propHash, $content);
 	}
 	switch($display){
 		case 'links':
 			return $content;
 		case 'slider':
-			return $modx->parseChunk($sliderTpl, array_merge($scriptProperties, array('content' => $content, 'basis' => $tWidth/2)));
+			return $videobox->parseTemplate($scriptProperties['sliderTpl'], array_merge($scriptProperties, array('content' => $content, 'basis' => $scriptProperties['tWidth']/2)));
 		default:
-			return $modx->parseChunk($galleryTpl, array_merge($scriptProperties, array('content' => $content, 'pagination' => $pagination)));
+			return $videobox->parseTemplate($scriptProperties['galleryTpl'], array_merge($scriptProperties, array('content' => $content, 'pagination' => $pagination)));
 	}
 } else {
 	$autoPlay = isset($autoPlay) && $autoPlay && $display == 'player' && (!isset($videobox->autoPlay) || !$videobox->autoPlay);
@@ -194,23 +181,23 @@ if(count($videos) > 1){
 	if($autoPlay) $videobox->autoPlay = true;
 	ksort($scriptProperties);
 	$propHash = 'Vb_video_' . md5(serialize($scriptProperties));
-	$data = $cache ? $modx->cacheManager->get($propHash) : '';
+	$data = $videobox->getCache($propHash);
 	if($data) return $data;
 	$video = $videos[0];
-	$props = array_merge(array('rel' => $player, 'pWidth' => $pWidth, 'pHeight' => $pHeight, 'tWidth' => $tWidth, 'tHeight' => $tHeight), array('title' => $video->getTitle(), 'link' => $video->getPlayerLink($display != 'player' || $autoPlay), 'ratio' => (100*$pHeight/$pWidth)));
+	$props = array_merge(array('rel' => $scriptProperties['player'], 'pWidth' => $scriptProperties['pWidth'], 'pHeight' => $scriptProperties['pHeight'], 'tWidth' => $scriptProperties['tWidth'], 'tHeight' => $scriptProperties['tHeight']), array('title' => $video->getTitle(), 'link' => $video->getPlayerLink($display != 'player' || $autoPlay), 'ratio' => (100*$scriptProperties['pHeight']/$scriptProperties['pWidth'])));
 	switch($display){
 		case 'links':
 			$props['linkText'] = isset($linkText) ? trim($linkText) : $video->getTitle(true);
-			$v = $modx->parseChunk($linkTpl, $props);
+			$v = $videobox->parseTemplate($scriptProperties['linkTpl'], $props);
 			break;
 		case 'box':
-			$thumb = $videobox->videoThumbnail($video, $tWidth, $tHeight);
-			$v = $modx->parseChunk($boxTpl, array_merge($scriptProperties, $props, array('thumb' => $thumb[0], 'tWidth' => $thumb[1], 'tHeight' => $thumb[2])));
+			$thumb = $videobox->videoThumbnail($video);
+			$v = $videobox->parseTemplate($scriptProperties['boxTpl'], array_merge($scriptProperties, $props, array('thumb' => $thumb[0], 'tWidth' => $thumb[1], 'tHeight' => $thumb[2])));
 			break;
 		default:
-			$v = $modx->parseChunk($playerTpl, $props);
+			$v = $videobox->parseTemplate($scriptProperties['playerTpl'], $props);
 			break;
 	}
-	if($cache) $modx->cacheManager->set($propHash, $v, 0);
+	$videobox->setCache($propHash, $v);
 	return $v;
 }

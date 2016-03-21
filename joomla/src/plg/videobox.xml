@@ -24,7 +24,7 @@
                     
             </fieldset>
             
-            <fieldset name="main">
+            <fieldset name="vb_main">
                 
                 <field name="multipleDisplay" type="list" default="gallery" label="PLG_SYSTEM_VIDEOBOX_MULTIPLE_DISPLAY" description="PLG_SYSTEM_VIDEOBOX_MULTIPLE_DISPLAY_DESC" >
                     <option value="gallery">Gallery</option>
@@ -59,7 +59,31 @@
                 
             </fieldset>
             
-            <fieldset name="templates">
+            <fieldset name="vb_templates">
+            
+                <field name="boxTpl" type="textarea" rows="10" cols="75" filter="raw" class="vb-tpl" label="PLG_SYSTEM_VIDEOBOX_BOX_TPL" description="PLG_SYSTEM_VIDEOBOX_BOX_TPL_DESC" 
+                default="&lt;a href=&quot;[[+link]]&quot; rel=&quot;[[+rel]]&quot; title=&quot;[[+title]]&quot; data-videowidth=&quot;[[+pWidth]]&quot; data-videoheight=&quot;[[+pHeight]]&quot; data-target=&quot;img&quot; class=&quot;vb_video_cont vb_box [[+class]]&quot; style=&quot;[[+style]] max-width: [[+tWidth]]px;&quot; data-style=&quot;[[+style]]&quot; data-class=&quot;[[+class]]&quot;&gt;&#10;&#9;&lt;span class=&quot;vb_thub_wrap&quot;&gt;&lt;img src=&quot;[[++static_path]][[+thumb]]&quot; alt=&quot;[[+title]]&quot; width=&quot;[[+tWidth]]&quot; height=&quot;[[+tHeight]]&quot; /&gt;&lt;span class=&quot;vb-icon-play&quot;&gt;&lt;/span&gt;&lt;/span&gt;&#10;&#9;&lt;span class=&quot;vb_video_title&quot; &gt;[[+title]]&lt;/span&gt;&#10;&lt;/a&gt;" />
+            
+                <field name="galleryItemTpl" type="textarea" rows="10" cols="75" filter="raw" class="vb-tpl" label="PLG_SYSTEM_VIDEOBOX_GALLERY_ITEM_TPL" description="PLG_SYSTEM_VIDEOBOX_GALLERY_ITEM_DESC" 
+                default="&lt;li class=&quot;vb_video_cont vb_gal&quot; style=&quot;flex: [[+ratio]] [[+ratio]] [[+basis]]px&quot;&gt;[[+content]]&lt;/li&gt;" />
+            
+                <field name="galleryTpl" type="textarea" rows="10" cols="75" filter="raw" class="vb-tpl" label="PLG_SYSTEM_VIDEOBOX_GALLERY_TPL" description="PLG_SYSTEM_VIDEOBOX_GALLERY_TPL_DESC" 
+                default="&lt;ul class=&quot;vb_gallery [[+class]]&quot; style=&quot;[[+style]]&quot;&gt;[[+content]]&lt;/ul&gt;&#10;[[+pagination]]" />
+            
+                <field name="linkTpl" type="textarea" rows="10" cols="75" filter="raw" class="vb-tpl" label="PLG_SYSTEM_VIDEOBOX_LINK_TPL" description="PLG_SYSTEM_VIDEOBOX_LINK_TPL_DESC" 
+                default="&lt;a href=&quot;[[+link]]&quot; class=&quot;vb_link&quot; rel=&quot;[[+rel]]&quot; title=&quot;[[+title]]&quot; data-videowidth=&quot;[[+pWidth]]&quot; data-videoheight=&quot;[[+pHeight]]&quot;&gt;[[+linkText]]&lt;/a&gt;" />
+            
+                <field name="playerTpl" type="textarea" rows="10" cols="75" filter="raw" class="vb-tpl" label="PLG_SYSTEM_VIDEOBOX_PLAYER_TPL" description="PLG_SYSTEM_VIDEOBOX_PLAYER_TPL_DESC" 
+                default="&lt;div class=&quot;vb_video_frame&quot; style=&quot;max-width: [[+pWidth]]px;&quot;&gt;&lt;div class=&quot;vb_video_sizer&quot; style=&quot;padding-bottom: [[+ratio]]%;&quot;&gt;&lt;iframe src=&quot;[[+link]]&quot; frameborder=&quot;0&quot; allowfullscreen oallowfullscreen msallowfullscreen webkitallowfullscreen mozallowfullscreen &gt;&lt;/iframe&gt;&lt;/div&gt;&lt;span class=&quot;vb_video_title&quot; &gt;[[+title]]&lt;/span&gt;&lt;/div&gt;" />
+            
+                <field name="sliderItemTpl" type="textarea" rows="10" cols="75" filter="raw" class="vb-tpl" label="PLG_SYSTEM_VIDEOBOX_SLIDER_ITEM_TPL" description="PLG_SYSTEM_VIDEOBOX_SLIDER_ITEM_TPL_DESC" 
+                default="&lt;li class=&quot;vb_video_cont vb_gal&quot; style=&quot;flex: [[+ratio]] [[+ratio]] [[+basis]]px&quot;&gt;[[+content]]&lt;/li&gt;" />
+            
+                <field name="sliderTpl" type="textarea" rows="10" cols="75" filter="raw" class="vb-tpl" label="PLG_SYSTEM_VIDEOBOX_SLIDER_TPL" description="PLG_SYSTEM_VIDEOBOX_SLIDER_TPL_DESC" 
+                default="&lt;ul class=&quot;vb_gallery vb_slider [[+class]]&quot; data-target=&quot;img&quot; data-move=&quot;[[+move]]&quot; data-width=&quot;[[+basis]]&quot; style=&quot;[[+style]]&quot;&gt;[[+content]]&lt;/ul&gt;" />
+            
+                <field name="thumbTpl" type="textarea" rows="10" cols="75" filter="raw" class="vb-tpl" label="PLG_SYSTEM_VIDEOBOX_THUMBNAIL_TPL" description="PLG_SYSTEM_VIDEOBOX_THUMBNAIL_TPL_DESC" 
+                default="&lt;a href=&quot;[[+link]]&quot; rel=&quot;[[+rel]]&quot; title=&quot;[[+title]]&quot; data-videowidth=&quot;[[+pWidth]]&quot; data-videoheight=&quot;[[+pHeight]]&quot; data-target=&quot;img&quot; style=&quot;max-width: [[+tWidth]]px; &quot;&gt;&#10;&#9;&lt;span class=&quot;vb_thub_wrap&quot;&gt;&lt;img src=&quot;[[++static_path]][[+thumb]]&quot; alt=&quot;[[+title]]&quot; width=&quot;[[+tWidth]]&quot; height=&quot;[[+tHeight]]&quot; /&gt;&lt;span class=&quot;vb-icon-play&quot;&gt;&lt;/span&gt;&lt;/span&gt;&#10;&#9;&lt;span class=&quot;vb_video_title&quot; &gt;[[+title]]&lt;/span&gt;&#10;&lt;/a&gt;" />
                 
             </fieldset>
         </fields>
