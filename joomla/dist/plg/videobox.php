@@ -1,6 +1,7 @@
 <?php
 // no direct access
 defined( '_JEXEC' ) or die;
+JLoader::discover('Videobox', JPATH_LIBRARIES . '/videobox');
  
 class plgSystemVideobox extends JPlugin {
 	/**
@@ -11,5 +12,10 @@ class plgSystemVideobox extends JPlugin {
 	 * @since  3.1
 	 */
 	protected $autoloadLanguage = true;
+	
+	public function onAfterRender(){
+		$videobox = new VideoboxVideobox(array());
+		var_dump($videobox);
+	}
     
 }
