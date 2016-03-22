@@ -2,7 +2,7 @@
   "license": "GPL-3.0",
   "readme": "README.md",
   "version": "5.0.0",
-  "name": "Videobox",
+  "name": "videobox",
   "description": "JS pop-up video player",
   "copyright": "Hitko",
   "homepage": "https://hitko.eu/videobox/",
