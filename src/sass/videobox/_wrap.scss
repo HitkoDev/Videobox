@@ -1,0 +1,26 @@
+#vbWrap {
+    position: absolute;
+	z-index: 9999;
+	left: 0;
+	top: 0;
+	height: 100%;
+	visibility: hidden;
+	pointer-events: none;
+	width: 100%;
+    
+    @include display-flex(flex);
+    @include justify-content(center);
+    @include align-items(center);
+    
+    &.visible {
+        visibility: visible;
+        
+        &:not(.animating) #vbCenter {
+            @include transition(all $transition-duration ease-in-out);
+        }
+    }
+    
+    .animating {
+        overflow: hidden;
+    }
+}

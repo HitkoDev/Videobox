@@ -1,0 +1,65 @@
+.vjs-progress-control {
+    @include flex(1 1 0px);
+    
+    .vjs-progress-holder {
+        height: 0.25*$base-font-size;
+        width: 100%;
+        margin: 0 0.5*$base-font-size;
+        position: relative;
+        background: rgba(255, 255, 255, 1 - $overlay-opacity);
+        cursor: pointer;
+        
+        .vjs-load-progress,
+        .vjs-mouse-display,
+        .vjs-play-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+        }
+        
+        .vjs-load-progress {
+            background: rgba(255, 255, 255, 1 - $overlay-opacity);
+        }
+        
+        .vjs-mouse-display {
+            z-index: 10;
+            width: 1px;
+            background: rgb(0, 0, 0);
+            display: none;
+        }
+        
+        .vjs-play-progress {
+            @extend .vb-icon; 
+            
+            background: #fff;
+            
+            &:after {
+                @extend .vb-hover-animated;
+                
+                content: $font-Videobox-circle;
+                position: absolute;
+                right: 0;
+                margin: -0.125*$base-font-size;
+                opacity: 0;
+                font-size: 0.25*$base-font-size;
+                top: 0.125*$base-font-size;
+                cursor: pointer;
+            }
+        }
+    }
+    
+    &:hover,
+    &:focus {
+        
+        .vjs-mouse-display {
+            display: block;
+        }
+        
+        .vjs-play-progress:after {
+            opacity: 1;
+            font-size: $base-font-size;
+            margin: -$base-font-size/2;
+        }
+    }
+}

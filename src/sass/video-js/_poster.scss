@@ -1,0 +1,17 @@
+.vjs-poster {
+    background-color: #000;
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	background-size: contain;
+    cursor: pointer;
+	position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right : 0;
+    z-index: 2;
+}
+
+.vjs-has-started:not(.vjs-audio) .vjs-poster {
+    display: none;
+}

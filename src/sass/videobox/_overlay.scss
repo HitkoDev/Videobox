@@ -1,0 +1,19 @@
+#vbOverlay {    
+	position: fixed;
+	z-index: 9999;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	cursor: pointer;
+	visibility: hidden;
+	background-color: #000;
+    opacity: 0;
+    
+    @include transition(all $transition-duration ease-in-out);
+    
+    &.visible {
+        visibility: visible;
+        opacity: $overlay-opacity;
+    }
+}

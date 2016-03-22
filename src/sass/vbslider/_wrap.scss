@@ -1,0 +1,13 @@
+.vb_slider_outer {
+	width: 100%;
+	color: $primary-color;
+    
+    @include display-flex(flex);
+    @include flex-flow(row);
+    
+    .vb_slider_wrap {
+        @include flex(1 1 100%);
+        overflow: hidden;
+        padding: 0px;
+    }
+}

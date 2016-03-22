@@ -1,0 +1,25 @@
+.vb_slider_outer {
+    
+    .vb_slider_prev,
+    .vb_slider_next {
+        @extend .vb-hover-animated;
+        
+        flex: 0 0 2*$base-font-size;
+        cursor: pointer;
+        position: relative;
+        margin: 15px 0;
+        
+        i {
+            position: absolute;
+            top: 50%;
+            margin-top: -24px;
+            font-size: 2*$base-font-size;
+        }
+        
+        &:hover,
+        &:focus {
+            color: $primary-light;
+        }
+    }
+    
+}

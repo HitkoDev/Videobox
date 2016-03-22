@@ -1,0 +1,20 @@
+//
+// Icon Font: <%= font_name %>
+//
+
+<%= font_face(path: @font_path_alt) %>
+
+[data-icon]:before { content: attr(data-icon); }
+
+[data-icon]:before,
+<%= options[:css_selector] %> {
+<%= glyph_properties %>
+
+    font-size: 24px;
+    width: 1em;
+    height: 1em;
+}
+
+<%= glyphs %>
+<% @glyphs.each do |name, value| %>
+$font-<%= font_name.gsub(/[^\w\d_]/, '-') %>-<%= name.to_s %>: "\<%= value[:codepoint].to_s(16) %>";<% end %>

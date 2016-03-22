@@ -1,0 +1,43 @@
+#vbBottomContainer {
+	width: 100%;
+	position: absolute;
+	color: #fff;
+	max-height: 0;
+	overflow: hidden;
+	background-color: #000;
+	opacity: 0.5;
+	pointer-events: all;
+	z-index: 5;
+    font-size: 0.625 * $base-font-size;
+    
+	@include box-shadow(0px 0px 40px -5px #000);
+    
+    &.visible {
+        max-height: 200px;
+        
+        @include transition(opacity $transition-duration .1s ease-in-out);
+        
+        &:hover,
+        &:focus {
+            opacity: 1;
+            
+            @include transition-delay(0s);
+        }
+    }
+}
+
+#vbBottom {
+    @include box-sizing(border-box);
+    
+	position: relative;
+	width: 100%;
+	padding: 15px 15px 0;
+	text-align: left;
+	font-weight: 400;
+	font-size: 15px;
+}
+
+#vbCaption {
+	margin-bottom: 10px;
+	display: block;
+}

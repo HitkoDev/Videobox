@@ -1,0 +1,18 @@
+/// <reference path="headers.d.ts" />
+
+(function($: JQueryStatic) {
+
+    $(window).on('load', function() {
+        var r = $(".mdl-layout.mdl-js-layout")[0];
+        if (!r) r = $("body")[0];
+
+        $("a[rel^='videobox']").videobox({
+            root: r
+        });
+
+        $("a[rel^='vbinline']").vbinline({ /* Put custom options here */ });
+
+        $(".vb_slider").vbSlider({ /* Put custom options here */ });
+    });
+
+})(jQuery);

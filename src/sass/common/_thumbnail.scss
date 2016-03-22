@@ -1,0 +1,70 @@
+.vb_video_cont {
+	vertical-align: top;
+	text-align: center;
+    
+    img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        width: 100%;
+    }
+    
+    &, a {
+        @extend .vb-hover-animated;
+        
+        display: inline-block;
+        text-decoration: none;
+        color: $primary-color;
+        display: inline-block;
+        width: 100%;
+        
+        &:hover,
+        &:focus {
+            color: $primary-light;
+            
+            .vb_thub_wrap .vb-icon-play {
+                color: $primary-light;
+                background-color: rgba(0, 0, 0, 0.7);
+            }
+        }
+    }
+}
+
+.vb_video_title {
+	display: block;
+	padding: 8px 10px 0;
+    
+    &:empty {
+        display: none;
+    }
+}
+
+.vb_thub_wrap {
+	position: relative;
+	display: block;
+    
+    .vb-icon-play {
+        @extend .vb-hover-animated;
+        
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        bottom: 50%;
+        right: 50%;
+        width: 3*$base-font-size;
+        height: 3*$base-font-size;
+        margin: -1.5*$base-font-size;
+        border-radius: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        font-size: 2*$base-font-size;
+        line-height: 3*$base-font-size;
+        color: #ffffff;
+        display: none;
+        
+        @include box-shadow(0px 0px 40px -5px #000);
+    }
+}
+
+.vb_play_button .vb_thub_wrap .vb-icon-play {
+	display: block;
+}

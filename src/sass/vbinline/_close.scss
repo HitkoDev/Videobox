@@ -1,0 +1,27 @@
+#vbiClose {
+    @extend .vb-hover-animated;
+    
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 48px;
+    height: 48px;
+    margin: -24px -24px 0 0;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 12px;
+    opacity: 0;
+	z-index: 300;
+
+    @include box-sizing(border-box);
+}
+
+#vbiWrap:hover #vbiClose { 
+	opacity: 1; 
+}
+
+#vbiClose:hover,
+#vbiClose:focus {
+	color: $primary-light;
+}

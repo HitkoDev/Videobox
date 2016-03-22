@@ -1,0 +1,71 @@
+//
+// Icon Font: Videobox
+//
+
+@font-face {
+  font-family: "Videobox";
+  src: url("/font/Videobox.eot");
+  src: url("/font/Videobox.eot?#iefix") format("embedded-opentype"),
+       url("/font/Videobox.woff") format("woff"),
+       url("/font/Videobox.ttf") format("truetype"),
+       url("/font/Videobox.svg#Videobox") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "Videobox";
+    src: url("/font/Videobox.svg#Videobox") format("svg");
+  }
+}
+
+[data-icon]:before { content: attr(data-icon); }
+
+[data-icon]:before,
+.vb-icon, [class^="vb-icon-"], [class*=" vb-icon-"] {
+  display: inline-block;
+  font-family: "Videobox";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-decoration: inherit;
+  text-rendering: optimizeLegibility;
+  text-transform: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+
+    font-size: 24px;
+    width: 1em;
+    height: 1em;
+}
+
+.vb-icon-circle:before { content: "\f100"; }
+.vb-icon-close:before { content: "\f101"; }
+.vb-icon-close-small:before { content: "\f102"; }
+.vb-icon-fullscreen-enter:before { content: "\f106"; }
+.vb-icon-fullscreen-exit:before { content: "\f107"; }
+.vb-icon-next:before { content: "\f104"; }
+.vb-icon-pause:before { content: "\f108"; }
+.vb-icon-play:before { content: "\f103"; }
+.vb-icon-prev:before { content: "\f105"; }
+.vb-icon-volume-0:before { content: "\f109"; }
+.vb-icon-volume-1:before { content: "\f10a"; }
+.vb-icon-volume-2:before { content: "\f10b"; }
+.vb-icon-volume-3:before { content: "\f10c"; }
+
+$font-Videobox-circle: "\f100";
+$font-Videobox-close: "\f101";
+$font-Videobox-close-small: "\f102";
+$font-Videobox-fullscreen-enter: "\f106";
+$font-Videobox-fullscreen-exit: "\f107";
+$font-Videobox-next: "\f104";
+$font-Videobox-pause: "\f108";
+$font-Videobox-play: "\f103";
+$font-Videobox-prev: "\f105";
+$font-Videobox-volume-0: "\f109";
+$font-Videobox-volume-1: "\f10a";
+$font-Videobox-volume-2: "\f10b";
+$font-Videobox-volume-3: "\f10c";

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="48px" height="48px" viewBox="0 0 48 48" enable-background="new 0 0 48 48" xml:space="preserve">
+	<style>
+		.spinner {
+			fill: #ffffff;
+			-webkit-animation: spin 0.8s steps(8, end) infinite !important;
+					animation: spin 0.8s steps(8, end) infinite !important;
+			-webkit-transform-origin: 24px 24px !important;
+				-ms-transform-origin: 24px 24px !important;
+				-moz-transform-origin: 24px 24px !important;
+					transform-origin: 24px 24px !important;
+		}
+
+		@keyframes spin {
+			to {
+				transform: rotate(360deg);
+			}
+		}
+
+		@-webkit-keyframes spin {
+			to {
+				-webkit-transform: rotate(360deg) translate3d(0, 0, 0);
+			}
+		}
+	</style>
+	<defs>
+		<path id="arc" opacity="1" d="M 25 2.022739024164089 A 22 22 0 0 1 38.833163486733505 7.752622950893399 L 32.458044608725132 14.127741828901772 A 13 13 0 0 0 25 11.038518603184279 Z"/>
+	</defs>
+	<g class="spinner">
+		<use opacity="0.4" x="0" y="0" transform="rotate(0, 24, 24)" xlink:href="#arc"/>
+		<use opacity="0.4" x="0" y="0" transform="rotate(45, 24, 24)" xlink:href="#arc"/>
+		<use opacity="0.4" x="0" y="0" transform="rotate(90, 24, 24)" xlink:href="#arc"/>
+		<use opacity="0.4" x="0" y="0" transform="rotate(135, 24, 24)" xlink:href="#arc"/>
+		<use opacity="0.4" x="0" y="0" transform="rotate(180, 24, 24)" xlink:href="#arc"/>
+		<use opacity="0.4" x="0" y="0" transform="rotate(225, 24, 24)" xlink:href="#arc"/>
+		<use opacity="0.85" x="0" y="0" transform="rotate(270, 24, 24)" xlink:href="#arc"/>
+		<use opacity="0.4" x="0" y="0" transform="rotate(315, 24, 24)" xlink:href="#arc"/>
+	</g>
+</svg>

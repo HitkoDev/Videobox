@@ -1,0 +1,17 @@
+.vb_gallery {
+	padding: 0;
+	margin: -12px;
+	clear: both;
+    
+    @include display-flex(flex);
+    @include flex-flow(row wrap);
+}
+
+.vb_video_cont.vb_gal {
+    margin: 12px;
+    
+    &:empty{
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
