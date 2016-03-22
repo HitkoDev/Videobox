@@ -27,6 +27,7 @@ class JFormFieldPropertySet extends JFormFieldText {
 		
 		$value = json_decode($this->value, true);
 		if(!$value) $value = array();
+		$value['__keymap'] = $keymap;
 		if(!$value['default']) $value['default'] = array_merge($fields, array(
 			'property_set' => 'default'
 		));
@@ -35,6 +36,7 @@ class JFormFieldPropertySet extends JFormFieldText {
 		foreach($data as $key => $val){
 			if($keymap[$key]) $this->form->setValue($keymap[$key], $this->group, $val);
 		}
+		if($set == 'default') $value[$set] = $data;
 		
 		$document = JFactory::getDocument();
 		JHtml::script(JUri::base() . '../libraries/videobox/js/propertyset.min.js');
@@ -63,6 +65,7 @@ class JFormFieldPropertySet extends JFormFieldText {
 		
 		$out = '<ul class="prop-set-items" id="' . $this->id . '-list">';
 		foreach($value as $key => $data) {
+			if($key == '__keymap') continue;
 			if($key == 'default'){
 				unset($query['property_set']);
 			} else {

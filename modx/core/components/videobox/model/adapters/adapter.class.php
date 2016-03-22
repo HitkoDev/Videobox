@@ -22,11 +22,11 @@ class VideoboxAdapter {
 	
 	public $type = 'v';
 
-	function __construct($id, $title = '', $start = 0, $end = 0, $properties = array()){
-		$this->id = $id;
-		$this->title = $title;
-		$this->start = $start;
-		$this->end = $end;
+	function __construct($properties = array()){
+		$this->id = $properties['id'];
+		$this->title = isset($properties['title']) ? $properties['title'] : '';
+		$this->start = isset($properties['start']) ? $properties['start'] : 0;
+		$this->end = isset($properties['end']) ? $properties['end'] : 0;
 		$this->properties = $properties;
 	}
 	

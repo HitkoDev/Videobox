@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.1" type="plugin" group="videobox">
+    <name>plg_videobox_youtube</name>
+    <author>HitkoDev</author>
+    <creationDate>August 2012</creationDate>
+    <copyright>Copyright (C) 2016 HtikoDev</copyright>
+    <license>GNU General Public License version 3 or later</license>
+    <authorEmail>development@hitko.si</authorEmail>
+    <authorUrl>hitko.eu</authorUrl>
+    <version>5.0.0</version>
+    <description>Video plugin for Joomla!</description>
+    <files>
+        <filename plugin="youtube">youtube.php</filename>
+    </files>
+    <config>
+        <fields name="params">
+		
+        </fields>
+    </config>
+</extension>

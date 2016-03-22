@@ -27,6 +27,7 @@ class VideoboxVideobox {
 	const VB_GALLERY_NUMBER = 'vb_gallery_number';
 
 	function __construct(array $config = array()){
+		$this->setConfig($config);
 		if($this->gallery == null) $this->gallery = -1;
 		
 		$this->pages = array();
@@ -40,9 +41,9 @@ class VideoboxVideobox {
 	
 	function setConfig(array $config = array()){
 		$this->config = array_merge(array(
-			'assets_url' => $this->modx->getOption('videobox.assets_url', null, $this->modx->getOption('assets_url').'components/videobox/'),
-			'assets_path' => $this->modx->getOption('videobox.assets_path', null, MODX_ASSETS_PATH.'components/videobox/'),
-			'core_path' => $this->modx->getOption('videobox.core_path', null, $this->modx->getOption('core_path').'components/videobox/')
+			'assets_url' => '/joomla/libraries/videobox/',
+			'assets_path' => dirname(__FILE__) . '/',
+			'core_path' => dirname(__FILE__) . '/'
 		), $config);
 		$this->processors = null;
 	}
@@ -50,12 +51,9 @@ class VideoboxVideobox {
 	function getProcessors(){
 		if($this->processors) return $this->processors;
 		
-		$processors = array_map('trim', explode(',', $this->config['processors']));
-		$this->processors = array();
-		foreach($processors as $key => $processor){
-			$p = $this->modx->getObject('modSnippet', array('name' => $processor));
-			if($p) $this->processors[] = $processor;
-		}
+		JPluginHelper::importPlugin('videobox');
+		$dispatcher = JEventDispatcher::getInstance();
+		$this->processors = $dispatcher->trigger('onLoadProcessors', array($this->config));
 		
 		return $this->processors;
 	}
@@ -63,7 +61,8 @@ class VideoboxVideobox {
 	function getVideo(array $props = array()){
 		$prop = array_merge($this->config, $props);
 		foreach($this->getProcessors() as $processor){
-			$v = $this->modx->runSnippet($processor, $prop);
+			$v = call_user_func($processor, $props);
+			var_dump($v);
 			if($v) return $v;
 		}
 		return false;
@@ -358,15 +357,14 @@ class VideoboxVideobox {
 	}
 	
 	function pagination($total, $current, $perPage){
-		global $modx;
 		if($perPage < 1) return '';
 		if($total < $perPage) return '';
 		$pages = floor(($total - 1) / $perPage + 1);
 		$output = '';
-		$id = $modx->resource->get('id');
+		$id = $this->modx->resource->get('id');
 		$que = $_GET;
-		$rq = trim($modx->getOption('request_param_id'));
-		$ra = trim($modx->getOption('request_param_alias'));
+		$rq = trim($this->modx->getOption('request_param_id'));
+		$ra = trim($this->modx->getOption('request_param_alias'));
 		if($rq) unset($que[$rq]);
 		if($ra) unset($que[$ra]);
 		unset($que['vbpages']);
@@ -378,7 +376,7 @@ class VideoboxVideobox {
 		for(; $i < count($this->pages); $i++) $post .= ',' . (isset($this->pages[$i]) ? $this->pages[$i] : 0);
 		for($i = 0; $i < $pages; $i++){
 			$pg = preg_replace("/(^,)|((?<=,),+)|((?<=0)0+)|((,|,0)+$)/m", '', $pref . $i . $post);	//	clean 1) leading comas, 2) multiple comas, 3) multiple zeros, 4) trailing comas and zeros
-			$output .= '<li '.($i == $current ? 'class="active"' : '').'><a href="'.$modx->makeUrl($id, '', ($pg ? array_merge($que, array('vbpages' => $pg)) : $que)).'">'.($i+1).'</a></li>';
+			$output .= '<li '.($i == $current ? 'class="active"' : '').'><a href="'.$this->modx->makeUrl($id, '', ($pg ? array_merge($que, array('vbpages' => $pg)) : $que)).'">'.($i+1).'</a></li>';
 		}
 		return '<ul class="pagination">'.$output.'</ul>';
 	}

@@ -22,7 +22,7 @@ $vbCore = $modx->getOption('videobox.core_path', null, $modx->getOption('core_pa
 require_once($vbCore . 'model/adapters/html5.class.php');
 
 /*
- *	$id - url ending with one of the known file extensions
+ *	$scriptProperties['id'] - url ending with one of the known file extensions
  */
 HTML5Video::$vid = array(
 	array('mp4', 'ogv', 'webm'), 
@@ -36,7 +36,7 @@ HTML5Video::$img = array(
 	array('jpg', 'jpeg', 'png', 'gif'), 
 	array(IMAGETYPE_JPEG, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_GIF)
 ); 
-$ext = pathinfo($id);
+$ext = pathinfo($scriptProperties['id']);
 $file = $ext['dirname'] . '/' . $ext['filename'];
 $ext = $ext['extension'];
 
@@ -57,6 +57,6 @@ if(in_array(strtolower($ext), HTML5Video::$vid[0]) || in_array(strtolower($ext),
 	$scriptProperties['ext'] = $ext;
 	$scriptProperties['scriptsDir'] = rtrim($vbCore, '/') . '/scripts/';
 	$scriptProperties['modx'] = $modx;
-	return new HTML5Video($id, $title, $start, $end, $scriptProperties);
+	return new HTML5Video($scriptProperties);
 }
 return false;

@@ -20,7 +20,7 @@
         <fields name="params">
             <fieldset name="basic" addfieldpath="/libraries/videobox/fields">
             
-                <field name="property_sets" type="PropertySet" default="" label="PLG_SYSTEM_VIDEOBOX_PROPERTY_SETS" description="PLG_SYSTEM_VIDEOBOX_PROPERTY_SETS_DESC" />
+                <field name="property_sets" type="PropertySet" filter="raw" default="" label="PLG_SYSTEM_VIDEOBOX_PROPERTY_SETS" description="PLG_SYSTEM_VIDEOBOX_PROPERTY_SETS_DESC" />
                     
             </fieldset>
             

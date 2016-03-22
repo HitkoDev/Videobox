@@ -22,9 +22,9 @@ $vbCore = $modx->getOption('videobox.core_path', null, $modx->getOption('core_pa
 require_once($vbCore . 'model/adapters/soundcloud.class.php');
 
 /*
- *	$id - link to the song (https://soundcloud.com/alestorm/shipwrecked)
+ *	$scriptProperties['id'] - link to the song (https://soundcloud.com/alestorm/shipwrecked)
  */
-if(strpos($id, 'soundcloud')!==false){
-	return new SoundCloudVideo($id, $title, $start, $end, $scriptProperties);
+if(strpos($scriptProperties['id'], 'soundcloud')!==false){
+	return new SoundCloudVideo($scriptProperties);
 }
 return false;

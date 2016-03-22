@@ -28,7 +28,7 @@ class HTML5Video extends VideoboxAdapter {
     public static $img;
 	
 	function __construct($id, $title = '', $start = 0, $end = 0, $properties = array()) {
-		parent::__construct($id, $title, $start, $end, $properties);
+		parent::__construct($properties);
 		if(in_array(strtolower($properties['ext']), self::$aud[0])) $this->type = 'a';
 	}
 

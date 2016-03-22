@@ -23,14 +23,14 @@ $videobox = $modx->getService('videobox', 'Videobox', $vbCore . 'model/videobox/
 if(!($videobox instanceof Videobox)) return '';
 $videobox->setConfig($scriptProperties);
 
-if(!isset($videos) && isset($video)) $videos = $video;
-if(!isset($videos)) return;
+if(!isset($scriptProperties['videos']) && isset($scriptProperties['video'])) $scriptProperties['videos'] = $scriptProperties['video'];
+if(!isset($scriptProperties['videos'])) return;
 $scriptProperties['color'] = trim(str_replace('#', '', $scriptProperties['color']));
-if(!$scriptProperties['color']) $scriptProperties['color'] = '00a645';
 if(strlen($scriptProperties['color']) != 6) $scriptProperties['color'] = '';
-$v = $videobox->parseTemplate($videos);
-if($v) $videos = $v;
-$videos = explode('|,', $videos);
+if(!$scriptProperties['color']) $scriptProperties['color'] = '00a645';
+$v = $videobox->parseTemplate($scriptProperties['videos']);
+if($v) $scriptProperties['videos'] = $v;
+$videos = explode('|,', $scriptProperties['videos']);
 
 $processors = $videobox->getProcessors();
 
@@ -96,10 +96,6 @@ if(count($videos) > 1){
 		$scriptProperties['pWidth'] = $scriptProperties['tWidth'];
 		$scriptProperties['pHeight'] = $scriptProperties['tHeight'];
 	}
-
-	// if($display == 'slider'){ 
-		// $scriptProperties['class'] = isset($scriptProperties['class']) ? $scriptProperties['class'] . ' vb_slider' : 'vb_slider';
-	// }
 	
 	ksort($scriptProperties);
 	$propHash = 'Vb_gallery_' . md5(serialize($scriptProperties));
@@ -125,7 +121,6 @@ if(count($videos) > 1){
 		foreach($filtered as $video){
 			$r = $video['thumb'][1]/$video['thumb'][2];
 			if($r > $maxR) $maxR = $r;
-			//if($slika['thumb'][1] > $maxW) $maxW = $slika['thumb'][1];
 		}
 		$minR = 0.6;
 		foreach($filtered as $video){
@@ -133,12 +128,6 @@ if(count($videos) > 1){
 			if($r && $r < $minR) $minR = $r;
 		}
 		$minR = 1 - log($minR);
-	/*	foreach($slike as $slika){
-			$r = $video['thumb'][1]/($maxR*$video['thumb'][2]);
-			$b = 0.25*$r*$maxW*$minR;
-			$so .= '<li class="galerija_item" style="flex: ' . $r . ' ' . $r . ' ' . $b . 'px;"><a class="galerija_slika_link" href="'.$slika['small'][0].'" rel="lightbox.gal"><img class="thumb" width="'.$slika['thumb'][1].'" height="'.$slika['thumb'][2].'" src="'.$slika['thumb'][0].'"></a></li>';
-		}
-		$b = 0.25*$maxW*$minR;*/
 		$n = 0;
 		foreach($filtered as $video){
 			$v = $videobox->parseTemplate($tpl, array_merge($props, $video, array('thumb' => $video['thumb'][0], 'tWidth' => $video['thumb'][1], 'tHeight' => $video['thumb'][2])));

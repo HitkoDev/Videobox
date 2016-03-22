@@ -25,15 +25,15 @@ class TwitchVideo extends VideoboxAdapter {
 	
 	public $type = 'c';
 
-	function __construct($channel, $video = '', $title = '', $start = 0, $end = 0, $properties = array()){
-		$this->channel = $channel;
-		$this->type = $video ? 'v' : 'c';
-		parent::__construct($video ? $video : $channel, $title, $start, $end, $properties);
+	function __construct($properties = array()){
+		$this->channel = $properties['channel'];
+		$this->type = $properties['video'] ? 'v' : 'c';
+		parent::__construct($properties);
 	}
 
 	function getTitle($forced = false){
 		if($forced && $this->title == ''){
-			return $this->type == 'v' ? 'https://www.twitch.tv/' . $this-channel . '/v/' . $this->id : 'https://www.twitch.tv/' . $this-channel;
+			return $this->type == 'v' ? 'https://www.twitch.tv/' . $this->channel . '/v/' . $this->id : 'https://www.twitch.tv/' . $this->channel;
 		} else {
 			return $this->title; 
 		}

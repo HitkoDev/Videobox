@@ -22,15 +22,15 @@ $vbCore = $modx->getOption('videobox.core_path', null, $modx->getOption('core_pa
 require_once($vbCore . 'model/adapters/vimeo.class.php');
 
 /*
- *	$id - one of the following:
+ *	$scriptProperties['id'] - one of the following:
  *		- numeric Vimeo video ID
  *		- link to the video (http://vimeo.com/4700344)
  */
-if(is_numeric($id)){
-	return new VimeoVideo($id, $title, $start, $end, $scriptProperties);
+if(is_numeric($scriptProperties['id'])){
+	return new VimeoVideo($scriptProperties);
 }
-if(strpos($id, 'vimeo')!==false){
-	preg_match('/vimeo.com\/([0-9]*?)/isU', $id, $v_urls);
-	return new VimeoVideo($v_urls[1], $title, $start, $end, $scriptProperties);
+if(strpos($scriptProperties['id'], 'vimeo')!==false){
+	preg_match('/vimeo.com\/([0-9]*?)/isU', $scriptProperties['id'], $v_urls);
+	return new VimeoVideo(array_merge($scriptProperties, array('id' => $v_urls[1])));
 }
 return false;

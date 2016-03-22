@@ -22,12 +22,12 @@ $vbCore = $modx->getOption('videobox.core_path', null, $modx->getOption('core_pa
 require_once($vbCore . 'model/adapters/twitch.class.php');
 
 /*
- *	$id - Twitch channel or video url
+ *	$scriptProperties['id'] - Twitch channel or video url
  */
 if(preg_match("/twitch\.tv\/([^\/]+)\/v\/(\d+)/isu", $id, $matches) > 0){
-	return new TwitchVideo($matches[1], $matches[2], $title, $start, $end, $scriptProperties);
+	return new TwitchVideo(array_merge($scriptProperties, array('channel' => $matches[1], 'video' => $matches[2], 'id' => $matches[2])));
 }
 if(preg_match("/twitch\.tv\/([^\/]+)(\/.*)?/isu", $id, $matches) > 0){
-	return new TwitchVideo($matches[1], '', $title, $start, $end, $scriptProperties);
+	return new TwitchVideo(array_merge($scriptProperties, array('channel' => $matches[1], 'video' => '', 'id' => $matches[1])));
 }
 return false;

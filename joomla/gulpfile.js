@@ -11,7 +11,8 @@ gulp.task('default', function() {
 
 gulp.task('dist', [
     'lib',
-    'plg'
+    'plg',
+	'plg_yt'
 ], function() {
 
     // compress JS and CSS
@@ -48,6 +49,11 @@ gulp.task('install', [
 
     gulp.src(['./dist/plg/**', '!./dist/plg/language/**'])
         .pipe(gulp.dest('../../joomla/plugins/system/videobox'));
+
+
+    // install YouTube plugin
+    gulp.src('./dist/plg_yt/**')
+        .pipe(gulp.dest('../../joomla/plugins/videobox/youtube'));
 
 });
 
@@ -87,4 +93,10 @@ gulp.task('plg', function() {
 
     gulp.src('./src/plg/**')
         .pipe(gulp.dest('./dist/plg'));
+});
+
+gulp.task('plg_yt', function() {
+
+    gulp.src('./src/plg_yt/**')
+        .pipe(gulp.dest('./dist/plg_yt'));
 });

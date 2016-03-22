@@ -22,20 +22,20 @@ $vbCore = $modx->getOption('videobox.core_path', null, $modx->getOption('core_pa
 require_once($vbCore . 'model/adapters/youtube.class.php');
 
 /*
- *	$id - one of the following:
+ *	$scriptProperties['id'] - one of the following:
  *		- 11 characters YouTube video ID
  *		- YouTube sharing link (http://youtu.be/KKWTdo5YW_I)
  *		- link to the video (https://www.youtube.com/watch?v=KKWTdo5YW_I)
  */
-if(strlen($id)==11 && preg_match('/([a-zA-Z0-9_-]{11})/', $id)==1){
-	return new YouTubeVideo($id, $title, $start, $end, $scriptProperties);
+if(strlen($scriptProperties['id'])==11 && preg_match('/([a-zA-Z0-9_-]{11})/', $scriptProperties['id'])==1){
+	return new YouTubeVideo($scriptProperties);
 }
-if(strpos($id, 'youtube')!==false){
-	preg_match('/v=([a-zA-Z0-9_-]{11}?)/isU', $id, $v_urls);
-	return new YouTubeVideo($v_urls[1], $title, $start, $end, $scriptProperties);
+if(strpos($scriptProperties['id'], 'youtube')!==false){
+	preg_match('/v=([a-zA-Z0-9_-]{11}?)/isU', $scriptProperties['id'], $v_urls);
+	return new YouTubeVideo(array_merge($scriptProperties, array('id' => $v_urls[1])));
 }
-if(strpos($id, 'youtu.be')!==false){
-	preg_match('/youtu\.be\/([a-zA-Z0-9_-]{11}?)/isU', $id, $v_urls);
-	return new YouTubeVideo($v_urls[1], $title, $start, $end, $scriptProperties);
+if(strpos($scriptProperties['id'], 'youtu.be')!==false){
+	preg_match('/youtu\.be\/([a-zA-Z0-9_-]{11}?)/isU', $scriptProperties['id'], $v_urls);
+	return new YouTubeVideo(array_merge($scriptProperties, array('id' => $v_urls[1])));
 }
 return false;
