@@ -3,23 +3,33 @@
   "readme": "README.md",
   "version": "5.0.0",
   "name": "videobox",
-  "description": "JS pop-up video player",
+  "description": "Pop-up video player plugin",
   "copyright": "Hitko",
   "homepage": "https://hitko.eu/videobox/",
   "repository": {
     "type": "git",
     "url": "https://github.com/HitkoDev/Videobox"
   },
-  "main": "./dist/videobox.js",
-  "style": "./dist/videobox.css",
+  "keywords": [
+    "html5",
+    "video",
+    "audio",
+    "css3",
+    "jQuery",
+    "player",
+    "pop-up",
+    "slider",
+    "gallery",
+    "oembed",
+    "iframe"
+  ],
+  "main": "./dist/videobox.min.js",
+  "style": "./dist/videobox.min.css",
   "files": [
     "dist/videobox.js",
     "dist/videobox.css",
     "dist/videobox.min.css",
-    "dist/videobox.min.js",
-    "dist/video-js/video.js",
-    "dist/video-js/video.min.js",
-    "dist/video-js/video-js.swf"
+    "dist/videobox.min.js"
   ],
   "devDependencies": {
     "gulp": "^3.9.0",
@@ -33,9 +43,10 @@
     "gulp-rename": "^1.2.0",
     "gulp-replace": "^0.5.4",
     "gulp-sass": "^2.2.0",
+    "gulp-typedoc": "^1.2.1",
     "gulp-typescript": "^2.10.0",
     "gulp-uglify": "^1.5.0",
-    "video.js": "git+https://github.com/HitkoDev/video.js.git"
+    "merge2": "^1.0.1"
   },
   "dependencies": {
     "jquery": "^2.2.2",

@@ -1,26 +1,130 @@
-/// <reference path="headers.d.ts" />
+/// <reference path="helpers.d.ts" />
+/// <reference path="vbinline.ts" />
+
+interface JQueryStatic {
+
+    /**
+     * Create a new Videobox slider, or find an existing slider and update it's configuration
+     * 
+     * @param target an element containing the slider items
+     * @param _options slider configuration
+     * @returns slider containing the target element
+     */
+    vbSlider: (target: HTMLElement, _options?: vbSliderOptions) => vbSlider
+}
+
+interface JQuery {
+
+    /**
+     * Map Videobox slider to elements matched by the query
+     * 
+     * @param _options slider configuration
+     * @returns sliders matching the corresponding query elements
+     */
+    vbSlider: (_options?: vbSliderOptions) => Array<vbSlider>
+}
+
+/**
+ * Interface for Videobox slider
+ */
+interface vbSlider {
+
+    /**
+     * slider configuration
+     */
+    options: vbSliderOptions,
+
+    /**
+     * scrolls slider to the left
+     */
+    showPrev(): void,
+
+    /**
+     * scrolls slider to the right 
+     */
+    showNext(): void,
+
+    /**
+     * recalcuate slider metrics 
+     */
+    setCount(): void,
+
+    /**
+     * returns true if slider is currently scrolling
+     */
+    isMoving(): boolean,
+
+    /**
+     * get the slider's target element
+     */
+    getTarget(): HTMLElement,
+
+    /**
+     * set element base width
+     * 
+     * @param basis new base width
+     */
+    setBasis(basis: number): void
+
+}
+
+/**
+ * Interface for Videobox slider configuration
+ */
+interface vbSliderOptions {
+
+    /**
+     * if true, slider will scroll all visible elements
+     */
+    moveAll?: boolean,
+
+    /**
+     * target selector
+     */
+    target?: string,
+
+    /**
+     * transition duration for one element
+     */
+    singleDuration?: number,
+
+    /**
+     * clicks within the timeout are processed together
+     */
+    doubleClickTimeout?: number,
+
+    /**
+     * animation properties (see <a href="https://w3c.github.io/web-animations/">web animations specifications</a>)
+     */
+    animation?: {
+        duration?: number,
+        iterations?: number,
+        delay?: number,
+        easing?: string
+    }
+}
 
 (function($: JQueryStatic) {
 
     class _vbSlider implements vbSlider {
 
-        target: HTMLElement;
-        outer: HTMLDivElement = <HTMLDivElement>$('<div class="vb_slider_outer"></div>')[0];
-        wrap: HTMLDivElement = <HTMLDivElement>$('<div class="vb_slider_wrap"></div>').appendTo(this.outer)[0];
-        content: HTMLDivElement = <HTMLDivElement>$('<div class="vb_slider_cont"></div>').appendTo(this.wrap)[0];
-        prev: HTMLDivElement = <HTMLDivElement>$('<div class="vb_slider_prev"><i class="vb-icon-prev"></i></div>').prependTo(this.outer)[0];
-        next: HTMLDivElement = <HTMLDivElement>$('<div class="vb_slider_next"><i class="vb-icon-next"></i></div>').appendTo(this.outer)[0];
-        buttons: JQuery = $(this.outer).find('i');
+        private target: HTMLElement;
+        private outer: HTMLDivElement = <HTMLDivElement>$('<div class="vb_slider_outer"></div>')[0];
+        private wrap: HTMLDivElement = <HTMLDivElement>$('<div class="vb_slider_wrap"></div>').appendTo(this.outer)[0];
+        private content: HTMLDivElement = <HTMLDivElement>$('<div class="vb_slider_cont"></div>').appendTo(this.wrap)[0];
+        private prev: HTMLDivElement = <HTMLDivElement>$('<div class="vb_slider_prev"><i class="vb-icon-prev"></i></div>').prependTo(this.outer)[0];
+        private next: HTMLDivElement = <HTMLDivElement>$('<div class="vb_slider_next"><i class="vb-icon-next"></i></div>').appendTo(this.outer)[0];
+        private buttons: JQuery = $(this.outer).find('i');
 
-        basis: number;
-        queue: Array<string> = [];
-        timeout: number = -1;
-        moving: boolean = false;
-        visible: number = 1;
-        detachedElements: Array<HTMLElement> = [];
+        private basis: number;
+        private queue: Array<string> = [];
+        private timeout: number = -1;
+        private moving: boolean = false;
+        private visible: number = 1;
+        private detachedElements: Array<HTMLElement> = [];
 
         options: vbSliderOptions = {
-            move: 'single',
+            moveAll: true,
             target: '',
             singleDuration: 500,
             doubleClickTimeout: 200,
@@ -43,7 +147,7 @@
 
             $.extend(this.options, _options);
 
-            $(this.content).toggleClass(this.options.move, true);
+            $(this.content).toggleClass('vb-slider__move-all', this.options.moveAll);
 
             var slider: _vbSlider = this;
             $(this.prev).click(function() {
@@ -52,7 +156,7 @@
             $(this.next).click(function() {
                 slider.showNext();
             });
-            
+
             this.setCount();
         }
 
@@ -64,7 +168,22 @@
             this.queueMove('l');
         }
 
-        queueMove(dir: string): void {
+        setBasis(_basis: number): void {
+            if (_basis != this.basis) {
+                this.basis = _basis;
+                this.setCount();
+            }
+        }
+
+        isMoving(): boolean {
+            return this.moving;
+        }
+
+        getTarget(): HTMLElement {
+            return this.target;
+        }
+
+        private queueMove(dir: string): void {
             if (this.queue.length > 0 && this.queue[this.queue.length - 1] != dir) {
                 this.queue.pop();
             } else {
@@ -78,7 +197,7 @@
             }, this.options.doubleClickTimeout);
         }
 
-        move(): void {
+        private move(): void {
             this.moving = true;
             var dir = this.queue.pop();
 
@@ -93,7 +212,7 @@
                 num = 0 - num;
             }
 
-            var count: number = (this.options.move == 'single' ? 1 : this.visible) * num;
+            var count: number = (this.options.moveAll ? 1 : this.visible) * num;
             count = count % (this.visible + this.detachedElements.length);
             for (var i = 0; i < count && this.detachedElements.length > 0; i++) {
                 dir == 'l' ? $(this.target).append(this.detachedElements.shift()) : $(this.target).prepend(this.detachedElements.pop());
@@ -142,7 +261,7 @@
             el.detach();
         }
 
-        skip(dir: string): void {
+        private skip(dir: string): void {
             var attached: JQuery = $(this.target).children();
             if (dir == 'l') {
                 var el: JQuery = attached.slice(0, attached.length - this.visible);
@@ -165,7 +284,7 @@
             var current = this.visible;
             var width = $(this.target).innerWidth();
             var base = this.basis + $(this.target).children().outerWidth(true) - $(this.target).children().innerWidth();	// base width including any offset
-            
+
             // calculate number of displayed items
             var visible = Math.floor(width / this.basis);
             if (visible < 1) {
@@ -175,19 +294,19 @@
                 var w2 = base / (width / (visible + 1));
                 if (w2 < w1) visible++;
             }
-            
+
             // add or remove visible items if needed
             if (visible != current) {
                 this.visible = visible;
                 this.setAttached();
             }
-            
+
             // set new size
             $(this.content).css('height', $(this.target).innerHeight());
             this.buttons.css('top', this.options.target ? ($(this.target).find(this.options.target).outerHeight(true) / 2) : '');
         }
 
-        setAttached(): void {
+        private setAttached(): void {
             var attached = $(this.target).children();
             if (attached.length < this.visible) {
                 for (var i = attached.length; i < this.visible && this.detachedElements.length > 0; i++) {
@@ -206,9 +325,9 @@
     var sliders: Array<vbSlider> = [];
 
     $.vbSlider = function(target: HTMLElement, _options: vbSliderOptions = {}): vbSlider {
-		
+
         // update and return an existing slider
-        for (var i = 0; i < sliders.length; i++) if (sliders[i].target == target) {
+        for (var i = 0; i < sliders.length; i++) if (sliders[i].getTarget() == target) {
             $.extend(sliders[i].options, _options);
             return sliders[i];
         }
@@ -222,7 +341,7 @@
             var target: HTMLElement = this[i], _op: vbSliderOptions = {}, tr: string = $(target).attr("data-target"), mo: string = $(target).attr("data-move");
 
             if (tr) _op.target = tr;
-            if (mo && mo.trim()) _op.move = mo.trim();
+            if (mo && mo.trim()) _op.moveAll = mo.trim() != 'single';
 
             sliders.push($.vbSlider(target, $.extend({}, _options, _op)));
         }

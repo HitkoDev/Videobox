@@ -17,11 +17,193 @@
  *	along with this program. If not, see <http://www.gnu.org/licenses/>
  */ 
 
-/// <reference path="headers.d.ts" />
+/// <reference path="helpers.d.ts" />
+/// <reference path="interfaces.d.ts" />
+/// <reference path="vbinline.ts" />
 (function ($) {
-    var wrap, responsive, caption, button, video, win = $(window), videos = [], activeVideo, open = false, hidding = false, animations = [], hidden = [], options = {}, defaults = {
-        videoWidth: 720,
-        videoHeight: 405,
+    var closeText, center, caption, wrap, responsive, overlay, bottomContainer, video, bottom, button, win = $(window), activeVideo, open = false, animations = [], defaults = {
+        width: 720,
+        height: 405,
+        closeText: 'Close',
+        padding: 30,
+        initialWidth: '15%',
+        root: $("body")[0],
+        animation: {
+            duration: 500,
+            iterations: 1,
+            delay: 0,
+            easing: 'ease-in-out'
+        }
+    };
+    $.videobox = function (_video) {
+        $.vbiClose();
+        $.vbClose();
+        _video.options = $.extend(true, {}, defaults, _video.options);
+        setup(_video);
+        var link = _video.origin.target;
+        var target = $($(link).find($(link).attr("data-target"))[0] || link);
+        var bw = wrap.getBoundingClientRect();
+        var bt = target[0].getBoundingClientRect();
+        target.toggleClass('vb_line_fix', true);
+        _video.origin = $.extend(true, {}, {
+            x: bt.left - bw.left + target.innerWidth() / 2,
+            y: bt.top - bw.top + target.innerHeight() / 2,
+            width: target.innerWidth(),
+            height: target.innerHeight()
+        }, _video.origin);
+        target.toggleClass('vb_line_fix', false);
+        changeVideo(_video);
+        return false;
+    };
+    $.vbClose = function () {
+        stop();
+        $([wrap, bottomContainer, overlay]).toggleClass('visible', false);
+        $(wrap).css({
+            top: 0,
+            left: 0
+        });
+        activeVideo = null;
+        return false;
+    };
+    $.fn.videobox = function (_options, linkMapper) {
+        if (_options === void 0) { _options = {}; }
+        if (linkMapper === void 0) { linkMapper = function (el) {
+            var v = {
+                url: el.getAttribute("href") || "",
+                title: el.getAttribute("title") || "",
+                options: JSON.parse(el.getAttribute("data-videobox")) || {},
+                origin: { target: el }
+            };
+            return v;
+        }; }
+        var links = this;
+        links.unbind("click").click(function (evt) {
+            var _video = linkMapper(this);
+            _video.options = $.extend(true, {}, _options, _video.options);
+            return $.videobox(_video);
+        });
+        return false;
+    };
+    function setup(newVideo) {
+        $(closeText).html(newVideo.options.closeText);
+        $(newVideo.options.root).append([overlay, wrap]);
+        $(wrap).css({
+            top: $(newVideo.options.root).scrollTop(),
+            left: $(newVideo.options.root).scrollLeft()
+        });
+    }
+    function changeVideo(newVideo) {
+        activeVideo = newVideo;
+        $(caption).html(activeVideo.title);
+        var targetRatio = setPlayerSizePosition();
+        open = true;
+        var centerOrigin = {
+            top: (activeVideo.origin ? -($(wrap).innerHeight() / 2 - activeVideo.origin.y) : 0) + 'px',
+            left: (activeVideo.origin ? -($(wrap).innerWidth() / 2 - activeVideo.origin.x) : 0) + 'px',
+            'max-width': activeVideo.origin ? activeVideo.origin.width + 'px' : activeVideo.options.initialWidth
+        };
+        var centerTarget = {
+            top: '0px',
+            left: '0px',
+            'max-width': activeVideo.options.width + 'px'
+        };
+        $(center).css(centerOrigin);
+        $([wrap, overlay]).toggleClass('visible', true);
+        $(wrap).toggleClass('animating', true);
+        if (activeVideo.origin) {
+            var originRatio = ((activeVideo.origin.height * 100) / activeVideo.origin.width) || targetRatio;
+            if (originRatio != targetRatio) {
+                animations.push(responsive.animate([
+                    { 'padding-bottom': originRatio + '%' },
+                    { 'padding-bottom': targetRatio + '%' }
+                ], activeVideo.options.animation));
+            }
+        }
+        var centerAnimation = center.animate([
+            centerOrigin,
+            centerTarget
+        ], activeVideo.options.animation);
+        centerAnimation.addEventListener('finish', function () {
+            $(center).css(centerTarget);
+            var bottomAnimation = bottomContainer.animate([
+                { 'max-height': '0px' },
+                { 'max-height': '200px' }
+            ], activeVideo.options.animation);
+            bottomAnimation.addEventListener('finish', function () {
+                $(bottomContainer).toggleClass('visible', true);
+                showVideo();
+            });
+            animations.push(bottomAnimation);
+        });
+        animations.push(centerAnimation);
+        return false;
+    }
+    function setPlayerSizePosition() {
+        if (!activeVideo)
+            return;
+        var width = activeVideo.options.width;
+        var height = activeVideo.options.height;
+        $(wrap).css({
+            top: $(activeVideo.options.root).scrollTop(),
+            left: $(activeVideo.options.root).scrollLeft()
+        });
+        if (width + 2 * activeVideo.options.padding > $(wrap).innerWidth()) {
+            var nw = $(wrap).innerWidth() - 2 * activeVideo.options.padding;
+            height = (height * nw) / width;
+            width = nw;
+        }
+        if (height + 2 * activeVideo.options.padding > $(wrap).innerHeight())
+            height = $(wrap).innerHeight() - 2 * activeVideo.options.padding;
+        var ratio = (height * 100) / width;
+        $(responsive).css('padding-bottom', ratio + '%');
+        return ratio;
+    }
+    function showVideo() {
+        if (!open || $(video).attr('src') != '')
+            return;
+        $(video).show();
+        video.src = activeVideo.url;
+        $(wrap).toggleClass('animating', false);
+    }
+    function stop() {
+        for (var i = 0; i < animations.length; i++)
+            animations[i].cancel();
+        animations = [];
+        open = false;
+        video.src = "";
+        $(video).hide();
+        $(wrap).toggleClass('animating', false);
+    }
+    $(window).on('load', function () {
+        $(defaults.root).append($([
+            overlay = $('<div id="vbOverlay" />').click($.vbClose)[0],
+            wrap = $('<div id="vbWrap" />')[0]
+        ]));
+        center = $('<div id="vbCenter" />').appendTo(wrap).append([
+            responsive = $('<div id="vbResponsive" />')[0],
+            bottomContainer = $('<div id="vbBottomContainer" />')[0],
+        ])[0];
+        video = $('<iframe id="vbVideo" frameborder="0" allowfullscreen="true" oallowfullscreen msallowfullscreen webkitallowfullscreen mozallowfullscreen />').css('display', 'none').appendTo(responsive)[0];
+        bottom = $('<div id="vbBottom" />').appendTo(bottomContainer).append([
+            button = $('<a id="vbCloseLink" href="#" ><span id="vbCloseText">' + defaults.closeText + '</span><i class="vb-icon-close"></i></a>').click($.vbClose)[0],
+            caption = $('<strong id="vbCaption" />')[0]
+        ])[0];
+        closeText = $(bottom).find('#vbCloseText')[0];
+        win.on("resize", function () {
+            if (!open || !activeVideo)
+                return;
+            setPlayerSizePosition();
+        });
+    });
+})(jQuery);
+
+/// <reference path="helpers.d.ts" />
+/// <reference path="interfaces.d.ts" />
+/// <reference path="videobox.ts" />
+(function ($) {
+    var wrap, responsive, caption, button, video, win = $(window), activeVideo, open = false, hidding = false, animations = [], hidden = [], defaults = {
+        width: 720,
+        height: 405,
         closeText: 'Close',
         padding: 30,
         animation: {
@@ -31,112 +213,114 @@
             easing: 'ease-in-out'
         }
     };
-    $.vbinline = function (_videos, startVideo, _options) {
-        if (_options === void 0) { _options = {}; }
-        $.extend(options, defaults, _options);
+    $.vbinline = function (_video) {
         $.vbClose();
+        _video.options = $.extend(true, {}, defaults, _video.options);
+        var link = _video.origin.target;
+        var target = $($(link).find($(link).attr("data-target"))[0] || link);
+        target.toggleClass('vb_line_fix', true);
+        _video.origin = $.extend(true, {}, {
+            width: target.innerWidth(),
+            height: target.innerHeight()
+        }, _video.origin);
+        target.toggleClass('vb_line_fix', false);
         $.vbiClose(function () {
-            videos = _videos;
-            changeVideo(startVideo);
+            changeVideo(_video);
         });
         return false;
     };
     $.vbiClose = function (callback) {
         stop();
         if (!hidding) {
-            if ($(wrap).parent().length > 0) {
+            if ($(wrap).parent().length > 0 && activeVideo) {
                 hidding = true;
-                var v1 = wrap.animate([{
-                        'max-width': (activeVideo.width || options.videoWidth) + 2 * options.padding + 'px'
+                var v1 = wrap.animate([
+                    {
+                        'max-width': (activeVideo.options.width + 2 * activeVideo.options.padding) + 'px'
                     }, {
-                        'max-width': (activeVideo.origin ? activeVideo.origin.width : options.initialWidth) + 'px'
-                    }], options.animation);
+                        'max-width': (activeVideo.origin ? activeVideo.origin.width : activeVideo.options.initialWidth) + 'px'
+                    }
+                ], activeVideo.options.animation);
                 v1.addEventListener('finish', function () {
                     $(wrap).detach();
                     for (var i = 0; i < hidden.length; i++)
                         $(hidden[i]).show();
                     hidden = [];
                     hidding = false;
-                    if (callback)
+                    activeVideo = null;
+                    if (typeof callback == "function")
                         callback();
                 });
                 if (activeVideo.origin) {
-                    var v2 = responsive.animate([{
-                            'padding-bottom': ((activeVideo.height || options.videoHeight) * 100) / (activeVideo.width || options.videoWidth) + '%'
+                    var v2 = responsive.animate([
+                        {
+                            'padding-bottom': ((activeVideo.options.height * 100) / activeVideo.options.width) + '%'
                         }, {
-                            'padding-bottom': (activeVideo.origin.height * 100) / activeVideo.origin.width + '%'
-                        }], options.animation);
+                            'padding-bottom': ((activeVideo.origin.height * 100) / activeVideo.origin.width) + '%'
+                        }
+                    ], activeVideo.options.animation);
                 }
             }
-            else if (callback)
-                callback();
+            else {
+                if ($(wrap).parent().length > 0) {
+                    $(wrap).detach();
+                    for (var i = 0; i < hidden.length; i++)
+                        $(hidden[i]).show();
+                    hidden = [];
+                }
+                activeVideo = null;
+                if (typeof callback == "function")
+                    callback();
+            }
         }
         return false;
     };
     $.fn.vbinline = function (_options, linkMapper) {
         if (_options === void 0) { _options = {}; }
-        if (linkMapper === void 0) { linkMapper = function (el, i) {
+        if (linkMapper === void 0) { linkMapper = function (el) {
             var v = {
                 url: el.getAttribute("href") || "",
                 title: el.getAttribute("title") || "",
-                width: parseInt(el.getAttribute("data-videowidth")) || undefined,
-                height: parseInt(el.getAttribute("data-videoheight")) || undefined,
-                style: el.getAttribute("data-style") || undefined,
-                class: el.getAttribute("data-class") || undefined,
-                index: i
+                options: JSON.parse(el.getAttribute("data-videobox")) || {},
+                origin: { target: el }
             };
             return v;
         }; }
         var links = this;
         links.unbind("click").click(function (evt) {
-            var link = this, startIndex = 0, mappedLinks = [], target = $($(this).find($(this).attr("data-target"))[0] || this);
-            for (var i = 0; i < links.length; i++) {
-                if (links[i] == link)
-                    startIndex = i;
-                mappedLinks.push(linkMapper(links[i], i));
-            }
-            target.toggleClass('vb_line_fix', true);
-            mappedLinks[startIndex].origin = {
-                x: target.offset().left - win.scrollLeft() + $(target).innerWidth() / 2,
-                y: target.offset().top - win.scrollTop() + $(target).innerHeight() / 2,
-                width: target.innerWidth(),
-                height: target.innerHeight(),
-                target: link
-            };
-            target.toggleClass('vb_line_fix', false);
-            return $.vbinline(mappedLinks, startIndex, _options);
+            var _video = linkMapper(this);
+            _video.options = $.extend(true, {}, _options, _video.options);
+            return $.vbinline(_video);
         });
         return false;
     };
-    function changeVideo(index) {
-        if (index < 0 || index >= videos.length)
-            return;
-        activeVideo = videos[index];
+    function changeVideo(newVideo) {
+        activeVideo = newVideo;
         setup();
-        $(wrap).attr('style', activeVideo.style);
-        $(wrap).attr('class', activeVideo.class);
+        $(wrap).attr('style', activeVideo.options.style);
+        $(wrap).attr('class', activeVideo.options.class);
         $(caption).html(activeVideo.title);
         open = true;
         var wrapOrigin = {
-            'max-width': (activeVideo.origin ? activeVideo.origin.width : options.initialWidth) + 'px'
+            'max-width': (activeVideo.origin ? activeVideo.origin.width : activeVideo.options.initialWidth) + 'px'
         };
         var wrapDest = {
-            'max-width': (activeVideo.width || options.videoWidth) + 2 * options.padding + 'px'
+            'max-width': (activeVideo.options.width + 2 * activeVideo.options.padding) + 'px'
         };
-        var animation = wrap.animate([wrapOrigin, wrapDest], options.animation);
+        var animation = wrap.animate([wrapOrigin, wrapDest], activeVideo.options.animation);
         animation.addEventListener('finish', function () {
             $(wrap).css(wrapDest);
             showVideo();
         });
         animations.push(animation);
         var responsiveDest = {
-            'padding-bottom': ((activeVideo.height || options.videoHeight) * 100) / (activeVideo.width || options.videoWidth) + '%'
+            'padding-bottom': ((activeVideo.options.height * 100) / activeVideo.options.width) + '%'
         };
         if (activeVideo.origin) {
             var responsiveOrigin = {
-                'padding-bottom': (activeVideo.origin.height * 100) / activeVideo.origin.width + '%'
+                'padding-bottom': ((activeVideo.origin.height * 100) / activeVideo.origin.width) + '%'
             };
-            var animation = responsive.animate([responsiveOrigin, responsiveDest], options.animation);
+            var animation = responsive.animate([responsiveOrigin, responsiveDest], activeVideo.options.animation);
             animation.addEventListener('finish', function () {
                 $(responsive).css(responsiveDest);
             });
@@ -175,7 +359,8 @@
     });
 })(jQuery);
 
-/// <reference path="headers.d.ts" />
+/// <reference path="helpers.d.ts" />
+/// <reference path="vbinline.ts" />
 (function ($) {
     var _vbSlider = (function () {
         function _vbSlider(target, _options) {
@@ -191,7 +376,7 @@
             this.visible = 1;
             this.detachedElements = [];
             this.options = {
-                move: 'single',
+                moveAll: true,
                 target: '',
                 singleDuration: 500,
                 doubleClickTimeout: 200,
@@ -208,7 +393,7 @@
             $(this.content).append(target);
             this.basis = parseInt($(target).attr('data-width')) || elements.innerWidth();
             $.extend(this.options, _options);
-            $(this.content).toggleClass(this.options.move, true);
+            $(this.content).toggleClass('vb-slider__move-all', this.options.moveAll);
             var slider = this;
             $(this.prev).click(function () {
                 slider.showPrev();
@@ -223,6 +408,18 @@
         };
         _vbSlider.prototype.showNext = function () {
             this.queueMove('l');
+        };
+        _vbSlider.prototype.setBasis = function (_basis) {
+            if (_basis != this.basis) {
+                this.basis = _basis;
+                this.setCount();
+            }
+        };
+        _vbSlider.prototype.isMoving = function () {
+            return this.moving;
+        };
+        _vbSlider.prototype.getTarget = function () {
+            return this.target;
         };
         _vbSlider.prototype.queueMove = function (dir) {
             if (this.queue.length > 0 && this.queue[this.queue.length - 1] != dir) {
@@ -254,7 +451,7 @@
                 dir = dir == 'l' ? 'r' : 'l';
                 num = 0 - num;
             }
-            var count = (this.options.move == 'single' ? 1 : this.visible) * num;
+            var count = (this.options.moveAll ? 1 : this.visible) * num;
             count = count % (this.visible + this.detachedElements.length);
             for (var i = 0; i < count && this.detachedElements.length > 0; i++) {
                 dir == 'l' ? $(this.target).append(this.detachedElements.shift()) : $(this.target).prepend(this.detachedElements.pop());
@@ -359,7 +556,7 @@
         if (_options === void 0) { _options = {}; }
         // update and return an existing slider
         for (var i = 0; i < sliders.length; i++)
-            if (sliders[i].target == target) {
+            if (sliders[i].getTarget() == target) {
                 $.extend(sliders[i].options, _options);
                 return sliders[i];
             }
@@ -373,7 +570,7 @@
             if (tr)
                 _op.target = tr;
             if (mo && mo.trim())
-                _op.move = mo.trim();
+                _op.moveAll = mo.trim() != 'single';
             sliders.push($.vbSlider(target, $.extend({}, _options, _op)));
         }
         return sliders;
@@ -384,190 +581,9 @@
     });
 })(jQuery);
 
-/// <reference path="headers.d.ts" />
-(function ($) {
-    var closeText, center, caption, wrap, responsive, overlay, bottomContainer, video, bottom, button, content, win = $(window), videos = [], activeVideo, open = false, animations = [], options = {}, defaults = {
-        videoWidth: 720,
-        videoHeight: 405,
-        closeText: 'Close',
-        padding: 30,
-        initialWidth: '15%',
-        root: $("body")[0],
-        animation: {
-            duration: 500,
-            iterations: 1,
-            delay: 0,
-            easing: 'ease-in-out'
-        }
-    };
-    $.videobox = function (_videos, startVideo, _options) {
-        if (_options === void 0) { _options = {}; }
-        $.vbiClose();
-        $.vbClose();
-        $.extend(options, defaults, _options);
-        setup();
-        if (_videos[startVideo].origin && _videos[startVideo].origin.target) {
-            var link = _videos[startVideo].origin.target;
-            var target = $($(link).find($(link).attr("data-target"))[0] || link);
-            var bw = wrap.getBoundingClientRect();
-            var bt = target[0].getBoundingClientRect();
-            target.toggleClass('vb_line_fix', true);
-            _videos[startVideo].origin.x = _videos[startVideo].origin.x || (bt.left - bw.left + target.innerWidth() / 2);
-            _videos[startVideo].origin.y = _videos[startVideo].origin.y || (bt.top - bw.top + target.innerHeight() / 2);
-            _videos[startVideo].origin.width = _videos[startVideo].origin.width || target.innerWidth();
-            _videos[startVideo].origin.height = _videos[startVideo].origin.height || target.innerHeight();
-            target.toggleClass('vb_line_fix', false);
-        }
-        videos = _videos;
-        changeVideo(startVideo);
-        return false;
-    };
-    $.vbClose = function () {
-        stop();
-        $([wrap, bottomContainer, overlay]).toggleClass('visible', false);
-        $(wrap).css({
-            top: 0,
-            left: 0
-        });
-        if (activeVideo)
-            activeVideo = undefined;
-        return false;
-    };
-    $.fn.videobox = function (_options, linkMapper) {
-        if (_options === void 0) { _options = {}; }
-        if (linkMapper === void 0) { linkMapper = function (el, i) {
-            var v = {
-                url: el.getAttribute("href") || "",
-                title: el.getAttribute("title") || "",
-                width: parseInt(el.getAttribute("data-videowidth")) || undefined,
-                height: parseInt(el.getAttribute("data-videoheight")) || undefined,
-                index: i
-            };
-            return v;
-        }; }
-        var links = this;
-        links.unbind("click").click(function (evt) {
-            var link = this, startIndex = 0, mappedLinks = [];
-            for (var i = 0; i < links.length; i++) {
-                if (links[i] == link)
-                    startIndex = i;
-                mappedLinks.push(linkMapper(links[i], i));
-            }
-            mappedLinks[startIndex].origin = {
-                target: link
-            };
-            return $.videobox(mappedLinks, startIndex, _options);
-        });
-        return false;
-    };
-    function setup() {
-        $(closeText).html(options.closeText);
-        $(center).css('padding', options.padding);
-        $(options.root).append([overlay, wrap]);
-        $(wrap).css({
-            top: $(options.root).scrollTop(),
-            left: $(options.root).scrollLeft()
-        });
-    }
-    function changeVideo(i) {
-        if (i < 0 || i >= videos.length)
-            return false;
-        activeVideo = videos[i];
-        $(caption).html(activeVideo.title);
-        setPlayerSizePosition();
-        open = true;
-        var centerOrigin = {
-            top: (activeVideo.origin ? -($(wrap).innerHeight() / 2 - activeVideo.origin.y) : 0) + 'px',
-            left: (activeVideo.origin ? -($(wrap).innerWidth() / 2 - activeVideo.origin.x) : 0) + 'px',
-            'max-width': (activeVideo.origin ? (activeVideo.origin.width + 2 * options.padding) + 'px' : options.initialWidth)
-        };
-        var centerTarget = {
-            top: '0px',
-            left: '0px',
-            'max-width': (activeVideo.width || options.videoWidth) + 2 * options.padding + 'px'
-        };
-        $(center).css(centerOrigin);
-        $([wrap, overlay]).toggleClass('visible', true);
-        $(wrap).toggleClass('animating', true);
-        var centerAnimation = center.animate([
-            centerOrigin,
-            centerTarget
-        ], options.animation);
-        centerAnimation.addEventListener('finish', function () {
-            $(center).css(centerTarget);
-            var bottomAnimation = bottomContainer.animate([
-                { 'max-height': '0px' },
-                { 'max-height': '200px' }
-            ], options.animation);
-            bottomAnimation.addEventListener('finish', function () {
-                $(bottomContainer).toggleClass('visible', true);
-                showVideo();
-            });
-            animations.push(bottomAnimation);
-        });
-        animations.push(centerAnimation);
-        return false;
-    }
-    function setPlayerSizePosition() {
-        if (!activeVideo)
-            return;
-        var width = activeVideo.width || options.videoWidth;
-        var height = activeVideo.height || options.videoHeight;
-        $(wrap).css({
-            top: $(options.root).scrollTop(),
-            left: $(options.root).scrollLeft()
-        });
-        if (width + 2 * options.padding > $(wrap).innerWidth()) {
-            var nw = $(wrap).innerWidth() - 2 * options.padding;
-            height = (height * nw) / width;
-            width = nw;
-        }
-        if (height + 2 * options.padding > $(wrap).innerHeight())
-            height = $(wrap).innerHeight() - 2 * options.padding;
-        var ratio = (height * 100) / width;
-        $(responsive).css('padding-bottom', ratio + '%');
-    }
-    function showVideo() {
-        if (!open || $(video).attr('src') != '')
-            return;
-        $(video).show();
-        video.src = activeVideo.url;
-        $(wrap).toggleClass('animating', false);
-    }
-    function stop() {
-        for (var i = 0; i < animations.length; i++)
-            animations[i].cancel();
-        animations = [];
-        open = false;
-        video.src = "";
-        $(video).hide();
-        $(wrap).toggleClass('animating', false);
-    }
-    $(window).on('load', function () {
-        $(defaults.root).append($([
-            overlay = $('<div id="vbOverlay" />').click($.vbClose)[0],
-            wrap = $('<div id="vbWrap" />')[0]
-        ]));
-        center = $('<div id="vbCenter" />').appendTo(wrap)[0];
-        content = $('<div id="vbContent" />').appendTo(center).append([
-            responsive = $('<div id="vbResponsive" />')[0],
-            bottomContainer = $('<div id="vbBottomContainer" />')[0],
-        ])[0];
-        video = $('<iframe id="vbVideo" frameborder="0" allowfullscreen="true" oallowfullscreen msallowfullscreen webkitallowfullscreen mozallowfullscreen />').css('display', 'none').appendTo(responsive)[0];
-        bottom = $('<div id="vbBottom" />').appendTo(bottomContainer).append([
-            button = $('<a id="vbCloseLink" href="#" ><span id="vbCloseText">' + defaults.closeText + '</span><i class="vb-icon-close"></i></a>').click($.vbClose)[0],
-            caption = $('<strong id="vbCaption" />')[0]
-        ])[0];
-        closeText = $(bottom).find('#vbCloseText')[0];
-        win.on("resize", function () {
-            if (!open || !activeVideo)
-                return;
-            setPlayerSizePosition();
-        });
-    });
-})(jQuery);
-
-/// <reference path="headers.d.ts" />
+/// <reference path="videobox.ts" />
+/// <reference path="vbinline.ts" />
+/// <reference path="vbslider.ts" />
 (function ($) {
     $(window).on('load', function () {
         var r = $(".mdl-layout.mdl-js-layout")[0];

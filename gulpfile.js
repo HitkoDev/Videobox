@@ -10,21 +10,17 @@ var fontcustom = require('gulp-fontcustom');
 var replace = require('gulp-replace');
 var imagemin = require('gulp-imagemin');
 var changed = require("gulp-changed");
+var merge = require("merge2");
+var typedoc = require("gulp-typedoc");
 
 gulp.task('default', [
     'compress'
-], function () {
-    gulp.src([
-        'node_modules/video.js/dist/video.js',
-        'node_modules/video.js/dist/video.min.js',
-        'node_modules/video.js/dist/video-js.css',
-        'node_modules/video.js/dist/video-js.min.css',
-        'node_modules/video.js/dist/video-js.swf',
-    ]).pipe(gulp.dest('./dist/video-js'));
+], function() {
+
 });
 
-gulp.task('style', function () {
-    gulp.src('./src/sass/*.scss')
+gulp.task('style', function() {
+    return gulp.src('./src/sass/*.scss')
         .pipe(compass({
             css: 'src/css',
             sass: 'src/sass'
@@ -35,11 +31,7 @@ gulp.task('style', function () {
         .pipe(gulp.dest('./dist'));
 });
 
-gulp.task('style:watch', function () {
-    gulp.watch('./src/sass/**/*.scss', ['style']);
-});
-
-gulp.task('scripts', function () {
+gulp.task('scripts', function() {
     var tsResult = gulp.src('./src/js/**.ts')
         .pipe(typescript({
             declaration: true,
@@ -48,15 +40,35 @@ gulp.task('scripts', function () {
             sourcemap: true
         }));
 
-    tsResult.dts.pipe(gulp.dest('./dist/definitions'));
+    return merge([
+        tsResult.dts.pipe(gulp.dest('./dist/definitions')),
 
-    tsResult.js
-        .pipe(concat('videobox.js'))
-        .pipe(gulp.dest('./dist'))
+        tsResult.js
+            .pipe(concat('videobox.js'))
+            .pipe(gulp.dest('./dist'))
+    ]);
 });
 
-gulp.task('images', function () {
-    gulp.src('./src/images/**')
+gulp.task('documentation', function() {
+    return gulp.src([
+        './src/js/videobox.ts',
+        './src/js/vbinline.ts',
+        './src/js/vbslider.ts',
+        './src/js/interfaces.d.ts'
+    ])
+        .pipe(typedoc({
+            module: "commonjs",
+            target: "es5",
+            includeDeclarations: true,
+            out: "./docs",
+            mode: "file",
+            excludeExternals: true,
+            theme: 'minimal'
+        }));
+});
+
+gulp.task('images', function() {
+    return gulp.src('./src/images/**')
         .pipe(changed('./dist/images'))
         .pipe(imagemin({
             progressive: true,
@@ -71,36 +83,40 @@ gulp.task('compress', [
     'scripts',
     'style',
     'images'
-], function () {
-    gulp.src(['./dist/videobox.js'])
-        .pipe(uglify({
-            preserveComments: 'license'
-        }))
-        .pipe(rename({
-            suffix: '.min'
-        }))
-        .pipe(gulp.dest('./dist'));
+], function() {
+    return merge([
+        gulp.src(['./dist/videobox.js'])
+            .pipe(uglify({
+                preserveComments: 'license'
+            }))
+            .pipe(rename({
+                suffix: '.min'
+            }))
+            .pipe(gulp.dest('./dist')),
 
-    gulp.src(['./dist/videobox.css'])
-        .pipe(cssnano())
-        .pipe(rename({
-            suffix: '.min'
-        }))
-        .pipe(gulp.dest('./dist'));
+        gulp.src(['./dist/videobox.css'])
+            .pipe(cssnano())
+            .pipe(rename({
+                suffix: '.min'
+            }))
+            .pipe(gulp.dest('./dist'))
+    ]);
 });
 
-gulp.task('icons', function () {
-    gulp.src(['./src/icons/*.svg'])
-        .pipe(fontcustom({
-            font_name: 'Videobox',
-            'css-selector': '.vb-icon-{{glyph}}',
-            templates: ['_icons.scss'],
-            preprocessor_path: '/font'
-        }))
-        .pipe(gulp.dest('./dist/font'));
+gulp.task('icons', function() {
+    return merge([
+        gulp.src(['./src/icons/*.svg'])
+            .pipe(fontcustom({
+                font_name: 'Videobox',
+                'css-selector': '.vb-icon-{{glyph}}',
+                templates: ['_icons.scss'],
+                preprocessor_path: '/font'
+            }))
+            .pipe(gulp.dest('./dist/font')),
 
-    gulp.src('./dist/font/*.scss')
-        .pipe(replace('-{{glyph}}', ', [class^="vb-icon-"], [class*=" vb-icon-"]'))
-        .pipe(concat('_icons.scss'))
-        .pipe(gulp.dest('./src/sass'));
+        gulp.src('./dist/font/*.scss')
+            .pipe(replace('-{{glyph}}', ', [class^="vb-icon-"], [class*=" vb-icon-"]'))
+            .pipe(concat('_icons.scss'))
+            .pipe(gulp.dest('./src/sass'))
+    ]);
 });

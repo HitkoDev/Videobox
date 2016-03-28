@@ -342,10 +342,6 @@
   box-sizing: border-box;
   width: 100%;
   position: relative;
-}
-
-#vbContent {
-  position: relative;
   display: block;
 }
 

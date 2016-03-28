@@ -1,4 +1,32 @@
-/// <reference path="headers.d.ts" />
+/// <reference path="helpers.d.ts" />
+/// <reference path="interfaces.d.ts" />
+/// <reference path="vbinline.ts" />
+
+interface JQueryStatic {
+
+    /**
+     * Open Videobox pop-up player
+     * 
+     * @param _video video to show
+     */
+    videobox: (_video: vbVideo) => boolean,
+
+    /**
+     * Close the open pop-up
+     */
+    vbClose: () => boolean
+}
+
+interface JQuery {
+
+    /**
+     * Map pop-up player to elements matched by the query 
+     * 
+     * @param _options player configuration
+     * @param linkMapper function to get a Videobox video object from the clicked element
+     */
+    videobox: (_options?: vbOptions, linkMapper?: (el: HTMLElement) => vbVideo) => boolean
+}
 
 (function($: JQueryStatic) {
 
@@ -13,18 +41,15 @@
         video: HTMLIFrameElement,
         bottom: HTMLDivElement,
         button: HTMLLinkElement,
-        content: HTMLDivElement,
         win = $(window),
 
-        videos: Array<vbVideo> = [],
         activeVideo: vbVideo,
         open: boolean = false,
         animations: Array<webAnimation> = [],
-        options: vbOptions = {},
 
         defaults: vbOptions = {
-            videoWidth: 720,
-            videoHeight: 405,
+            width: 720,
+            height: 405,
             closeText: 'Close',
             padding: 30,
             initialWidth: '15%',
@@ -37,30 +62,29 @@
             }
         };
 
-    $.videobox = function(_videos: Array<vbVideo>, startVideo: number, _options: vbOptions = {}): boolean {
+    $.videobox = function(_video: vbVideo): boolean {
         $.vbiClose();
         $.vbClose();
 
-        $.extend(options, defaults, _options);
-        setup();
+        _video.options = $.extend(true, {}, defaults, _video.options);
+        setup(_video);
 
-        if (_videos[startVideo].origin && _videos[startVideo].origin.target) {
-            var link = _videos[startVideo].origin.target;
-            var target = $($(link).find($(link).attr("data-target"))[0] || link);
+        var link = _video.origin.target;
+        var target = $($(link).find($(link).attr("data-target"))[0] || link);
 
-            var bw = wrap.getBoundingClientRect();
-            var bt = target[0].getBoundingClientRect();
+        var bw = wrap.getBoundingClientRect();
+        var bt = target[0].getBoundingClientRect();
 
-            target.toggleClass('vb_line_fix', true);
-            _videos[startVideo].origin.x = _videos[startVideo].origin.x || (bt.left - bw.left + target.innerWidth() / 2);
-            _videos[startVideo].origin.y = _videos[startVideo].origin.y || (bt.top - bw.top + target.innerHeight() / 2);
-            _videos[startVideo].origin.width = _videos[startVideo].origin.width || target.innerWidth();
-            _videos[startVideo].origin.height = _videos[startVideo].origin.height || target.innerHeight();
-            target.toggleClass('vb_line_fix', false);
-        }
+        target.toggleClass('vb_line_fix', true);
+        _video.origin = $.extend(true, {}, {
+            x: bt.left - bw.left + target.innerWidth() / 2,
+            y: bt.top - bw.top + target.innerHeight() / 2,
+            width: target.innerWidth(),
+            height: target.innerHeight()
+        }, _video.origin);
+        target.toggleClass('vb_line_fix', false);
 
-        videos = _videos;
-        changeVideo(startVideo);
+        changeVideo(_video);
 
         return false;
     }
@@ -72,19 +96,18 @@
             top: 0,
             left: 0
         });
-        if (activeVideo) activeVideo = undefined;
+        activeVideo = null;
         return false;
     };
 
     $.fn.videobox = function(
         _options: vbOptions = {},
-        linkMapper: ((el: HTMLElement, i: number) => vbVideo) = (el: HTMLElement, i: number): vbVideo=> {
+        linkMapper: ((el: HTMLElement) => vbVideo) = (el: HTMLElement): vbVideo => {
             var v: vbVideo = {
                 url: el.getAttribute("href") || "",
                 title: el.getAttribute("title") || "",
-                width: parseInt(el.getAttribute("data-videowidth")) || undefined,
-                height: parseInt(el.getAttribute("data-videoheight")) || undefined,
-                index: i
+                options: JSON.parse(el.getAttribute("data-videobox")) || {},
+                origin: { target: el }
             };
             return v;
         }
@@ -94,68 +117,70 @@
 
         links.unbind("click").click(function(evt: JQueryEventObject): boolean {
 
-            var link: HTMLElement = this, startIndex: number = 0, mappedLinks: Array<vbVideo> = [];
+            var _video = linkMapper(this);
 
-            for (var i = 0; i < links.length; i++) {
-                if (links[i] == link) startIndex = i;
-                mappedLinks.push(linkMapper(links[i], i));
-            }
+            _video.options = $.extend(true, {}, _options, _video.options);
 
-            mappedLinks[startIndex].origin = {
-                target: link
-            };
-
-            return $.videobox(mappedLinks, startIndex, _options);
+            return $.videobox(_video);
         });
         return false;
     };
 
-    function setup(): void {
-        $(closeText).html(options.closeText);
-        $(center).css('padding', options.padding);
-        $(options.root).append([overlay, wrap]);
+    function setup(newVideo: vbVideo): void {
+        $(closeText).html(newVideo.options.closeText);
+        $(newVideo.options.root).append([overlay, wrap]);
         $(wrap).css({
-            top: $(options.root).scrollTop(),
-            left: $(options.root).scrollLeft()
+            top: $(newVideo.options.root).scrollTop(),
+            left: $(newVideo.options.root).scrollLeft()
         });
     }
 
-    function changeVideo(i: number): boolean {
-        if (i < 0 || i >= videos.length) return false;
+    function changeVideo(newVideo: vbVideo): boolean {
 
-        activeVideo = videos[i];
+        activeVideo = newVideo;
+
         $(caption).html(activeVideo.title);
 
-        setPlayerSizePosition();
+        var targetRatio = setPlayerSizePosition();
 
         open = true;
 
         var centerOrigin = {
             top: (activeVideo.origin ? -($(wrap).innerHeight() / 2 - activeVideo.origin.y) : 0) + 'px',
             left: (activeVideo.origin ? -($(wrap).innerWidth() / 2 - activeVideo.origin.x) : 0) + 'px',
-            'max-width': (activeVideo.origin ? (activeVideo.origin.width + 2 * options.padding) + 'px' : options.initialWidth)
+            'max-width': activeVideo.origin ? activeVideo.origin.width + 'px' : activeVideo.options.initialWidth
         };
 
         var centerTarget = {
             top: '0px',
             left: '0px',
-            'max-width': (activeVideo.width || options.videoWidth) + 2 * options.padding + 'px'
+            'max-width': activeVideo.options.width + 'px'
         };
 
         $(center).css(centerOrigin);
         $([wrap, overlay]).toggleClass('visible', true);
         $(wrap).toggleClass('animating', true);
 
+        if (activeVideo.origin) {
+            var originRatio = ((activeVideo.origin.height * 100) / activeVideo.origin.width) || targetRatio;
+            if (originRatio != targetRatio) {
+                animations.push(responsive.animate([
+                    { 'padding-bottom': originRatio + '%' },
+                    { 'padding-bottom': targetRatio + '%' }
+                ], activeVideo.options.animation));
+            }
+        }
+
         var centerAnimation = center.animate([
             centerOrigin,
             centerTarget
-        ], options.animation);
+        ], activeVideo.options.animation);
         centerAnimation.addEventListener('finish', function() {
             $(center).css(centerTarget);
             var bottomAnimation = bottomContainer.animate([
                 { 'max-height': '0px' },
                 { 'max-height': '200px' }
-            ], options.animation);
+            ], activeVideo.options.animation);
             bottomAnimation.addEventListener('finish', function() {
                 $(bottomContainer).toggleClass('visible', true);
                 showVideo();
@@ -166,26 +191,27 @@
         return false;
     }
 
-    function setPlayerSizePosition(): void {
+    function setPlayerSizePosition(): number {
         if (!activeVideo) return;
 
-        var width: number = activeVideo.width || options.videoWidth;
-        var height: number = activeVideo.height || options.videoHeight;
+        var width: number = activeVideo.options.width;
+        var height: number = activeVideo.options.height;
 
         $(wrap).css({
-            top: $(options.root).scrollTop(),
-            left: $(options.root).scrollLeft()
+            top: $(activeVideo.options.root).scrollTop(),
+            left: $(activeVideo.options.root).scrollLeft()
         });
 
-        if (width + 2 * options.padding > $(wrap).innerWidth()) {
-            var nw = $(wrap).innerWidth() - 2 * options.padding;
+        if (width + 2 * activeVideo.options.padding > $(wrap).innerWidth()) {
+            var nw = $(wrap).innerWidth() - 2 * activeVideo.options.padding;
             height = (height * nw) / width;
             width = nw;
         }
-        if (height + 2 * options.padding > $(wrap).innerHeight()) height = $(wrap).innerHeight() - 2 * options.padding;
+        if (height + 2 * activeVideo.options.padding > $(wrap).innerHeight()) height = $(wrap).innerHeight() - 2 * activeVideo.options.padding;
 
         var ratio = (height * 100) / width;
         $(responsive).css('padding-bottom', ratio + '%');
+        return ratio;
     }
 
     function showVideo(): void {
@@ -211,8 +237,7 @@
                 wrap = <HTMLDivElement>$('<div id="vbWrap" />')[0]
             ])
         );
-        center = <HTMLDivElement>$('<div id="vbCenter" />').appendTo(wrap)[0];
-        content = <HTMLDivElement>$('<div id="vbContent" />').appendTo(center).append([
+        center = <HTMLDivElement>$('<div id="vbCenter" />').appendTo(wrap).append([
             responsive = <HTMLDivElement>$('<div id="vbResponsive" />')[0],
             bottomContainer = <HTMLDivElement>$('<div id="vbBottomContainer" />')[0],
         ])[0];

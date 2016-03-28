@@ -1,4 +1,6 @@
-/// <reference path="headers.d.ts" />
+/// <reference path="videobox.ts" />
+/// <reference path="vbinline.ts" />
+/// <reference path="vbslider.ts" />
 
 (function($: JQueryStatic) {
 
