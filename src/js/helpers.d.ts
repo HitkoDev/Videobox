@@ -1,5 +1,3 @@
-/// <reference path="jquery.d.ts" />
-
 interface webAnimation {
     addEventListener(event: string, callback: Function): void,
     cancel(): void,

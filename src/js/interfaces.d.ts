@@ -1,4 +1,4 @@
-/// <reference path="helpers.d.ts" />
+/// <reference path="jquery.d.ts" />
 
 /**
  * Interface for the Videobox's video element

@@ -12,6 +12,7 @@ var imagemin = require('gulp-imagemin');
 var changed = require("gulp-changed");
 var merge = require("merge2");
 var typedoc = require("gulp-typedoc");
+var addsrc = require('gulp-add-src');
 
 gulp.task('default', [
     'compress'
@@ -41,7 +42,14 @@ gulp.task('scripts', function() {
         }));
 
     return merge([
-        tsResult.dts.pipe(gulp.dest('./dist/definitions')),
+        tsResult.dts
+            .pipe(addsrc('./src/js/interfaces.d.ts'))
+            .pipe(concat('videobox.ts'))
+            .pipe(typescript({
+                declaration: true,
+                target: 'ES5'
+            })).dts
+            .pipe(gulp.dest('./dist/definitions')),
 
         tsResult.js
             .pipe(concat('videobox.js'))
