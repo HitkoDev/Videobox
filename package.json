@@ -1,6 +1,5 @@
 {
   "license": "GPL-3.0",
-  "readme": "README.md",
   "version": "5.0.0",
   "name": "videobox",
   "description": "Pop-up video player plugin",
