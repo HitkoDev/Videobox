@@ -1,0 +1,35 @@
+{
+  "name": "videobox",
+  "description": "Pop-up video player plugin",
+  "main": "./dist/videobox.min.js",
+  "authors": [
+    "HitkoDev"
+  ],
+  "license": "GPL-3.0",
+  "keywords": [
+    "html5",
+    "video",
+    "audio",
+    "css3",
+    "jQuery",
+    "player",
+    "pop-up",
+    "slider",
+    "gallery",
+    "oembed",
+    "iframe"
+  ],
+  "homepage": "https://hitko.eu/videobox",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^2.2.2",
+    "web-animations-js": "^2.1.4"
+  }
+}
