@@ -13,6 +13,7 @@ var changed = require("gulp-changed");
 var merge = require("merge2");
 var typedoc = require("gulp-typedoc");
 var addsrc = require('gulp-add-src');
+var svgmin = require('gulp-svgmin');
 
 gulp.task('default', [
     'compress'
@@ -127,4 +128,14 @@ gulp.task('icons', function() {
             .pipe(concat('_icons.scss'))
             .pipe(gulp.dest('./src/sass'))
     ]);
+});
+
+gulp.task('compress-font', function() {
+    return gulp.src('./dist/font/*.svg')
+        .pipe(svgmin({
+            plugins: [{
+                removeUselessDefs: false
+            }]
+        }))
+        .pipe(gulp.dest('./dist/font'));
 });
