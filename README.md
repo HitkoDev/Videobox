@@ -12,6 +12,7 @@ Getting started
  + include ```<script src="path/to/videobox/dist/videobox.js" type="text/javascript" ></script>``` before the ```</body>``` tag
 4. Make sure jQuery is loaded before Videobox. Since some browsers don't support Web animations yet, you'll probably want to include the polyfill on the page as well.
  + If you've installed Videobox through npm, jQuery and Web animations polyfill are inside the ```node_modules``` folder
+ + If you've installed through bower, jQuery and Web animations polyfill are inside the ```bower_components``` folder
 
 **That's it, you're now ready to start using Videobox on your page.**  
 
