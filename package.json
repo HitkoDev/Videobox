@@ -27,8 +27,10 @@
   "files": [
     "dist/videobox.js",
     "dist/videobox.css",
+    "dist/overrides.css",
+    "dist/videobox.min.js",
     "dist/videobox.min.css",
-    "dist/videobox.min.js"
+    "dist/overrides.min.css"
   ],
   "devDependencies": {
     "gulp": "^3.9.0",

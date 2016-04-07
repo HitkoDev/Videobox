@@ -1,0 +1,76 @@
+/*!	
+ *	 without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program. If not, see <http://www.gnu.org/licenses/>
+ */
+@font-face {}
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  @font-face {}
+}
+.pagination > li > a, .pagination > li > span {
+  color: #005723;
+}
+.pagination > li > a:hover, .pagination > li > a:focus, .pagination > li > span:hover, .pagination > li > span:focus {
+  color: #005723;
+  background-color: #84d1a4;
+}
+.pagination > li.active > a, .pagination > li.active > span {
+  color: #005723;
+  background-color: #84d1a4;
+}
+
+.vb_video_frame {
+  color: #005723;
+}
+
+.vb_video_cont, .vb_video_cont a {
+  color: #005723;
+}
+.vb_video_cont:hover, .vb_video_cont:focus, .vb_video_cont a:hover, .vb_video_cont a:focus {
+  color: #84d1a4;
+}
+.vb_video_cont:hover .vb_thub_wrap .vb-icon-play, .vb_video_cont:focus .vb_thub_wrap .vb-icon-play, .vb_video_cont a:hover .vb_thub_wrap .vb-icon-play, .vb_video_cont a:focus .vb_thub_wrap .vb-icon-play {
+  color: #84d1a4;
+}
+
+#vbiClose:hover,
+#vbiClose:focus {
+  color: #84d1a4;
+}
+
+#vbiWrap {
+  color: #005723;
+}
+
+.vb_slider_outer .vb_slider_prev:hover, .vb_slider_outer .vb_slider_prev:focus,
+.vb_slider_outer .vb_slider_next:hover,
+.vb_slider_outer .vb_slider_next:focus {
+  color: #84d1a4;
+}
+
+.vb_slider_outer {
+  color: #005723;
+}
+
+.vjs-big-play-button:hover, .vjs-big-play-button:focus {
+  color: #84d1a4;
+}
+
+#vbCloseLink:hover, #vbCloseLink:focus {
+  color: #84d1a4;
+}
+
+.vjs-fullscreen-control:hover {
+  color: #84d1a4;
+}
+
+.vjs-play-control:hover {
+  color: #84d1a4;
+}
+
+.vjs-volume-menu-button:hover, .vjs-volume-menu-button:focus {
+  color: #84d1a4;
+}

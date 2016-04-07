@@ -1,0 +1,962 @@
+/*!	
+ *	 without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program. If not, see <http://www.gnu.org/licenses/>
+ */
+
+
+
+$primary-color: #005723;
+$primary-light: #84d1a4;
+$overlay-opacity: 0.7;
+$transition-duration: 0.5s;
+$hover-duration: 0.2s;
+$base-font-size: 24px;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.vb-hover-animated {
+    
+}
+
+.vb-line-fix {
+	
+	
+	
+}
+
+.vb-icon-circle-close-invert {
+	
+	
+}
+
+.vb-icon-circle-close-invert:before,
+.vb-icon-circle-close-invert:after {
+	
+	
+	
+	
+}
+
+.vb-icon-circle-close-invert:before {
+	
+}
+
+.vb-icon-circle-close-invert:after {
+	
+	
+}
+
+
+
+
+@font-face {
+  
+  
+  
+  
+  
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    
+    
+  }
+}
+
+[data-icon]:before {  }
+
+[data-icon]:before,
+.vb-icon, [class^="vb-icon-"], [class*=" vb-icon-"] {
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+    
+    
+    
+}
+
+.vb-icon-circle:before {  }
+.vb-icon-close:before {  }
+.vb-icon-close-small:before {  }
+.vb-icon-fullscreen-enter:before {  }
+.vb-icon-fullscreen-exit:before {  }
+.vb-icon-next:before {  }
+.vb-icon-pause:before {  }
+.vb-icon-play:before {  }
+.vb-icon-prev:before {  }
+.vb-icon-volume-0:before {  }
+.vb-icon-volume-1:before {  }
+.vb-icon-volume-2:before {  }
+.vb-icon-volume-3:before {  }
+
+.vb_gallery {
+	
+	
+	
+    
+    
+    
+}
+
+.vb_video_cont.vb_gal {
+    
+    
+    &:empty{
+        
+        
+    }
+}
+.pagination {
+	
+	
+	
+	
+    
+    &>li {
+        
+        
+        &>a,
+        &>span {
+            
+            
+            
+            color: $primary-color;
+            
+            
+            
+            
+            
+            
+            
+                
+            &:hover,
+            &:focus {
+                color: $primary-color;
+                background-color: $primary-light;
+            }
+        }
+        
+        &+li {
+            
+            &>a,
+            &>span {
+                
+                
+            }
+            
+        }
+        
+        &.active {
+            
+            &>a,
+            &>span {
+                color: $primary-color;
+                background-color: $primary-light;
+            }
+            
+        }
+        
+    }
+}
+.vb_video_sizer {
+	
+	
+	
+	
+	 
+    
+    iframe {
+        
+        
+        
+        
+        
+        
+        
+        
+    }
+}
+
+.vb_video_frame {
+	
+	
+	
+	
+	
+	color: $primary-color;
+}
+.vb_video_cont {
+	
+	
+    
+    img {
+        
+        
+        
+        
+    }
+    
+    &, a {
+        
+        
+        
+        
+        color: $primary-color;
+        
+        
+        
+        &:hover,
+        &:focus {
+            color: $primary-light;
+            
+            .vb_thub_wrap .vb-icon-play {
+                color: $primary-light;
+                
+            }
+        }
+    }
+}
+
+.vb_video_title {
+	
+	
+    
+    &:empty {
+        
+    }
+}
+
+.vb_thub_wrap {
+	
+	
+    
+    .vb-icon-play {
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }
+}
+
+.vb_play_button .vb_thub_wrap .vb-icon-play {
+	
+}
+#vbiClose {
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+	
+
+    
+}
+
+#vbiWrap:hover #vbiClose { 
+	 
+}
+
+#vbiClose:hover,
+#vbiClose:focus {
+	color: $primary-light;
+}
+#vbiResponsive {
+	
+	
+	
+	
+	
+	
+	
+	
+	
+} 
+#vbiVideo {
+	
+	
+	
+	
+	
+	
+	
+	
+}
+#vbiWrap {
+	
+	
+	color: $primary-color;
+	
+}
+.vb_slider_outer {
+    
+    .vb_slider_prev,
+    .vb_slider_next {
+        
+        
+        
+        
+        
+        
+        
+        i {
+            
+            
+            
+            
+        }
+        
+        &:hover,
+        &:focus {
+            color: $primary-light;
+        }
+    }
+    
+}
+.vb_gallery.vb_slider {
+    
+    
+    
+    
+    .vb_video_cont.vb_gal {
+        
+    }
+}
+.vb_slider_outer {
+	
+	color: $primary-color;
+    
+    
+    
+    
+    .vb_slider_wrap {
+        
+        
+        
+    }
+}
+html.vb-html5-player, 
+body.vb-html5-player {
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    *:focus {
+        
+        
+    }
+}
+
+#vb-html5-video {
+    
+    
+    
+}
+
+.video-js {
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+}
+
+.video-js .vjs-control-text {
+	
+	
+	
+	
+	
+	
+	
+	
+}
+
+.vjs-hidden {
+    
+}
+.video-js .vjs-control-bar {
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+}
+
+.vjs-has-started .vjs-control-bar {
+    
+    
+}
+
+.vjs-has-started.vjs-user-inactive.vjs-playing:not(.vjs-audio) .vjs-control-bar {
+    
+    
+}
+
+.vjs-control {
+    
+    
+    
+    
+    
+	
+    
+    
+    
+    
+    &:before {
+        
+        
+        
+        
+        
+        
+        
+    }
+}
+
+.vjs-live-control,
+.vjs-custom-control-spacer,
+.vjs-playback-rate,
+.vjs-chapters-button,
+.vjs-subtitles-button,
+.vjs-captions-button {
+    
+}
+.vjs-big-play-button {
+     
+    
+    
+    
+	
+	
+	
+	
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    &:before {
+        
+        
+    }
+    
+    &:hover,
+    &:focus {
+        color: $primary-light;
+    }
+}
+
+.vjs-has-started .vjs-big-play-button {
+    
+}
+.vjs-poster {
+    
+	
+	
+	
+    
+	
+    
+    
+    
+    
+    
+}
+
+.vjs-has-started:not(.vjs-audio) .vjs-poster {
+    
+}
+.vjs-loading-spinner {
+     
+    
+    
+	
+	
+	
+	
+    
+    
+    
+    
+    
+    
+    
+    
+    &:before {
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }
+    
+    &:after {
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }
+}
+
+.vjs-seeking, .vjs-waiting {
+    
+    .vjs-loading-spinner {
+        
+    }
+}
+.video-js .vjs-tech {
+    
+    
+    
+	
+	
+    
+}
+#vbBottomContainer {
+	
+	
+	
+	
+	
+	
+	
+	
+	
+    
+    
+	
+    
+    &.visible {
+        
+        
+        
+        
+        &:hover,
+        &:focus {
+            
+            
+            
+        }
+    }
+}
+
+#vbBottom {
+    
+    
+	
+	
+	
+	
+	
+	
+}
+
+#vbCaption {
+	
+	
+}
+#vbCenter {
+    
+    
+	
+	
+	
+}
+#vbCloseLink {
+    
+    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+    
+    &:hover,
+    &:focus {
+        
+        color: $primary-light;
+    }
+    
+    i {
+        
+        
+        
+        
+    }
+    
+    
+}
+
+#vbCloseText {
+	
+	
+}
+#vbOverlay {    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+    
+    
+    
+    
+    &.visible {
+        
+        
+    }
+}
+#vbResponsive {    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+    
+	
+}
+#vbVideo {
+	
+	
+	
+	
+	
+	
+	
+	
+}
+#vbWrap {
+    
+	
+	
+	
+	
+	
+	
+	
+    
+    
+    
+    
+    
+    &.visible {
+        
+        
+        &:not(.animating) #vbCenter {
+            
+        }
+    }
+    
+    .animating {
+        
+    }
+}
+.vjs-fullscreen-control {
+     
+    
+    
+    
+    
+    &:hover {
+        color: $primary-light;
+    }
+    
+    &:before {
+        
+    }
+    
+}
+
+.vjs-fullscreen .vjs-fullscreen-control {
+    
+    &:before {
+        
+    }
+}
+.vjs-play-control {
+     
+    
+    
+    
+    
+    &:before {
+        
+    }
+    
+    &:hover {
+        color: $primary-light;
+    }
+}
+
+.vjs-playing .vjs-play-control:before {
+    
+}
+.vjs-progress-control {
+    
+    
+    .vjs-progress-holder {
+        
+        
+        
+        
+        
+        
+        
+        .vjs-load-progress,
+        .vjs-mouse-display,
+        .vjs-play-progress {
+            
+            
+            
+            
+        }
+        
+        .vjs-load-progress {
+            
+        }
+        
+        .vjs-mouse-display {
+            
+            
+            
+            
+        }
+        
+        .vjs-play-progress {
+             
+            
+            
+            
+            &:after {
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+            }
+        }
+    }
+    
+    &:hover,
+    &:focus {
+        
+        .vjs-mouse-display {
+            
+        }
+        
+        .vjs-play-progress:after {
+            
+            
+            
+        }
+    }
+}
+.vjs-time-control {
+    
+}
+
+.vjs-time-divider, .vjs-duration, .vjs-remaining-time {
+    
+}
+.vjs-volume-menu-button {
+     
+    
+    
+    
+    
+    
+    
+    &:before { 
+	   
+    }
+    
+    &.vjs-vol-3:before {
+        
+    } 
+    
+    &.vjs-vol-2:before {
+        
+    }
+    
+    &.vjs-vol-1:before {
+        
+    } 
+    
+    &.vjs-vol-0:before {
+        
+    }  
+    
+    &:hover,
+    &:focus {
+        color: $primary-light;
+        
+        
+    }
+    
+    .vjs-menu {
+        
+        
+        
+        
+        .vjs-menu-content {
+            
+        }
+        
+        .vjs-volume-bar {
+            
+            
+            
+            
+            .vjs-volume-level {
+                 
+                
+                
+                
+                
+                
+                
+                
+                
+                &:after {
+                    
+                    
+                    
+                    
+                    
+                    
+                }
+            }
+        }
+    }
+}

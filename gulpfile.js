@@ -14,7 +14,6 @@ var merge = require("merge2");
 var typedoc = require("gulp-typedoc");
 var addsrc = require('gulp-add-src');
 var svgmin = require('gulp-svgmin');
-var cleancss = require('gulp-clean-css');
 
 gulp.task('default', [
     'compress'
@@ -22,7 +21,9 @@ gulp.task('default', [
 
 });
 
-gulp.task('style', function() {
+gulp.task('style', [
+    'overrides'
+], function() {
     return gulp.src('./src/sass/*.scss')
         .pipe(compass({
             css: 'src/css',
@@ -119,10 +120,7 @@ gulp.task('compress', [
             .pipe(gulp.dest('./dist')),
 
         gulp.src(['./dist/**/*.css', '!./dist/**/*.min.css'])
-            .pipe(cleancss({
-                semanticMerging: true
-            }))
-            //.pipe(cssnano())
+            .pipe(cssnano())
             .pipe(rename({
                 suffix: '.min'
             }))
