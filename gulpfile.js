@@ -14,6 +14,7 @@ var merge = require("merge2");
 var typedoc = require("gulp-typedoc");
 var addsrc = require('gulp-add-src');
 var svgmin = require('gulp-svgmin');
+var cleancss = require('gulp-clean-css');
 
 gulp.task('default', [
     'compress'
@@ -88,13 +89,27 @@ gulp.task('images', function() {
         .pipe(gulp.dest('./dist/images'));
 });
 
+gulp.task('overrides', function() {
+    return gulp.src(['./src/sass/**/!(videobox)*.scss', '!./src/sass/overrides.scss'])
+        .pipe(concat('overrides.scss'))
+        .pipe(replace(/\/\/[^]*?$/igm, ''))
+        .pipe(replace(/\@[^\;\{]*?\;/ig, ''))
+        .pipe(replace(/\/\*[^]*?\*\//ig, ''))
+        .pipe(replace(/[\w\-]+\s*\:((?!(\$primary\-color|\$primary\-light|\:))[^])*?\;/igm, ''))
+        .pipe(addsrc('./src/sass/videobox.scss'))
+        .pipe(concat('overrides.scss'))
+        .pipe(replace(/\@[^\;\{]*?\;/ig, ''))
+        .pipe(replace(/(\$\s*)*\$\s+/igm, ''))
+        .pipe(gulp.dest('./src/sass'));
+});
+
 gulp.task('compress', [
     'scripts',
     'style',
     'images'
 ], function() {
     return merge([
-        gulp.src(['./dist/videobox.js'])
+        gulp.src(['./dist/**/*.js', '!./dist/**/*.min.js'])
             .pipe(uglify({
                 preserveComments: 'license'
             }))
@@ -103,8 +118,11 @@ gulp.task('compress', [
             }))
             .pipe(gulp.dest('./dist')),
 
-        gulp.src(['./dist/videobox.css'])
-            .pipe(cssnano())
+        gulp.src(['./dist/**/*.css', '!./dist/**/*.min.css'])
+            .pipe(cleancss({
+                semanticMerging: true
+            }))
+            //.pipe(cssnano())
             .pipe(rename({
                 suffix: '.min'
             }))
