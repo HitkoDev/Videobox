@@ -99,7 +99,7 @@ gulp.task('overrides', function() {
         .pipe(replace(/[\w\-]+\s*\:((?!(\$primary\-color|\$primary\-light|\:))[^])*?\;/igm, ''))
         .pipe(addsrc('./src/sass/videobox.scss'))
         .pipe(concat('overrides.scss'))
-        .pipe(replace(/\@[^\;\{]*?\;/ig, ''))
+        .pipe(replace(/\@import [^\;\{]*?\;/ig, ''))
         .pipe(replace(/(\$\s*)*\$\s+/igm, ''))
         .pipe(gulp.dest('./src/sass'));
 });
