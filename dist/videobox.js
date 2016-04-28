@@ -373,10 +373,10 @@
             this.queue = [];
             this.timeout = -1;
             this.moving = false;
-            this.visible = 1;
+            this.visible = -1;
             this.detachedElements = [];
             this.options = {
-                moveAll: true,
+                moveAll: false,
                 target: '',
                 singleDuration: 500,
                 doubleClickTimeout: 200,
@@ -451,7 +451,7 @@
                 dir = dir == 'l' ? 'r' : 'l';
                 num = 0 - num;
             }
-            var count = (this.options.moveAll ? 1 : this.visible) * num;
+            var count = (this.options.moveAll ? this.visible : 1) * num;
             count = count % (this.visible + this.detachedElements.length);
             for (var i = 0; i < count && this.detachedElements.length > 0; i++) {
                 dir == 'l' ? $(this.target).append(this.detachedElements.shift()) : $(this.target).prepend(this.detachedElements.pop());
@@ -570,7 +570,7 @@
             if (tr)
                 _op.target = tr;
             if (mo && mo.trim())
-                _op.moveAll = mo.trim() != 'single';
+                _op.moveAll = mo.trim() == 'all';
             sliders.push($.vbSlider(target, $.extend({}, _options, _op)));
         }
         return sliders;

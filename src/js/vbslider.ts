@@ -120,11 +120,11 @@ interface vbSliderOptions {
         private queue: Array<string> = [];
         private timeout: number = -1;
         private moving: boolean = false;
-        private visible: number = 1;
+        private visible: number = -1;
         private detachedElements: Array<HTMLElement> = [];
 
         options: vbSliderOptions = {
-            moveAll: true,
+            moveAll: false,
             target: '',
             singleDuration: 500,
             doubleClickTimeout: 200,
@@ -136,7 +136,7 @@ interface vbSliderOptions {
             },
         };
 
-        constructor(target: HTMLElement, _options) {
+        constructor(target: HTMLElement, _options: vbSliderOptions) {
             this.target = target;
             var elements: JQuery = $(target).children();
 
@@ -212,7 +212,7 @@ interface vbSliderOptions {
                 num = 0 - num;
             }
 
-            var count: number = (this.options.moveAll ? 1 : this.visible) * num;
+            var count: number = (this.options.moveAll ? this.visible : 1) * num;
             count = count % (this.visible + this.detachedElements.length);
             for (var i = 0; i < count && this.detachedElements.length > 0; i++) {
                 dir == 'l' ? $(this.target).append(this.detachedElements.shift()) : $(this.target).prepend(this.detachedElements.pop());
@@ -341,7 +341,7 @@ interface vbSliderOptions {
             var target: HTMLElement = this[i], _op: vbSliderOptions = {}, tr: string = $(target).attr("data-target"), mo: string = $(target).attr("data-move");
 
             if (tr) _op.target = tr;
-            if (mo && mo.trim()) _op.moveAll = mo.trim() != 'single';
+            if (mo && mo.trim()) _op.moveAll = mo.trim() == 'all';
 
             sliders.push($.vbSlider(target, $.extend({}, _options, _op)));
         }
