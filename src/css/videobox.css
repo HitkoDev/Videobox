@@ -667,7 +667,8 @@ body.vb-html5-player *:focus {
 .vjs-playback-rate,
 .vjs-chapters-button,
 .vjs-subtitles-button,
-.vjs-captions-button {
+.vjs-captions-button,
+.vjs-descriptions-button {
   display: none;
 }
 
