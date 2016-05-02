@@ -14,6 +14,7 @@ var merge = require("merge2");
 var typedoc = require("gulp-typedoc");
 var addsrc = require('gulp-add-src');
 var svgmin = require('gulp-svgmin');
+var insert = require('gulp-insert');
 
 gulp.task('default', [
     'compress'
@@ -29,6 +30,8 @@ gulp.task('style', [
             css: 'src/css',
             sass: 'src/sass'
         }))
+        .pipe(replace(/(^|\})\s*[^\{\}]*\{\s*\}\s*/igm, ''))
+        .pipe(replace(/(^|\})\s*[^\{\}]*\{\s*\}\s*/igm, ''))
         .pipe(cssBase64({
             baseDir: "./dist"
         }))
@@ -102,6 +105,8 @@ gulp.task('overrides', function() {
         .pipe(concat('overrides.scss'))
         .pipe(replace(/\@import [^\;\{]*?\;/ig, ''))
         .pipe(replace(/(\$\s*)*\$\s+/igm, ''))
+        .pipe(insert.prepend(".vb-overrides-wrap {\n"))
+        .pipe(insert.append("\n}"))
         .pipe(gulp.dest('./src/sass'));
 });
 
