@@ -148,13 +148,13 @@ interface JQuery {
         var centerOrigin = {
             top: (activeVideo.origin ? -($(wrap).innerHeight() / 2 - activeVideo.origin.y) : 0) + 'px',
             left: (activeVideo.origin ? -($(wrap).innerWidth() / 2 - activeVideo.origin.x) : 0) + 'px',
-            'max-width': activeVideo.origin ? activeVideo.origin.width + 'px' : activeVideo.options.initialWidth
+            'maxWidth': activeVideo.origin ? activeVideo.origin.width + 'px' : activeVideo.options.initialWidth
         };
 
         var centerTarget = {
             top: '0px',
             left: '0px',
-            'max-width': activeVideo.options.width + 'px'
+            'maxWidth': activeVideo.options.width + 'px'
         };
 
         $(center).css(centerOrigin);
@@ -165,8 +165,8 @@ interface JQuery {
             var originRatio = ((activeVideo.origin.height * 100) / activeVideo.origin.width) || targetRatio;
             if (originRatio != targetRatio) {
                 animations.push(responsive.animate([
-                    { 'padding-bottom': originRatio + '%' },
-                    { 'padding-bottom': targetRatio + '%' }
+                    { 'paddingBottom': originRatio + '%' },
+                    { 'paddingBottom': targetRatio + '%' }
                 ], activeVideo.options.animation));
             }
         }
@@ -178,8 +178,8 @@ interface JQuery {
         centerAnimation.addEventListener('finish', function() {
             $(center).css(centerTarget);
             var bottomAnimation = bottomContainer.animate([
-                { 'max-height': '0px' },
-                { 'max-height': '200px' }
+                { 'maxHeight': '0px' },
+                { 'maxHeight': '200px' }
             ], activeVideo.options.animation);
             bottomAnimation.addEventListener('finish', function() {
                 $(bottomContainer).toggleClass('visible', true);
@@ -210,7 +210,7 @@ interface JQuery {
         if (height + 2 * activeVideo.options.padding > $(wrap).innerHeight()) height = $(wrap).innerHeight() - 2 * activeVideo.options.padding;
 
         var ratio = (height * 100) / width;
-        $(responsive).css('padding-bottom', ratio + '%');
+        $(responsive).css('paddingBottom', ratio + '%');
         return ratio;
     }
 

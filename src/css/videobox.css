@@ -668,7 +668,8 @@ body.vb-html5-player *:focus {
 .vjs-chapters-button,
 .vjs-subtitles-button,
 .vjs-captions-button,
-.vjs-descriptions-button {
+.vjs-descriptions-button,
+.vjs-audio-button {
   display: none;
 }
 
@@ -917,3 +918,5 @@ body.vb-html5-player *:focus {
 .vjs-fullscreen .vjs-fullscreen-control:before {
   content: "";
 }
+
+/*# sourceMappingURL=videobox.css.map */

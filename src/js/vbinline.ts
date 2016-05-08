@@ -88,9 +88,9 @@ interface JQuery {
                 hidding = true;
                 var v1 = wrap.animate([
                     {
-                        'max-width': (activeVideo.options.width + 2 * activeVideo.options.padding) + 'px'
+                        'maxWidth': (activeVideo.options.width + 2 * activeVideo.options.padding) + 'px'
                     }, {
-                        'max-width': (activeVideo.origin ? activeVideo.origin.width : activeVideo.options.initialWidth) + 'px'
+                        'maxWidth': (activeVideo.origin ? activeVideo.origin.width : activeVideo.options.initialWidth) + 'px'
                     }
                 ], activeVideo.options.animation);
                 v1.addEventListener('finish', function() {
@@ -105,9 +105,9 @@ interface JQuery {
                 if (activeVideo.origin) {
                     var v2 = responsive.animate([
                         {
-                            'padding-bottom': ((activeVideo.options.height * 100) / activeVideo.options.width) + '%'
+                            'paddingBottom': ((activeVideo.options.height * 100) / activeVideo.options.width) + '%'
                         }, {
-                            'padding-bottom': ((activeVideo.origin.height * 100) / activeVideo.origin.width) + '%'
+                            'paddingBottom': ((activeVideo.origin.height * 100) / activeVideo.origin.width) + '%'
                         }
                     ], activeVideo.options.animation);
                 }
@@ -163,10 +163,10 @@ interface JQuery {
         open = true;
 
         var wrapOrigin = {
-            'max-width': (activeVideo.origin ? activeVideo.origin.width : activeVideo.options.initialWidth) + 'px'
+            'maxWidth': (activeVideo.origin ? activeVideo.origin.width : activeVideo.options.initialWidth) + 'px'
         };
         var wrapDest = {
-            'max-width': (activeVideo.options.width + 2 * activeVideo.options.padding) + 'px'
+            'maxWidth': (activeVideo.options.width + 2 * activeVideo.options.padding) + 'px'
         };
         var animation = wrap.animate([wrapOrigin, wrapDest], activeVideo.options.animation);
         animation.addEventListener('finish', function() {
@@ -176,11 +176,11 @@ interface JQuery {
         animations.push(animation);
 
         var responsiveDest = {
-            'padding-bottom': ((activeVideo.options.height * 100) / activeVideo.options.width) + '%'
+            'paddingBottom': ((activeVideo.options.height * 100) / activeVideo.options.width) + '%'
         };
         if (activeVideo.origin) {
             var responsiveOrigin = {
-                'padding-bottom': ((activeVideo.origin.height * 100) / activeVideo.origin.width) + '%'
+                'paddingBottom': ((activeVideo.origin.height * 100) / activeVideo.origin.width) + '%'
             };
             var animation = responsive.animate([responsiveOrigin, responsiveDest], activeVideo.options.animation);
             animation.addEventListener('finish', function() {

@@ -100,12 +100,12 @@
         var centerOrigin = {
             top: (activeVideo.origin ? -($(wrap).innerHeight() / 2 - activeVideo.origin.y) : 0) + 'px',
             left: (activeVideo.origin ? -($(wrap).innerWidth() / 2 - activeVideo.origin.x) : 0) + 'px',
-            'max-width': activeVideo.origin ? activeVideo.origin.width + 'px' : activeVideo.options.initialWidth
+            'maxWidth': activeVideo.origin ? activeVideo.origin.width + 'px' : activeVideo.options.initialWidth
         };
         var centerTarget = {
             top: '0px',
             left: '0px',
-            'max-width': activeVideo.options.width + 'px'
+            'maxWidth': activeVideo.options.width + 'px'
         };
         $(center).css(centerOrigin);
         $([wrap, overlay]).toggleClass('visible', true);
@@ -114,8 +114,8 @@
             var originRatio = ((activeVideo.origin.height * 100) / activeVideo.origin.width) || targetRatio;
             if (originRatio != targetRatio) {
                 animations.push(responsive.animate([
-                    { 'padding-bottom': originRatio + '%' },
-                    { 'padding-bottom': targetRatio + '%' }
+                    { 'paddingBottom': originRatio + '%' },
+                    { 'paddingBottom': targetRatio + '%' }
                 ], activeVideo.options.animation));
             }
         }
@@ -126,8 +126,8 @@
         centerAnimation.addEventListener('finish', function () {
             $(center).css(centerTarget);
             var bottomAnimation = bottomContainer.animate([
-                { 'max-height': '0px' },
-                { 'max-height': '200px' }
+                { 'maxHeight': '0px' },
+                { 'maxHeight': '200px' }
             ], activeVideo.options.animation);
             bottomAnimation.addEventListener('finish', function () {
                 $(bottomContainer).toggleClass('visible', true);
@@ -155,7 +155,7 @@
         if (height + 2 * activeVideo.options.padding > $(wrap).innerHeight())
             height = $(wrap).innerHeight() - 2 * activeVideo.options.padding;
         var ratio = (height * 100) / width;
-        $(responsive).css('padding-bottom', ratio + '%');
+        $(responsive).css('paddingBottom', ratio + '%');
         return ratio;
     }
     function showVideo() {
@@ -236,9 +236,9 @@
                 hidding = true;
                 var v1 = wrap.animate([
                     {
-                        'max-width': (activeVideo.options.width + 2 * activeVideo.options.padding) + 'px'
+                        'maxWidth': (activeVideo.options.width + 2 * activeVideo.options.padding) + 'px'
                     }, {
-                        'max-width': (activeVideo.origin ? activeVideo.origin.width : activeVideo.options.initialWidth) + 'px'
+                        'maxWidth': (activeVideo.origin ? activeVideo.origin.width : activeVideo.options.initialWidth) + 'px'
                     }
                 ], activeVideo.options.animation);
                 v1.addEventListener('finish', function () {
@@ -254,9 +254,9 @@
                 if (activeVideo.origin) {
                     var v2 = responsive.animate([
                         {
-                            'padding-bottom': ((activeVideo.options.height * 100) / activeVideo.options.width) + '%'
+                            'paddingBottom': ((activeVideo.options.height * 100) / activeVideo.options.width) + '%'
                         }, {
-                            'padding-bottom': ((activeVideo.origin.height * 100) / activeVideo.origin.width) + '%'
+                            'paddingBottom': ((activeVideo.origin.height * 100) / activeVideo.origin.width) + '%'
                         }
                     ], activeVideo.options.animation);
                 }
@@ -302,10 +302,10 @@
         $(caption).html(activeVideo.title);
         open = true;
         var wrapOrigin = {
-            'max-width': (activeVideo.origin ? activeVideo.origin.width : activeVideo.options.initialWidth) + 'px'
+            'maxWidth': (activeVideo.origin ? activeVideo.origin.width : activeVideo.options.initialWidth) + 'px'
         };
         var wrapDest = {
-            'max-width': (activeVideo.options.width + 2 * activeVideo.options.padding) + 'px'
+            'maxWidth': (activeVideo.options.width + 2 * activeVideo.options.padding) + 'px'
         };
         var animation = wrap.animate([wrapOrigin, wrapDest], activeVideo.options.animation);
         animation.addEventListener('finish', function () {
@@ -314,11 +314,11 @@
         });
         animations.push(animation);
         var responsiveDest = {
-            'padding-bottom': ((activeVideo.options.height * 100) / activeVideo.options.width) + '%'
+            'paddingBottom': ((activeVideo.options.height * 100) / activeVideo.options.width) + '%'
         };
         if (activeVideo.origin) {
             var responsiveOrigin = {
-                'padding-bottom': ((activeVideo.origin.height * 100) / activeVideo.origin.width) + '%'
+                'paddingBottom': ((activeVideo.origin.height * 100) / activeVideo.origin.width) + '%'
             };
             var animation = responsive.animate([responsiveOrigin, responsiveDest], activeVideo.options.animation);
             animation.addEventListener('finish', function () {
@@ -464,12 +464,12 @@
             var animationProperties = this.options.singleDuration ? $.extend({}, this.options.animation, { duration: this.options.singleDuration * count }) : this.options.animation;
             var slider = this;
             var positionOrigin = {
-                'margin-left': (dir == 'l' ? 0 : -width) + '%',
-                'margin-right': (dir == 'l' ? -width : 0) + '%',
+                'marginLeft': (dir == 'l' ? 0 : -width) + '%',
+                'marginRight': (dir == 'l' ? -width : 0) + '%',
             };
             var positionDest = {
-                'margin-left': (dir == 'l' ? -width : 0) + '%',
-                'margin-right': (dir == 'l' ? 0 : -width) + '%',
+                'marginLeft': (dir == 'l' ? -width : 0) + '%',
+                'marginRight': (dir == 'l' ? 0 : -width) + '%',
             };
             var anim = this.content.animate([positionOrigin, positionDest], animationProperties);
             anim.addEventListener('finish', function () {
@@ -596,3 +596,5 @@
         $(".vb_slider").vbSlider({});
     });
 })(jQuery);
+
+//# sourceMappingURL=videobox.js.map

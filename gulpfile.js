@@ -15,6 +15,7 @@ var typedoc = require("gulp-typedoc");
 var addsrc = require('gulp-add-src');
 var svgmin = require('gulp-svgmin');
 var insert = require('gulp-insert');
+var sourcemaps = require('gulp-sourcemaps');
 
 gulp.task('default', [
     'compress'
@@ -23,12 +24,20 @@ gulp.task('default', [
 });
 
 gulp.task('style', [
+    'sass'
+], function() {
+    return gulp.src('./src/css/*.css.map')
+        .pipe(gulp.dest('./dist'));
+});
+
+gulp.task('sass', [
     'overrides'
 ], function() {
     return gulp.src('./src/sass/*.scss')
         .pipe(compass({
             css: 'src/css',
-            sass: 'src/sass'
+            sass: 'src/sass',
+            sourcemap: true
         }))
         .pipe(replace(/(^|\})\s*[^\{\}]*\{\s*\}\s*/igm, ''))
         .pipe(replace(/(^|\})\s*[^\{\}]*\{\s*\}\s*/igm, ''))
@@ -40,12 +49,13 @@ gulp.task('style', [
 
 gulp.task('scripts', function() {
     var tsResult = gulp.src('./src/js/**.ts')
+        .pipe(sourcemaps.init())
         .pipe(typescript({
             declaration: true,
             noExternalResolve: true,
-            target: 'ES5',
-            sourcemap: true
+            target: 'ES5'
         }));
+
 
     return merge([
         tsResult.dts
@@ -59,6 +69,7 @@ gulp.task('scripts', function() {
 
         tsResult.js
             .pipe(concat('videobox.js'))
+            .pipe(sourcemaps.write('.'))
             .pipe(gulp.dest('./dist'))
     ]);
 });

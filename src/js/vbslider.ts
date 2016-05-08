@@ -232,12 +232,12 @@ interface vbSliderOptions {
             var slider: _vbSlider = this;
 
             var positionOrigin = {
-                'margin-left': (dir == 'l' ? 0 : -width) + '%',
-                'margin-right': (dir == 'l' ? -width : 0) + '%',
+                'marginLeft': (dir == 'l' ? 0 : -width) + '%',
+                'marginRight': (dir == 'l' ? -width : 0) + '%',
             };
             var positionDest = {
-                'margin-left': (dir == 'l' ? -width : 0) + '%',
-                'margin-right': (dir == 'l' ? 0 : -width) + '%',
+                'marginLeft': (dir == 'l' ? -width : 0) + '%',
+                'marginRight': (dir == 'l' ? 0 : -width) + '%',
             };
 
             var anim = this.content.animate([positionOrigin, positionDest], animationProperties);
