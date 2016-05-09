@@ -120,16 +120,14 @@
             centerOrigin,
             centerTarget
         ], activeVideo.options.animation);
+        $(center).css(centerTarget);
         centerAnimation.addEventListener('finish', function () {
-            $(center).css(centerTarget);
             var bottomAnimation = bottomContainer.animate([
                 { 'maxHeight': '0px' },
                 { 'maxHeight': '200px' }
             ], activeVideo.options.animation);
-            bottomAnimation.addEventListener('finish', function () {
-                $(bottomContainer).toggleClass('visible', true);
-                showVideo();
-            });
+            $(bottomContainer).toggleClass('visible', true);
+            bottomAnimation.addEventListener('finish', showVideo);
             animations.push(bottomAnimation);
         });
         animations.push(centerAnimation);
@@ -236,13 +234,15 @@
         if (!hidding) {
             if ($(wrap).parent().length > 0 && activeVideo) {
                 hidding = true;
+                var maxW = (activeVideo.origin ? activeVideo.origin.width : activeVideo.options.initialWidth) + 'px';
                 var v1 = wrap.animate([
                     {
                         'maxWidth': (activeVideo.options.width + 2 * activeVideo.options.padding) + 'px'
                     }, {
-                        'maxWidth': (activeVideo.origin ? activeVideo.origin.width : activeVideo.options.initialWidth) + 'px'
+                        'maxWidth': maxW
                     }
                 ], activeVideo.options.animation);
+                $(wrap).css('maxWidth', maxW);
                 v1.addEventListener('finish', function () {
                     $(wrap).detach();
                     for (var i = 0; i < hidden.length; i++)
@@ -254,13 +254,15 @@
                         callback();
                 });
                 if (activeVideo.origin) {
+                    var padding = ((activeVideo.origin.height * 100) / activeVideo.origin.width) + '%';
                     var v2 = responsive.animate([
                         {
                             'paddingBottom': ((activeVideo.options.height * 100) / activeVideo.options.width) + '%'
                         }, {
-                            'paddingBottom': ((activeVideo.origin.height * 100) / activeVideo.origin.width) + '%'
+                            'paddingBottom': padding
                         }
                     ], activeVideo.options.animation);
+                    $(responsive).css('paddingBottom', padding);
                 }
             }
             else {
@@ -310,10 +312,8 @@
             'maxWidth': (activeVideo.options.width + 2 * activeVideo.options.padding) + 'px'
         };
         var animation = wrap.animate([wrapOrigin, wrapDest], activeVideo.options.animation);
-        animation.addEventListener('finish', function () {
-            $(wrap).css(wrapDest);
-            showVideo();
-        });
+        $(wrap).css(wrapDest);
+        animation.addEventListener('finish', showVideo);
         animations.push(animation);
         var responsiveDest = {
             'paddingBottom': ((activeVideo.options.height * 100) / activeVideo.options.width) + '%'
@@ -323,14 +323,9 @@
                 'paddingBottom': ((activeVideo.origin.height * 100) / activeVideo.origin.width) + '%'
             };
             var animation = responsive.animate([responsiveOrigin, responsiveDest], activeVideo.options.animation);
-            animation.addEventListener('finish', function () {
-                $(responsive).css(responsiveDest);
-            });
             animations.push(animation);
         }
-        else {
-            $(responsive).css(responsiveDest);
-        }
+        $(responsive).css(responsiveDest);
     }
     function setup() {
         $(activeVideo.origin.target).after(wrap);
@@ -482,9 +477,7 @@
                 }, {
                     height: height + 'px'
                 }], animationProperties);
-            anim.addEventListener('finish', function () {
-                $(slider.content).css('height', height);
-            });
+            $(slider.content).css('height', height);
             this.buttons.css('top', this.options.target ? ($(this.target).find(this.options.target).outerHeight(true) / 2) : '');
         };
         _vbSlider.detach = function (el) {

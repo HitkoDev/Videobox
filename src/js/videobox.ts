@@ -172,16 +172,14 @@ interface JQuery {
             centerOrigin,
             centerTarget
         ], activeVideo.options.animation);
+        $(center).css(centerTarget);
         centerAnimation.addEventListener('finish', function() {
-            $(center).css(centerTarget);
             var bottomAnimation = bottomContainer.animate([
                 { 'maxHeight': '0px' },
                 { 'maxHeight': '200px' }
             ], activeVideo.options.animation);
-            bottomAnimation.addEventListener('finish', function() {
-                $(bottomContainer).toggleClass('visible', true);
-                showVideo();
-            });
+            $(bottomContainer).toggleClass('visible', true);
+            bottomAnimation.addEventListener('finish', showVideo);
             animations.push(bottomAnimation);
         });
         animations.push(centerAnimation);

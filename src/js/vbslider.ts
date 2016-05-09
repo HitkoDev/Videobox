@@ -250,9 +250,7 @@ interface vbSliderOptions {
             }, {
                     height: height + 'px'
                 }], animationProperties);
-            anim.addEventListener('finish', function() {
-                $(slider.content).css('height', height);
-            });
+            $(slider.content).css('height', height);
             this.buttons.css('top', this.options.target ? ($(this.target).find(this.options.target).outerHeight(true) / 2) : '');
         }
 

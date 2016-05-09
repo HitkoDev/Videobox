@@ -86,13 +86,15 @@ interface JQuery {
         if (!hidding) {
             if ($(wrap).parent().length > 0 && activeVideo) {
                 hidding = true;
+                var maxW = (activeVideo.origin ? activeVideo.origin.width : activeVideo.options.initialWidth) + 'px';
                 var v1 = wrap.animate([
                     {
                         'maxWidth': (activeVideo.options.width + 2 * activeVideo.options.padding) + 'px'
                     }, {
-                        'maxWidth': (activeVideo.origin ? activeVideo.origin.width : activeVideo.options.initialWidth) + 'px'
+                        'maxWidth': maxW
                     }
                 ], activeVideo.options.animation);
+                $(wrap).css('maxWidth', maxW);
                 v1.addEventListener('finish', function() {
                     $(wrap).detach();
                     for (var i = 0; i < hidden.length; i++) $(hidden[i]).show();
@@ -103,13 +105,15 @@ interface JQuery {
                 });
 
                 if (activeVideo.origin) {
+                    var padding = ((activeVideo.origin.height * 100) / activeVideo.origin.width) + '%';
                     var v2 = responsive.animate([
                         {
                             'paddingBottom': ((activeVideo.options.height * 100) / activeVideo.options.width) + '%'
                         }, {
-                            'paddingBottom': ((activeVideo.origin.height * 100) / activeVideo.origin.width) + '%'
+                            'paddingBottom': padding
                         }
                     ], activeVideo.options.animation);
+                    $(responsive).css('paddingBottom', padding);
                 }
             } else {
                 if ($(wrap).parent().length > 0) {
@@ -169,10 +173,8 @@ interface JQuery {
             'maxWidth': (activeVideo.options.width + 2 * activeVideo.options.padding) + 'px'
         };
         var animation = wrap.animate([wrapOrigin, wrapDest], activeVideo.options.animation);
-        animation.addEventListener('finish', function() {
-            $(wrap).css(wrapDest);
-            showVideo();
-        });
+        $(wrap).css(wrapDest);
+        animation.addEventListener('finish', showVideo);
         animations.push(animation);
 
         var responsiveDest = {
@@ -183,13 +185,9 @@ interface JQuery {
                 'paddingBottom': ((activeVideo.origin.height * 100) / activeVideo.origin.width) + '%'
             };
             var animation = responsive.animate([responsiveOrigin, responsiveDest], activeVideo.options.animation);
-            animation.addEventListener('finish', function() {
-                $(responsive).css(responsiveDest);
-            });
             animations.push(animation);
-        } else {
-            $(responsive).css(responsiveDest);
         }
+        $(responsive).css(responsiveDest);
     }
 
     function setup(): void {
