@@ -8,7 +8,7 @@
 	pointer-events: none;
 	width: 100%;
     
-    @include display-flex(flex);
+    @include display(flex);
     @include justify-content(center);
     @include align-items(center);
     

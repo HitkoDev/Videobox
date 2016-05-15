@@ -2,7 +2,7 @@
 	width: 100%;
 	color: $primary-color;
     
-    @include display-flex(flex);
+    @include display(flex);
     @include flex-flow(row);
     
     .vb_slider_wrap {

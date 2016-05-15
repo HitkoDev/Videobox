@@ -1,5 +1,4 @@
 var gulp = require('gulp');
-var compass = require('gulp-compass');
 var typescript = require('gulp-typescript');
 var uglify = require('gulp-uglify');
 var rename = require("gulp-rename");
@@ -16,6 +15,8 @@ var addsrc = require('gulp-add-src');
 var svgmin = require('gulp-svgmin');
 var insert = require('gulp-insert');
 var sourcemaps = require('gulp-sourcemaps');
+var bourbon = require('bourbon');
+var sass = require('gulp-sass');
 
 gulp.task('default', [
     'compress'
@@ -34,16 +35,20 @@ gulp.task('sass', [
     'overrides'
 ], function() {
     return gulp.src('./src/sass/*.scss')
-        .pipe(compass({
-            css: 'src/css',
-            sass: 'src/sass',
-            sourcemap: true
+        .pipe(sourcemaps.init())
+        .pipe(sass({
+            includePaths: [
+                bourbon.includePaths
+            ],
+            outputStyle: 'expanded'
         }))
+        .pipe(replace(/(^|\})\s*[^\{\}]*\{\s*\}\s*/igm, ''))
         .pipe(replace(/(^|\})\s*[^\{\}]*\{\s*\}\s*/igm, ''))
         .pipe(replace(/(^|\})\s*[^\{\}]*\{\s*\}\s*/igm, ''))
         .pipe(cssBase64({
             baseDir: "./dist"
         }))
+        .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('./dist'));
 });
 

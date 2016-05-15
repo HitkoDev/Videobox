@@ -13,8 +13,7 @@
     padding: 12px;
     opacity: 0;
 	z-index: 300;
-
-    @include box-sizing(border-box);
+    box-sizing: border-box;
 }
 
 #vbiWrap:hover #vbiClose { 

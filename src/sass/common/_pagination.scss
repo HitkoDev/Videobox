@@ -18,8 +18,7 @@
             font-size: 0.625*$base-font-size;
             padding: 0.3125*$base-font-size 0.625*$base-font-size;
             text-decoration: none;
-            
-            @include text-shadow(0px 0px 10px $primary-light);
+            text-shadow: 0px 0px 10px $primary-light;
                 
             &:hover,
             &:focus {

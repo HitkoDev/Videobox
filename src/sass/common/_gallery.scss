@@ -3,7 +3,7 @@
 	margin: -12px;
 	clear: both;
     
-    @include display-flex(flex);
+    @include display(flex);
     @include flex-flow(row wrap);
 }
 

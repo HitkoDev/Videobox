@@ -1,53 +1,73 @@
-.vb-overrides-wrap .pagination > li > a, .vb-overrides-wrap .pagination > li > span {
+.vb-overrides-wrap .pagination > li > a,
+.vb-overrides-wrap .pagination > li > span {
   color: #005723;
+  text-shadow: 0px 0px 10px #84d1a4;
 }
-.vb-overrides-wrap .pagination > li > a:hover, .vb-overrides-wrap .pagination > li > a:focus, .vb-overrides-wrap .pagination > li > span:hover, .vb-overrides-wrap .pagination > li > span:focus {
+
+.vb-overrides-wrap .pagination > li > a:hover, .vb-overrides-wrap .pagination > li > a:focus,
+.vb-overrides-wrap .pagination > li > span:hover,
+.vb-overrides-wrap .pagination > li > span:focus {
   color: #005723;
   background-color: #84d1a4;
 }
-.vb-overrides-wrap .pagination > li.active > a, .vb-overrides-wrap .pagination > li.active > span {
+
+.vb-overrides-wrap .pagination > li.active > a,
+.vb-overrides-wrap .pagination > li.active > span {
   color: #005723;
   background-color: #84d1a4;
 }
+
 .vb-overrides-wrap .vb_video_frame {
   color: #005723;
 }
+
 .vb-overrides-wrap .vb_video_cont, .vb-overrides-wrap .vb_video_cont a {
   color: #005723;
 }
+
 .vb-overrides-wrap .vb_video_cont:hover, .vb-overrides-wrap .vb_video_cont:focus, .vb-overrides-wrap .vb_video_cont a:hover, .vb-overrides-wrap .vb_video_cont a:focus {
   color: #84d1a4;
 }
+
 .vb-overrides-wrap .vb_video_cont:hover .vb_thub_wrap .vb-icon-play, .vb-overrides-wrap .vb_video_cont:focus .vb_thub_wrap .vb-icon-play, .vb-overrides-wrap .vb_video_cont a:hover .vb_thub_wrap .vb-icon-play, .vb-overrides-wrap .vb_video_cont a:focus .vb_thub_wrap .vb-icon-play {
   color: #84d1a4;
 }
+
 .vb-overrides-wrap #vbiClose:hover,
 .vb-overrides-wrap #vbiClose:focus {
   color: #84d1a4;
 }
+
 .vb-overrides-wrap #vbiWrap {
   color: #005723;
 }
+
 .vb-overrides-wrap .vb_slider_outer .vb_slider_prev:hover, .vb-overrides-wrap .vb_slider_outer .vb_slider_prev:focus,
 .vb-overrides-wrap .vb_slider_outer .vb_slider_next:hover,
 .vb-overrides-wrap .vb_slider_outer .vb_slider_next:focus {
   color: #84d1a4;
 }
+
 .vb-overrides-wrap .vb_slider_outer {
   color: #005723;
 }
+
 .vb-overrides-wrap .vjs-big-play-button:hover, .vb-overrides-wrap .vjs-big-play-button:focus {
   color: #84d1a4;
 }
+
 .vb-overrides-wrap #vbCloseLink:hover, .vb-overrides-wrap #vbCloseLink:focus {
   color: #84d1a4;
 }
+
 .vb-overrides-wrap .vjs-fullscreen-control:hover {
   color: #84d1a4;
 }
+
 .vb-overrides-wrap .vjs-play-control:hover {
   color: #84d1a4;
 }
+
 .vb-overrides-wrap .vjs-volume-menu-button:hover, .vb-overrides-wrap .vjs-volume-menu-button:focus {
   color: #84d1a4;
 }

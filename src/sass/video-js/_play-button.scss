@@ -16,9 +16,8 @@
     color: #fff;
     background-color: rgba(0, 0, 0, $overlay-opacity);
     cursor: pointer;
-    
-    @include border-radius(100%);
-    @include box-shadow(0px 0px 40px -5px #000);
+    border-radius: 100%;
+    box-shadow: 0px 0px 40px -5px #000;
     
     &:before {
         content: $font-Videobox-play;
