@@ -87,7 +87,7 @@
     function setup(newVideo) {
         $(closeText).html(newVideo.options.closeText);
         $(newVideo.options.root).append([overlay, wrap]);
-        setPlayerPosition();
+        setPlayerPosition(newVideo.options.root);
     }
     function changeVideo(newVideo) {
         activeVideo = newVideo;
@@ -136,7 +136,7 @@
     function setPlayerSizePosition() {
         if (!activeVideo)
             return;
-        setPlayerPosition();
+        setPlayerPosition(activeVideo.options.root);
         var width = activeVideo.options.width;
         var height = activeVideo.options.height;
         if (width + 2 * activeVideo.options.padding > $(wrap).innerWidth()) {
@@ -150,10 +150,14 @@
         $(responsive).css('paddingBottom', ratio + '%');
         return ratio;
     }
-    function setPlayerPosition() {
+    function setPlayerPosition(root) {
         var pos = $(wrap).position();
         var rect = $(wrap).offset();
         var bdy = $('html').offset();
+        if ($(root)[0] != $('body')[0]) {
+            pos.top += $(root).scrollTop();
+            pos.left += $(root).scrollLeft();
+        }
         $(wrap).css({
             top: pos.top + bdy.top + window.scrollY - rect.top,
             left: pos.left + bdy.left + window.scrollX - rect.left
