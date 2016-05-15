@@ -208,10 +208,11 @@ interface JQuery {
 
     function setPlayerPosition(): void {
         var pos = $(wrap).position();
-        var rect = wrap.getBoundingClientRect();
+        var rect = $(wrap).offset();
+        var bdy = $('html').offset();
         $(wrap).css({
-            top: pos.top - rect.top,
-            left: pos.left - rect.left
+            top: pos.top + bdy.top + window.scrollY - rect.top,
+            left: pos.left + bdy.left + window.scrollX - rect.left
         });
     }
 
