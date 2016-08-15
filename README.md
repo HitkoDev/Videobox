@@ -8,8 +8,8 @@ Getting started
 1. <a href="https://github.com/HitkoDev/Videobox/releases" target="_blank">Download the latest version of Videobox</a>
 2. Check out the ```examples``` directory for some basic examples
 3. Include Videobox on your website:
- + add ```<link href="path/to/videobox/dist/videobox.css" rel="stylesheet" >``` to the ```<head>``` tag
- + include ```<script src="path/to/videobox/dist/videobox.js" type="text/javascript" ></script>``` before the ```</body>``` tag
+ + add ```<link href="path/to/videobox/videobox.min.css" rel="stylesheet" >``` to the ```<head>``` tag
+ + include ```<script src="path/to/videobox/videobox.min.js" type="text/javascript" ></script>``` before the ```</body>``` tag
 4. Make sure jQuery is loaded before Videobox. Since some browsers don't support Web animations yet, you'll probably want to include the polyfill on the page as well.
  + If you've installed Videobox through npm, jQuery and Web animations polyfill are inside the ```node_modules``` folder
  + If you've installed through bower, jQuery and Web animations polyfill are inside the ```bower_components``` folder
