@@ -44,6 +44,8 @@ var comment = `/*!
  *	along with this program. If not, see <http://www.gnu.org/licenses/>
  */`
 
+gulp.task('default', ['licence'], () => { })
+
 gulp.task('build', [
     'compress',
     'bundle',
