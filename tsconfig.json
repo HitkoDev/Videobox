@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "system",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "removeComments": false,
+        "noImplicitAny": false,
+        "declaration": true,
+        "noLib": false
+    },
+    "exclude": [
+        "node_modules",
+        "jspm_packages",
+        "typings/main",
+        "typings/main.d.ts",
+        "build",
+        "videobox.d.ts"
+    ]
+}
