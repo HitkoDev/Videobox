@@ -1,8 +1,6 @@
 .vb-overrides-wrap {
 
 
-
-
 $primary-color: #005723;
 $primary-light: #84d1a4;
 $overlay-opacity: 0.7;
@@ -397,153 +395,6 @@ $base-font-size: 24px;
         
     }
 }
-#vbBottomContainer {
-	
-	
-	
-	
-	
-	
-	
-	
-	
-    
-    
-    
-    &.visible {
-        
-        
-        
-        
-        &:hover,
-        &:focus {
-            
-            
-            
-        }
-    }
-}
-
-#vbBottom {
-    
-	
-	
-	
-	
-	
-	
-}
-
-#vbCaption {
-	
-	
-}
-#vbCenter {
-    
-	
-	
-	
-}
-#vbCloseLink {
-    
-    
-	
-	
-	
-	
-	
-	
-	
-	
-	
-    
-    &:hover,
-    &:focus {
-        
-        color: $primary-light;
-    }
-    
-    i {
-        
-        
-        
-        
-    }
-    
-    
-}
-
-#vbCloseText {
-	
-	
-}
-#vbOverlay {    
-	
-	
-	
-	
-	
-	
-	
-	
-	
-    
-    
-    
-    
-    &.visible {
-        
-        
-    }
-}
-#vbResponsive {    
-	
-	
-	
-	
-	
-	
-	
-	
-	
-    
-}
-#vbVideo {
-	
-	
-	
-	
-	
-	
-	
-	
-}
-#vbWrap {
-    
-	
-	
-	
-	
-	
-	
-	
-    
-    
-    
-    
-    
-    &.visible {
-        
-        
-        &:not(.animating) #vbCenter {
-            
-        }
-    }
-    
-    .animating {
-        
-    }
-}
 html.vb-html5-player, 
 body.vb-html5-player {
     
@@ -764,6 +615,153 @@ body.vb-html5-player {
 	
 	
     
+}
+#vbBottomContainer {
+	
+	
+	
+	
+	
+	
+	
+	
+	
+    
+    
+    
+    &.visible {
+        
+        
+        
+        
+        &:hover,
+        &:focus {
+            
+            
+            
+        }
+    }
+}
+
+#vbBottom {
+    
+	
+	
+	
+	
+	
+	
+}
+
+#vbCaption {
+	
+	
+}
+#vbCenter {
+    
+	
+	
+	
+}
+#vbCloseLink {
+    
+    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+    
+    &:hover,
+    &:focus {
+        
+        color: $primary-light;
+    }
+    
+    i {
+        
+        
+        
+        
+    }
+    
+    
+}
+
+#vbCloseText {
+	
+	
+}
+#vbOverlay {    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+    
+    
+    
+    
+    &.visible {
+        
+        
+    }
+}
+#vbResponsive {    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+    
+}
+#vbVideo {
+	
+	
+	
+	
+	
+	
+	
+	
+}
+#vbWrap {
+    
+	
+	
+	
+	
+	
+	
+	
+    
+    
+    
+    
+    
+    &.visible {
+        
+        
+        &:not(.animating) #vbCenter {
+            
+        }
+    }
+    
+    .animating {
+        
+    }
 }
 .vjs-fullscreen-control {
      

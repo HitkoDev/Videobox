@@ -25,12 +25,39 @@ var projectDefinitions = ts.createProject(projectFile, {
     out: './videobox.js'
 })
 
-gulp.task('default', [
+var comment = `/*!	
+ *	@author		HitkoDev http://hitko.eu/videobox
+ *	@copyright	Copyright (C) 2016 HitkoDev All Rights Reserved.
+ *	@license	http://www.gnu.org/licenses/gpl-3.0.html GNU/GPL
+ *
+ *	This program is free software: you can redistribute it and/or modify
+ *	it under the terms of the GNU General Public License as published by
+ *	the Free Software Foundation, either version 3 of the License, or
+ *	any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program. If not, see <http://www.gnu.org/licenses/>
+ */`
+
+gulp.task('build', [
     'compress',
     'bundle',
     'documentation'
 ], () => {
     return gulp.src(['./build/**/*.min.css', './build/**/*.css.map'])
+        .pipe(gulp.dest('.'))
+})
+
+gulp.task('licence', [
+    'build'
+], () => {
+    return gulp.src(['./videobox.min.js', './videobox.min.css'])
+        .pipe(insert.prepend(comment + "\n"))
         .pipe(gulp.dest('.'))
 })
 
