@@ -214,7 +214,7 @@ class _vbSlider implements vbSlider {
 }
 
 /**
- * function to load the Videobox slider
+ * Function to load the Videobox slider
  */
 export function slider($: JQueryStatic) {
 
