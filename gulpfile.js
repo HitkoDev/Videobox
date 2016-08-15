@@ -30,7 +30,8 @@ gulp.task('default', [
     'bundle',
     'documentation'
 ], () => {
-
+    return gulp.src(['./build/**/*.min.css', './build/**/*.css.map'])
+        .pipe(gulp.dest('.'))
 })
 
 gulp.task('bundle', [
