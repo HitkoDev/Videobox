@@ -12,7 +12,7 @@ declare module "components/inline" {
 }
 declare module "components/slider" {
     /**
-     * function to load the Videobox slider
+     * Function to load the Videobox slider
      */
     export function slider($: JQueryStatic): void;
 }

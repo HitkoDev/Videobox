@@ -22,15 +22,12 @@
     "oembed",
     "iframe"
   ],
-  "main": "./dist/videobox.min.js",
-  "style": "./dist/videobox.min.css",
+  "main": "./videobox.min.js",
+  "style": "./videobox.min.css",
   "files": [
-    "dist/videobox.js",
-    "dist/videobox.css",
-    "dist/overrides.css",
-    "dist/videobox.min.js",
-    "dist/videobox.min.css",
-    "dist/overrides.min.css"
+    "videobox.min.js",
+    "videobox.min.css",
+    "videobox.d.ts"
   ],
   "devDependencies": {
     "bourbon": "^4.2.7",
@@ -58,7 +55,8 @@
   },
   "dependencies": {
     "jquery": "^3.1.0",
-    "web-animations-js": "^2.2.2"
+    "web-animations-js": "^2.2.2",
+    "video.js": "^5.10.8"
   },
   "jspm": {
     "dependencies": {},

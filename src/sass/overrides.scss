@@ -133,6 +133,170 @@ $base-font-size: 24px;
 .vb-icon-volume-2:before {  }
 .vb-icon-volume-3:before {  }
 
+.vb_gallery {
+	
+	
+	
+    
+    
+    
+}
+
+.vb_video_cont.vb_gal {
+    
+    
+    &:empty{
+        
+        
+    }
+}
+.pagination {
+	
+	
+	
+	
+    
+    &>li {
+        
+        
+        &>a,
+        &>span {
+            
+            
+            
+            color: $primary-color;
+            
+            
+            
+            
+            
+            text-shadow: 0px 0px 10px $primary-light;
+                
+            &:hover,
+            &:focus {
+                color: $primary-color;
+                background-color: $primary-light;
+            }
+        }
+        
+        &+li {
+            
+            &>a,
+            &>span {
+                
+                
+            }
+            
+        }
+        
+        &.active {
+            
+            &>a,
+            &>span {
+                color: $primary-color;
+                background-color: $primary-light;
+            }
+            
+        }
+        
+    }
+}
+.vb_video_sizer {
+	
+	
+	
+	
+	 
+    
+    iframe {
+        
+        
+        
+        
+        
+        
+        
+        
+    }
+}
+
+.vb_video_frame {
+	
+	
+	
+	
+	
+	color: $primary-color;
+}
+.vb_video_cont {
+	
+	
+    
+    img {
+        
+        
+        
+        
+    }
+    
+    &, a {
+        
+        
+        
+        
+        color: $primary-color;
+        
+        
+        
+        &:hover,
+        &:focus {
+            color: $primary-light;
+            
+            .vb_thub_wrap .vb-icon-play {
+                color: $primary-light;
+                
+            }
+        }
+    }
+}
+
+.vb_video_title {
+	
+	
+    
+    &:empty {
+        
+    }
+}
+
+.vb_thub_wrap {
+	
+	
+    
+    .vb-icon-play {
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }
+}
+
+.vb_play_button .vb_thub_wrap .vb-icon-play {
+	
+}
 #vbiClose {
     
     
@@ -600,170 +764,6 @@ body.vb-html5-player {
     .animating {
         
     }
-}
-.vb_gallery {
-	
-	
-	
-    
-    
-    
-}
-
-.vb_video_cont.vb_gal {
-    
-    
-    &:empty{
-        
-        
-    }
-}
-.pagination {
-	
-	
-	
-	
-    
-    &>li {
-        
-        
-        &>a,
-        &>span {
-            
-            
-            
-            color: $primary-color;
-            
-            
-            
-            
-            
-            text-shadow: 0px 0px 10px $primary-light;
-                
-            &:hover,
-            &:focus {
-                color: $primary-color;
-                background-color: $primary-light;
-            }
-        }
-        
-        &+li {
-            
-            &>a,
-            &>span {
-                
-                
-            }
-            
-        }
-        
-        &.active {
-            
-            &>a,
-            &>span {
-                color: $primary-color;
-                background-color: $primary-light;
-            }
-            
-        }
-        
-    }
-}
-.vb_video_sizer {
-	
-	
-	
-	
-	 
-    
-    iframe {
-        
-        
-        
-        
-        
-        
-        
-        
-    }
-}
-
-.vb_video_frame {
-	
-	
-	
-	
-	
-	color: $primary-color;
-}
-.vb_video_cont {
-	
-	
-    
-    img {
-        
-        
-        
-        
-    }
-    
-    &, a {
-        
-        
-        
-        
-        color: $primary-color;
-        
-        
-        
-        &:hover,
-        &:focus {
-            color: $primary-light;
-            
-            .vb_thub_wrap .vb-icon-play {
-                color: $primary-light;
-                
-            }
-        }
-    }
-}
-
-.vb_video_title {
-	
-	
-    
-    &:empty {
-        
-    }
-}
-
-.vb_thub_wrap {
-	
-	
-    
-    .vb-icon-play {
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    }
-}
-
-.vb_play_button .vb_thub_wrap .vb-icon-play {
-	
 }
 .vjs-fullscreen-control {
      
