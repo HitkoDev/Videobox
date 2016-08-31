@@ -76,10 +76,18 @@ export function box($: JQueryStatic) {
     $.fn.videobox = function (
         options: vbOptions = {},
         linkMapper: ((el: HTMLElement) => vbVideo) = el => {
+            let options = JSON.parse(el.getAttribute("data-videobox")) || {}
+            if (options.root) {
+                let root = $(options.root)
+                if (root.length > 0)
+                    options.root = root[0]
+                else
+                    options.pop('root')
+            }
             return {
                 url: el.getAttribute("href") || "",
                 title: el.getAttribute("title") || "",
-                options: JSON.parse(el.getAttribute("data-videobox")) || {},
+                options: options,
                 origin: { target: el }
             }
         }
