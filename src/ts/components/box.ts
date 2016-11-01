@@ -1,245 +1,334 @@
-/**
- * Function to load the pop-up effect
- */
-export function box($: JQueryStatic) {
+import { create, applyStyles, vbOptions, vbVideo, hide, show, iterableToArray } from './helpers'
+import { VbInlineObj as VbInline } from './inline'
 
-    let
-        closeText: HTMLSpanElement,
-        center: HTMLDivElement,
-        caption: HTMLElement,
-        wrap: HTMLDivElement,
-        responsive: HTMLDivElement,
-        overlay: HTMLDivElement,
-        bottomContainer: HTMLDivElement,
-        video: HTMLIFrameElement,
-        bottom: HTMLDivElement,
-        button: HTMLLinkElement,
-        win = $(window),
+export class Videobox {
 
-        activeVideo: vbVideo,
-        open: boolean = false,
-        animations: Array<webAnimation> = [],
+    private closeText: HTMLSpanElement
+    private center: HTMLDivElement
+    private caption: HTMLElement
+    private wrap: HTMLDivElement
+    private responsive: HTMLDivElement
+    private overlay: HTMLDivElement
+    private bottomContainer: HTMLDivElement
+    private video: HTMLIFrameElement
+    private bottom: HTMLDivElement
+    private button: HTMLLinkElement
 
-        defaults: vbOptions = {
-            width: 720,
-            height: 405,
-            closeText: 'Close',
-            padding: 30,
-            initialWidth: '15%',
-            root: $("body")[0],
-            animation: {
-                duration: 500,
-                iterations: 1,
-                delay: 0,
-                easing: 'ease-in-out'
-            }
+    private activeVideo: vbVideo
+    private isOpen: boolean = false
+    private animations: Array<Animation> = []
+
+    private defaults: vbOptions = {
+        width: 720,
+        height: 405,
+        closeText: 'Close',
+        padding: 30,
+        initialWidth: '15%',
+        root: document.body,
+        animation: {
+            duration: 500,
+            iterations: 1,
+            delay: 0,
+            easing: 'ease-in-out'
         }
+    }
 
-    $.videobox = video => {
-        $.vbiClose()
-        $.vbClose()
+    /** @internal */
+    constructor(links?: Array<HTMLElement> | string, options: vbOptions = {}, linkMapper?: ((el: HTMLElement) => vbVideo)) {
+        this.overlay = <HTMLDivElement>create('div', 'vbOverlay', () => this.close())
+        this.defaults.root.appendChild(this.overlay)
 
-        video.options = $.extend(true, {}, defaults, video.options)
-        setup(video)
+        this.wrap = <HTMLDivElement>create('div', 'vbWrap')
+        this.defaults.root.appendChild(this.wrap)
+
+        this.center = <HTMLDivElement>create('div', 'vbCenter')
+        this.wrap.appendChild(this.center)
+
+        this.responsive = <HTMLDivElement>create('div', 'vbResponsive')
+        this.center.appendChild(this.responsive)
+
+        this.bottomContainer = <HTMLDivElement>create('div', 'vbBottomContainer')
+        this.center.appendChild(this.bottomContainer)
+
+        this.video = <HTMLIFrameElement>create('iframe', 'vbVideo')
+        this.video.allowFullscreen = true
+        this.video.frameBorder = '0px'
+        hide(this.video)
+        this.responsive.appendChild(this.video)
+
+        this.bottom = <HTMLDivElement>create('div', 'vbBottom')
+        this.bottomContainer.appendChild(this.bottom)
+
+        this.button = <HTMLLinkElement>create('a', 'vbCloseLink', () => this.close())
+        this.button.innerHTML = '<span id="vbCloseText">' + this.defaults.closeText + '</span><i class="vb-icon-close"></i>'
+        this.bottom.appendChild(this.button)
+
+        this.caption = create('strong', 'vbCaption')
+        this.bottom.appendChild(this.caption)
+
+        this.closeText = <HTMLSpanElement>this.button.querySelector('#vbCloseText')
+
+        window.addEventListener('resize', () => {
+            if (this.isOpen && this.activeVideo)
+                this.setPlayerSizePosition()
+        })
+
+        if (links)
+            this.bind(links, options, linkMapper || this.linkMapper)
+    }
+
+    /**
+     * Map pop-up player to links 
+     * 
+     * @param links array of elements or query selector to bind Videobox to
+     * @param options player configuration
+     * @param linkMapper function to get a Videobox video object from the clicked element
+     */
+    bind(
+        links: Array<HTMLElement> | string,
+        options: vbOptions = {},
+        linkMapper: ((el: HTMLElement) => vbVideo) = this.linkMapper
+    ): void {
+        if (typeof links == 'string')
+            links = iterableToArray<HTMLElement>(document.querySelectorAll(links))
+
+        links.forEach(link => link.addEventListener('click', evt => {
+            evt.preventDefault()
+            evt.stopPropagation()
+            let video = linkMapper(link)
+            video.options = Object.assign({}, options, video.options)
+            this.open(video)
+            return false
+        }))
+    }
+
+    /**
+     * Open Videobox pop-up player
+     * 
+     * @param video video to show
+     */
+    open(video: vbVideo): void {
+        VbInline.close()
+        this.close()
+
+        video.options = Object.assign({}, this.defaults, video.options)
+        this.setup(video)
 
         let link = video.origin.target
-        let target = $($(link).find($(link).attr("data-target"))[0] || link)
+        let target = link.querySelector(link.getAttribute("data-target")) || link
 
-        let bw = wrap.getBoundingClientRect()
-        let bt = target[0].getBoundingClientRect()
+        let bw = this.wrap.getBoundingClientRect()
+        let bt = target.getBoundingClientRect()
 
-        target.toggleClass('vb_line_fix', true)
-        video.origin = $.extend(true, {}, {
-            x: bt.left - bw.left + target.innerWidth() / 2,
-            y: bt.top - bw.top + target.innerHeight() / 2,
-            width: target.innerWidth(),
-            height: target.innerHeight()
+        target.classList.toggle('vb_line_fix', true)
+        video.origin = Object.assign({}, {
+            x: bt.left - bw.left + target.clientWidth / 2,
+            y: bt.top - bw.top + target.clientHeight / 2,
+            width: target.clientWidth,
+            height: target.clientHeight
         }, video.origin)
-        target.toggleClass('vb_line_fix', false)
+        target.classList.toggle('vb_line_fix', false)
 
-        changeVideo(video)
+        this.changeVideo(video)
+    }
 
+    /**
+     * Close the open pop-up
+     */
+    close() {
+        this.stop()
+        new Array(this.wrap, this.bottomContainer, this.overlay).forEach(el => el.classList.toggle('visible', false))
+        this.wrap.style.top = '0px'
+        this.wrap.style.left = '0px'
+        this.activeVideo = null
         return false
     }
 
-    $.vbClose = () => {
-        stop()
-        $([wrap, bottomContainer, overlay]).toggleClass('visible', false)
-        $(wrap).css({
-            top: 0,
-            left: 0
-        })
-        activeVideo = null
-        return false
-    }
+    /**
+     * Calculate and set player position & size
+     * 
+     * @returns width to height ratio of the player (in percent)
+     */
+    setPlayerSizePosition(): number {
+        if (!this.activeVideo) return
 
-    $.fn.videobox = function (
-        options: vbOptions = {},
-        linkMapper: ((el: HTMLElement) => vbVideo) = el => {
-            let options = JSON.parse(el.getAttribute("data-videobox")) || {}
-            if (options.root) {
-                let root = $(options.root)
-                if (root.length > 0)
-                    options.root = root[0]
-                else
-                    options.pop('root')
-            }
-            return {
-                url: el.getAttribute("href") || "",
-                title: el.getAttribute("title") || "",
-                options: options,
-                origin: { target: el }
-            }
+        this.setPlayerPosition(this.activeVideo.options.root)
+
+        let width: number = this.activeVideo.options.width
+        let height: number = this.activeVideo.options.height
+
+        if (width + 2 * this.activeVideo.options.padding > this.wrap.clientWidth) {
+            let nw = this.wrap.clientWidth - 2 * this.activeVideo.options.padding
+            height = (height * nw) / width
+            width = nw
         }
-    ): boolean {
+        if (height + 2 * this.activeVideo.options.padding > this.wrap.clientHeight)
+            height = this.wrap.clientHeight - 2 * this.activeVideo.options.padding
 
-        let links: JQuery = <JQuery>this
-
-        links.off("click").on('click', function (evt) {
-
-            let video = linkMapper(this)
-
-            video.options = $.extend(true, {}, options, video.options)
-
-            return $.videobox(video)
-        })
-        return false
+        let ratio = (height * 100) / width
+        this.responsive.style.paddingBottom = ratio + '%'
+        return ratio
     }
 
-    function setup(newVideo: vbVideo): void {
-        $(closeText).html(newVideo.options.closeText)
-        $(newVideo.options.root).append([overlay, wrap])
-        setPlayerPosition(newVideo.options.root)
+    private linkMapper(el: HTMLElement): vbVideo {
+        let options = JSON.parse(el.getAttribute("data-videobox")) || {}
+        if (options.root) {
+            let root = options.root
+            if (root.length > 0)
+                options.root = root[0]
+            else
+                options.pop('root')
+        }
+        return {
+            url: el.getAttribute("href") || "",
+            title: el.getAttribute("title") || "",
+            options: options,
+            origin: { target: el }
+        }
     }
 
-    function changeVideo(newVideo: vbVideo): boolean {
+    private setup(newVideo: vbVideo): void {
+        this.closeText.innerText = newVideo.options.closeText
+        newVideo.options.root.appendChild(this.overlay)
+        newVideo.options.root.appendChild(this.wrap)
+        this.setPlayerPosition(newVideo.options.root)
+    }
 
-        activeVideo = newVideo
+    private setPlayerPosition(root: HTMLElement = this.activeVideo.options.root): void {
+        let parent = <HTMLElement>this.wrap.offsetParent
+        let pos = {
+            top: this.wrap.offsetTop - parent.offsetTop,
+            left: this.wrap.offsetLeft - parent.offsetLeft
+        }
+        let rect = {
+            top: this.wrap.offsetTop,
+            left: this.wrap.offsetLeft
+        }
+        let bdy = {
+            top: document.documentElement.offsetTop,
+            left: document.documentElement.offsetLeft
+        }
+        if (root != document.body) {
+            pos.top += root.scrollTop
+            pos.left += root.scrollLeft
+        }
+        this.wrap.style.top = (pos.top + bdy.top + window.scrollY - rect.top) + 'px'
+        this.wrap.style.left = (pos.left + bdy.left + window.scrollX - rect.left) + 'px'
+    }
 
-        $(caption).html(activeVideo.title)
+    private changeVideo(newVideo: vbVideo): void {
+        this.activeVideo = newVideo
+        this.caption.innerHTML = this.activeVideo.title
 
-        let targetRatio = setPlayerSizePosition()
+        let targetRatio = this.setPlayerSizePosition()
 
-        open = true
+        this.isOpen = true
 
         let centerOrigin = {
-            top: (activeVideo.origin ? -($(wrap).innerHeight() / 2 - activeVideo.origin.y) : 0) + 'px',
-            left: (activeVideo.origin ? -($(wrap).innerWidth() / 2 - activeVideo.origin.x) : 0) + 'px',
-            'maxWidth': activeVideo.origin ? activeVideo.origin.width + 'px' : activeVideo.options.initialWidth
+            top: (this.activeVideo.origin ? -(this.wrap.clientHeight / 2 - this.activeVideo.origin.y) : 0) + 'px',
+            left: (this.activeVideo.origin ? -(this.wrap.clientWidth / 2 - this.activeVideo.origin.x) : 0) + 'px',
+            'maxWidth': this.activeVideo.origin ? this.activeVideo.origin.width + 'px' : this.activeVideo.options.initialWidth
         }
 
         let centerTarget = {
             top: '0px',
             left: '0px',
-            'maxWidth': activeVideo.options.width + 'px'
+            'maxWidth': this.activeVideo.options.width + 'px'
         }
 
-        $(center).css(centerOrigin)
-        $([wrap, overlay]).toggleClass('visible', true)
-        $(wrap).toggleClass('animating', true)
+        applyStyles(this.center, centerOrigin)
+        new Array(this.wrap, this.overlay).forEach(el => el.classList.toggle('visible', true))
+        this.wrap.classList.toggle('animating', true)
 
-        if (activeVideo.origin) {
-            let originRatio = ((activeVideo.origin.height * 100) / activeVideo.origin.width) || targetRatio
+        if (this.activeVideo.origin) {
+            let originRatio = ((this.activeVideo.origin.height * 100) / this.activeVideo.origin.width) || targetRatio
             if (originRatio != targetRatio)
-                animations.push(responsive.animate([
+                this.animations.push(this.responsive.animate([
                     { 'paddingBottom': originRatio + '%' },
                     { 'paddingBottom': targetRatio + '%' }
-                ], activeVideo.options.animation))
+                ], this.activeVideo.options.animation))
 
         }
 
-        let centerAnimation = center.animate([
+        let centerAnimation = this.center.animate([
             centerOrigin,
             centerTarget
-        ], activeVideo.options.animation)
-        $(center).css(centerTarget)
-        centerAnimation.addEventListener('finish', () => {
-            let bottomAnimation = bottomContainer.animate([
-                { 'maxHeight': '0px' },
-                { 'maxHeight': '200px' }
-            ], activeVideo.options.animation)
-            $(bottomContainer).toggleClass('visible', true)
-            bottomAnimation.addEventListener('finish', showVideo)
-            animations.push(bottomAnimation)
-        })
-        animations.push(centerAnimation)
-        return false
+        ], this.activeVideo.options.animation)
+        centerAnimation.onfinish = () => this.animateBotton()
+        this.animations.push(centerAnimation)
+        applyStyles(this.center, centerTarget)
+        centerAnimation.play()
     }
 
-    function setPlayerSizePosition(): number {
-        if (!activeVideo) return
-
-        setPlayerPosition(activeVideo.options.root)
-
-        let width: number = activeVideo.options.width
-        let height: number = activeVideo.options.height
-
-        if (width + 2 * activeVideo.options.padding > $(wrap).innerWidth()) {
-            let nw = $(wrap).innerWidth() - 2 * activeVideo.options.padding
-            height = (height * nw) / width
-            width = nw
-        }
-        if (height + 2 * activeVideo.options.padding > $(wrap).innerHeight())
-            height = $(wrap).innerHeight() - 2 * activeVideo.options.padding
-
-        let ratio = (height * 100) / width
-        $(responsive).css('paddingBottom', ratio + '%')
-        return ratio
+    private animateBotton(): void {
+        let bottomAnimation = this.bottomContainer.animate([
+            { 'maxHeight': '0px' },
+            { 'maxHeight': '200px' }
+        ], this.activeVideo.options.animation)
+        this.bottomContainer.classList.toggle('visible', true)
+        bottomAnimation.onfinish = () => this.showVideo()
+        this.animations.push(bottomAnimation)
+        bottomAnimation.play()
     }
 
-    function setPlayerPosition(root): void {
-        let pos = $(wrap).position()
-        let rect = $(wrap).offset()
-        let bdy = $('html').offset()
-        if ($(root)[0] != $('body')[0]) {
-            pos.top += $(root).scrollTop()
-            pos.left += $(root).scrollLeft()
-        }
-        $(wrap).css({
-            top: pos.top + bdy.top + window.scrollY - rect.top,
-            left: pos.left + bdy.left + window.scrollX - rect.left
-        })
+    private showVideo(): void {
+        if (!this.isOpen || this.video.getAttribute('src')) return
+        show(this.video)
+        this.video.setAttribute('src', this.activeVideo.url)
+        this.wrap.classList.toggle('animating', false)
     }
 
-    function showVideo(): void {
-        if (!open || $(video).attr('src') != '') return
-        $(video).show()
-        video.src = activeVideo.url
-        $(wrap).toggleClass('animating', false)
+    private stop(): void {
+        this.animations.forEach(anim => anim.cancel())
+        this.animations = []
+        this.isOpen = false
+        this.video.setAttribute('src', '')
+        hide(this.video)
+        this.wrap.classList.toggle('animating', false)
+    }
+}
+
+export const VideoboxObj = new Videobox()
+window['Videobox'] = VideoboxObj
+
+export declare interface JQueryStatic {
+    /**
+     * Open Videobox pop-up player
+     * 
+     * @param video video to show
+     */
+    videobox: (video: vbVideo) => void
+
+    /**
+     * Close the open pop-up
+     */
+    vbClose: () => void
+}
+
+export declare interface JQuery {
+    /**
+     * Map pop-up player to elements matched by the query 
+     * 
+     * @param options player configuration
+     * @param linkMapper function to get a Videobox video object from the clicked element
+     */
+    videobox: (options?: vbOptions, linkMapper?: ((el: HTMLElement) => vbVideo)) => void
+}
+
+if (typeof (jQuery) !== 'undefined') {
+    jQuery['videobox'] = function (video: vbVideo): void {
+        VideoboxObj.open(video)
     }
 
-    function stop(): void {
-        for (let i = 0; i < animations.length; i++)
-            animations[i].cancel()
-        animations = []
-        open = false
-        video.src = ""
-        $(video).hide()
-        $(wrap).toggleClass('animating', false)
+    jQuery['vbClose'] = function (): void {
+        VideoboxObj.close()
     }
 
-    $(window).on('load', () => {
-        $(defaults.root).append(
-            $([
-                overlay = <HTMLDivElement>$('<div id="vbOverlay" />').click($.vbClose)[0],
-                wrap = <HTMLDivElement>$('<div id="vbWrap" />')[0]
-            ])
-        )
-        center = <HTMLDivElement>$('<div id="vbCenter" />').appendTo(wrap).append([
-            responsive = <HTMLDivElement>$('<div id="vbResponsive" />')[0],
-            bottomContainer = <HTMLDivElement>$('<div id="vbBottomContainer" />')[0],
-        ])[0]
-        video = <HTMLIFrameElement>$('<iframe id="vbVideo" frameborder="0" allowfullscreen="true" oallowfullscreen msallowfullscreen webkitallowfullscreen mozallowfullscreen />').css('display', 'none').appendTo(responsive)[0]
-        bottom = <HTMLDivElement>$('<div id="vbBottom" />').appendTo(bottomContainer).append([
-            button = <HTMLLinkElement>$('<a id="vbCloseLink" href="#" ><span id="vbCloseText">' + defaults.closeText + '</span><i class="vb-icon-close"></i></a>').click($.vbClose)[0],
-            caption = $('<strong id="vbCaption" />')[0]
-        ])[0]
-        closeText = $(bottom).find('#vbCloseText')[0]
-
-        win.on("resize", () => {
-            if (!open || !activeVideo) return
-            setPlayerSizePosition()
-        })
-    })
-
+    jQuery.fn.videobox = function (options: vbOptions = {}, linkMapper?: ((el: HTMLElement) => vbVideo)): void {
+        let elements = iterableToArray<HTMLElement>(this)
+        if (linkMapper)
+            VideoboxObj.bind(elements, options, linkMapper)
+        else
+            VideoboxObj.bind(elements, options)
+    }
 }

@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
-        "target": "es5",
-        "module": "system",
+        "target": "es6",
+        "module": "es2015",
         "moduleResolution": "node",
         "sourceMap": true,
         "emitDecoratorMetadata": true,
@@ -9,14 +9,13 @@
         "removeComments": false,
         "noImplicitAny": false,
         "declaration": true,
-        "noLib": false
+        "noLib": false,
+        "outDir": "build",
+        "rootDir": "src/ts",
+        "stripInternal": true
     },
     "exclude": [
         "node_modules",
-        "jspm_packages",
-        "typings/main",
-        "typings/main.d.ts",
-        "build",
-        "videobox.d.ts"
+        "build"
     ]
 }

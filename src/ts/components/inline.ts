@@ -1,197 +1,268 @@
-/**
- * Function to load the inlline effect
- */
-export function inline($: JQueryStatic) {
+import { create, applyStyles, vbOptions, vbVideo, hide, show, iterableToArray, insertAfter } from './helpers'
+import { VideoboxObj as Videobox } from './box'
 
-    let
-        wrap: HTMLDivElement,
-        responsive: HTMLDivElement,
-        caption: HTMLElement,
-        button: HTMLDivElement,
-        video: HTMLIFrameElement,
-        win = $(window),
+export class VbInline {
 
-        activeVideo: vbVideo,
-        open: boolean = false,
-        hidding: boolean = false,
-        animations: Array<webAnimation> = [],
-        hidden: Array<HTMLElement> = [],
+    private wrap: HTMLDivElement
+    private responsive: HTMLDivElement
+    private caption: HTMLElement
+    private button: HTMLDivElement
+    private video: HTMLIFrameElement
 
-        defaults: vbOptions = {
-            width: 720,
-            height: 405,
-            closeText: 'Close',
-            padding: 30,
-            animation: {
-                duration: 500,
-                iterations: 1,
-                delay: 0,
-                easing: 'ease-in-out'
-            }
+    private activeVideo: vbVideo
+    private isOpen: boolean = false
+    private hidding: boolean = false
+    private animations: Array<Animation> = []
+    private hidden: Array<HTMLElement> = []
+
+    private defaults: vbOptions = {
+        width: 720,
+        height: 405,
+        closeText: 'Close',
+        padding: 30,
+        animation: {
+            duration: 500,
+            iterations: 1,
+            delay: 0,
+            easing: 'ease-in-out'
         }
+    }
 
-    $.vbinline = video => {
-        $.vbClose()
+    /** @internal */
+    constructor(links?: Array<HTMLElement> | string, options: vbOptions = {}, linkMapper?: ((el: HTMLElement) => vbVideo)) {
+        this.wrap = <HTMLDivElement>create('div', 'vbiWrap')
 
-        video.options = $.extend(true, {}, defaults, video.options)
+        this.responsive = <HTMLDivElement>create('div', 'vbiResponsive')
+        this.wrap.appendChild(this.responsive)
+
+        this.caption = document.createElement('span')
+        this.caption.className = 'vb_video_title'
+        this.wrap.appendChild(this.caption)
+
+        this.button = <HTMLDivElement>create('div', 'vbiClose', () => this.close())
+        this.button.innerHTML = '<i class="vb-icon-circle-close-invert"></i>'
+        this.wrap.appendChild(this.button)
+
+        this.video = <HTMLIFrameElement>create('iframe', 'vbiVideo')
+        this.video.allowFullscreen = true
+        this.video.frameBorder = '0px'
+        hide(this.video)
+        this.responsive.appendChild(this.video)
+
+        if (links)
+            this.bind(links, options, linkMapper || this.linkMapper)
+
+    }
+
+    /**
+     * Map inline player to elements matched by the query 
+     * 
+     * @param links array of elements or query selector to bind inline player to
+     * @param options player configuration
+     * @param linkMapper function to get a Videobox video object from the clicked element
+     */
+    bind(
+        links: Array<HTMLElement> | string,
+        options: vbOptions = {},
+        linkMapper: ((el: HTMLElement) => vbVideo) = this.linkMapper
+    ): void {
+        if (typeof links == 'string')
+            links = iterableToArray<HTMLElement>(document.querySelectorAll(links))
+
+        links.forEach(link => link.addEventListener('click', evt => {
+            evt.preventDefault()
+            evt.stopPropagation()
+            let video = linkMapper(link)
+            video.options = Object.assign({}, options, video.options)
+            this.open(video)
+            return false
+        }))
+    }
+
+    /**
+     * Open an inline player
+     * 
+     * @param video video to show
+     */
+    open(video: vbVideo): void {
+        Videobox.close()
+
+        video.options = Object.assign({}, this.defaults, video.options)
 
         let link = video.origin.target
-        let target = $($(link).find($(link).attr("data-target"))[0] || link)
+        let target = link.querySelector(link.getAttribute("data-target")) || link
 
-        target.toggleClass('vb_line_fix', true)
-        video.origin = $.extend(true, {}, {
-            width: target.innerWidth(),
-            height: target.innerHeight()
+        target.classList.toggle('vb_line_fix', true)
+        video.origin = Object.assign({}, {
+            x: target.clientWidth / 2,
+            y: target.clientHeight / 2,
+            width: target.clientWidth,
+            height: target.clientHeight
         }, video.origin)
-        target.toggleClass('vb_line_fix', false)
+        target.classList.toggle('vb_line_fix', false)
 
-        $.vbiClose(() => changeVideo(video))
-        return false
+        this.close(() => this.changeVideo(video))
     }
 
-    $.vbiClose = callback => {
-        stop()
+    /**
+     * Close the open inline player
+     * 
+     * @param callback function to run when close animation is over
+     */
+    close(callback?: () => any) {
+        this.stop()
 
-        if (!hidding)
-            if ($(wrap).parent().length > 0 && activeVideo) {
-                hidding = true
-                let maxW = (activeVideo.origin ? activeVideo.origin.width : activeVideo.options.initialWidth) + 'px'
-                let v1 = wrap.animate([
-                    {
-                        'maxWidth': (activeVideo.options.width + 2 * activeVideo.options.padding) + 'px'
-                    }, {
-                        'maxWidth': maxW
-                    }
-                ], activeVideo.options.animation)
-                $(wrap).css('maxWidth', maxW)
-                v1.addEventListener('finish', () => {
-                    $(wrap).detach()
-                    for (let i = 0; i < hidden.length; i++)
-                        $(hidden[i]).show()
+        if (!this.hidding)
+            if (this.wrap.parentElement && this.activeVideo) {
+                this.hidding = true
+                let maxW = (this.activeVideo.origin ? this.activeVideo.origin.width : this.activeVideo.options.initialWidth) + 'px'
+                let v1 = this.wrap.animate([
+                    { 'maxWidth': (this.activeVideo.options.width + 2 * this.activeVideo.options.padding) + 'px' },
+                    { 'maxWidth': maxW }
+                ], this.activeVideo.options.animation)
 
-                    hidden = []
-                    hidding = false
-                    activeVideo = null
-                    if (typeof callback == "function")
-                        callback()
-                })
+                v1.onfinish = () => this.hide(callback)
+                this.wrap.style.maxWidth = maxW
+                v1.play()
 
-                if (activeVideo.origin) {
-                    let padding = ((activeVideo.origin.height * 100) / activeVideo.origin.width) + '%'
-                    let v2 = responsive.animate([
-                        {
-                            'paddingBottom': ((activeVideo.options.height * 100) / activeVideo.options.width) + '%'
-                        }, {
-                            'paddingBottom': padding
-                        }
-                    ], activeVideo.options.animation)
-                    $(responsive).css('paddingBottom', padding)
+                if (this.activeVideo.origin) {
+                    let padding = ((this.activeVideo.origin.height * 100) / this.activeVideo.origin.width) + '%'
+                    let v2 = this.responsive.animate([
+                        { 'paddingBottom': ((this.activeVideo.options.height * 100) / this.activeVideo.options.width) + '%' },
+                        { 'paddingBottom': padding }
+                    ], this.activeVideo.options.animation)
+                    this.responsive.style.paddingBottom = padding
+                    v2.play()
                 }
-            } else {
-                if ($(wrap).parent().length > 0) {
-                    $(wrap).detach()
-                    for (let i = 0; i < hidden.length; i++)
-                        $(hidden[i]).show()
-
-                    hidden = []
-                }
-                activeVideo = null
-                if (typeof callback == "function")
-                    callback()
-            }
+            } else
+                this.hide(callback)
 
         return false
     }
 
-    $.fn.vbinline = function (
-        options: vbOptions = {},
-        linkMapper: ((el: HTMLElement) => vbVideo) = el => {
-            return {
-                url: el.getAttribute("href") || "",
-                title: el.getAttribute("title") || "",
-                options: JSON.parse(el.getAttribute("data-videobox")) || {},
-                origin: { target: el }
-            }
+    private linkMapper(el: HTMLElement): vbVideo {
+        return {
+            url: el.getAttribute("href") || "",
+            title: el.getAttribute("title") || "",
+            options: JSON.parse(el.getAttribute("data-videobox")) || {},
+            origin: { target: el }
         }
-    ): boolean {
-
-        let links: JQuery = <JQuery>this
-
-        links.off("click").on('click', function (evt) {
-
-            let video = linkMapper(this)
-
-            video.options = $.extend(true, {}, options, video.options)
-
-            return $.vbinline(video)
-
-        })
-        return false
     }
 
-    function changeVideo(newVideo: vbVideo): void {
+    private setup(): void {
+        insertAfter(this.wrap, this.activeVideo.origin.target)
+        hide(this.activeVideo.origin.target)
+        this.hidden.push(this.activeVideo.origin.target)
+    }
 
-        activeVideo = newVideo
+    private changeVideo(newVideo: vbVideo): void {
 
-        setup()
+        this.activeVideo = newVideo
 
-        $(wrap).attr('style', activeVideo.options.style)
-        $(wrap).attr('class', activeVideo.options.class)
-        $(caption).html(activeVideo.title)
-        open = true
+        this.setup()
+
+        this.wrap.setAttribute('style', this.activeVideo.options.style)
+        this.wrap.setAttribute('class', this.activeVideo.options.class)
+        this.caption.innerHTML = this.activeVideo.title
+        this.isOpen = true
 
         let wrapOrigin = {
-            'maxWidth': (activeVideo.origin ? activeVideo.origin.width : activeVideo.options.initialWidth) + 'px'
+            'maxWidth': (this.activeVideo.origin ? this.activeVideo.origin.width : this.activeVideo.options.initialWidth) + 'px'
         }
         let wrapDest = {
-            'maxWidth': (activeVideo.options.width + 2 * activeVideo.options.padding) + 'px'
+            'maxWidth': (this.activeVideo.options.width + 2 * this.activeVideo.options.padding) + 'px'
         }
-        let animation = wrap.animate([wrapOrigin, wrapDest], activeVideo.options.animation)
-        $(wrap).css(wrapDest)
-        animation.addEventListener('finish', showVideo)
-        animations.push(animation)
+        let animation = this.wrap.animate([wrapOrigin, wrapDest], this.activeVideo.options.animation)
+        applyStyles(this.wrap, wrapDest)
+        animation.onfinish = () => this.showVideo()
+        this.animations.push(animation)
+        animation.play()
 
         let responsiveDest = {
-            'paddingBottom': ((activeVideo.options.height * 100) / activeVideo.options.width) + '%'
+            'paddingBottom': ((this.activeVideo.options.height * 100) / this.activeVideo.options.width) + '%'
         }
-        if (activeVideo.origin) {
+        if (this.activeVideo.origin) {
             let responsiveOrigin = {
-                'paddingBottom': ((activeVideo.origin.height * 100) / activeVideo.origin.width) + '%'
+                'paddingBottom': ((this.activeVideo.origin.height * 100) / this.activeVideo.origin.width) + '%'
             }
-            let animation = responsive.animate([responsiveOrigin, responsiveDest], activeVideo.options.animation)
-            animations.push(animation)
+            let animation = this.responsive.animate([responsiveOrigin, responsiveDest], this.activeVideo.options.animation)
+            this.animations.push(animation)
+            animation.play()
         }
-        $(responsive).css(responsiveDest)
+        applyStyles(this.responsive, responsiveDest)
     }
 
-    function setup(): void {
-        $(activeVideo.origin.target).after(wrap)
-        $(activeVideo.origin.target).hide()
-        hidden.push(activeVideo.origin.target)
+    private showVideo() {
+        if (!this.isOpen) return
+        show(this.video)
+        this.video.setAttribute('src', this.activeVideo.url)
     }
 
-    function showVideo() {
-        if (!open) return
-        $(video).show()
-        video.src = activeVideo.url
+    private hide(callback?: () => any) {
+        if (this.wrap.parentElement)
+            this.wrap.remove()
+
+        this.hidden.forEach(el => show(el))
+        this.hidden = []
+
+        this.hidding = false
+        this.activeVideo = null
+        if (typeof callback == "function")
+            callback()
     }
 
-    function stop() {
-        for (let i = 0; i < animations.length; i++)
-            animations[i].cancel()
-        animations = []
-        open = false
-        video.src = ""
-        $(video).hide()
+    private stop() {
+        this.animations.forEach(anim => anim.cancel())
+        this.animations = []
+        this.isOpen = false
+        this.video.setAttribute('src', '')
+        hide(this.video)
+    }
+}
+
+export const VbInlineObj = new VbInline()
+window['VbInline'] = VbInlineObj
+
+export declare interface JQueryStatic {
+    /**
+     * Open an inline player
+     * 
+     * @param video video to show
+     */
+    vbInline: (video: vbVideo) => void
+
+    /**
+     * Close the open inline player
+     * 
+     * @param callback function to run when close animation is over
+     */
+    vbiClose: (callback?: () => any) => void
+}
+
+export declare interface JQuery {
+    /**
+     * Map inline player to elements matched by the query 
+     * 
+     * @param options player configuration
+     * @param linkMapper function to get a Videobox video object from the clicked element
+     */
+    vbInline: (options?: vbOptions, linkMapper?: ((el: HTMLElement) => vbVideo)) => void
+}
+
+if (typeof (jQuery) !== 'undefined') {
+    jQuery['vbInline'] = function (video: vbVideo): void {
+        VbInlineObj.open(video)
     }
 
-    $(window).on('load', () => {
-        wrap = <HTMLDivElement>$('<div id="vbiWrap" />').append([
-            responsive = <HTMLDivElement>$('<div id="vbiResponsive" />')[0],
-            caption = $('<span class="vb_video_title"></span>')[0],
-            button = <HTMLDivElement>$('<div id="vbiClose"><i class="vb-icon-circle-close-invert"></i></div>').click($.vbiClose)[0],
-        ])[0]
-        video = <HTMLIFrameElement>$('<iframe id="vbiVideo" frameborder="0" allowfullscreen="true" oallowfullscreen msallowfullscreen webkitallowfullscreen mozallowfullscreen />').css('display', 'none').appendTo(responsive)[0]
-    })
+    jQuery['vbiClose'] = function (callback?: () => any): void {
+        VbInlineObj.close(callback)
+    }
 
+    jQuery.fn.vbInline = function (options: vbOptions = {}, linkMapper?: ((el: HTMLElement) => vbVideo)): void {
+        let elements = iterableToArray<HTMLElement>(this)
+        if (linkMapper)
+            VbInlineObj.bind(elements, options, linkMapper)
+        else
+            VbInlineObj.bind(elements, options)
+    }
 }

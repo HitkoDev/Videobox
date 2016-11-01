@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>videobox | videobox</title>
+	<title>VbInline | videobox</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">/*! normalize.css v1.1.3 | MIT License | git.io/normalize */
@@ -907,143 +907,215 @@ img { max-width: 100%; }
 </header>
 <nav class="tsd-navigation secondary">
 	<ul>
-		<li class=" tsd-kind-class">
-			<a href="classes/vbinline.html" class="tsd-kind-icon">Vb<wbr>Inline</a>
+		<li class="current tsd-kind-class">
+			<a href="vbinline.html" class="tsd-kind-icon">Vb<wbr>Inline</a>
+			<ul>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="vbinline.html#bind" class="tsd-kind-icon">bind</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="vbinline.html#close" class="tsd-kind-icon">close</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="vbinline.html#open" class="tsd-kind-icon">open</a>
+				</li>
+			</ul>
 		</li>
 		<li class=" tsd-kind-class">
-			<a href="classes/vbslider.html" class="tsd-kind-icon">Vb<wbr>Slider</a>
+			<a href="vbslider.html" class="tsd-kind-icon">Vb<wbr>Slider</a>
 		</li>
 		<li class=" tsd-kind-class">
-			<a href="classes/videobox.html" class="tsd-kind-icon">Videobox</a>
+			<a href="videobox.html" class="tsd-kind-icon">Videobox</a>
 		</li>
 		<li class=" tsd-kind-interface">
-			<a href="interfaces/jquery.html" class="tsd-kind-icon">JQuery</a>
+			<a href="../interfaces/jquery.html" class="tsd-kind-icon">JQuery</a>
 		</li>
 		<li class=" tsd-kind-interface">
-			<a href="interfaces/jquerystatic.html" class="tsd-kind-icon">JQuery<wbr>Static</a>
+			<a href="../interfaces/jquerystatic.html" class="tsd-kind-icon">JQuery<wbr>Static</a>
 		</li>
 		<li class=" tsd-kind-interface">
-			<a href="interfaces/vboptions.html" class="tsd-kind-icon">vb<wbr>Options</a>
+			<a href="../interfaces/vboptions.html" class="tsd-kind-icon">vb<wbr>Options</a>
 		</li>
 		<li class=" tsd-kind-interface">
-			<a href="interfaces/vborigin.html" class="tsd-kind-icon">vb<wbr>Origin</a>
+			<a href="../interfaces/vborigin.html" class="tsd-kind-icon">vb<wbr>Origin</a>
 		</li>
 		<li class=" tsd-kind-interface">
-			<a href="interfaces/vbslideroptions.html" class="tsd-kind-icon">vb<wbr>Slider<wbr>Options</a>
+			<a href="../interfaces/vbslideroptions.html" class="tsd-kind-icon">vb<wbr>Slider<wbr>Options</a>
 		</li>
 		<li class=" tsd-kind-interface">
-			<a href="interfaces/vbvideo.html" class="tsd-kind-icon">vb<wbr>Video</a>
+			<a href="../interfaces/vbvideo.html" class="tsd-kind-icon">vb<wbr>Video</a>
 		</li>
 		<li class=" tsd-kind-variable">
-			<a href="globals.html#vbinlineobj" class="tsd-kind-icon">Vb<wbr>Inline<wbr>Obj</a>
+			<a href="../globals.html#vbinlineobj" class="tsd-kind-icon">Vb<wbr>Inline<wbr>Obj</a>
 		</li>
 		<li class=" tsd-kind-variable">
-			<a href="globals.html#videoboxobj" class="tsd-kind-icon">Videobox<wbr>Obj</a>
+			<a href="../globals.html#videoboxobj" class="tsd-kind-icon">Videobox<wbr>Obj</a>
 		</li>
 	</ul>
 </nav>
 <div class="container container-main">
 	<div class="content-wrap">
 		<div class="tsd-panel tsd-typography">
-			<p><img src="https://cloud.githubusercontent.com/assets/4700881/10467953/b5fb0616-71fc-11e5-9847-0e2afd05ff1f.png" alt="videobox logo" width="200" align="right"></p>
-			<h1 id="-videobox-a-lightweight-video-player-http-hitko-eu-videobox-"><a href="http://hitko.eu/videobox">Videobox - a lightweight video player</a></h1>
-			<p>I&#39;ve created Videobox with one thing on my mind: <strong>to replace huge, content-obscuring video players with a clean pop-up / collapsible player</strong>. </p>
-			<h2 id="getting-started">Getting started</h2>
-			<ol>
-				<li><a href="https://github.com/HitkoDev/Videobox/releases" target="_blank">Download the latest version of Videobox</a></li>
-				<li>Check out the <code>examples</code> directory for some basic examples</li>
-				<li>Include Videobox on your website:<ul>
-						<li>add <code>&lt;link href=&quot;path/to/videobox/videobox.min.css&quot; rel=&quot;stylesheet&quot; &gt;</code> to the <code>&lt;head&gt;</code> tag</li>
-						<li>include <code>&lt;script src=&quot;path/to/videobox/videobox.min.js&quot; type=&quot;text/javascript&quot; &gt;&lt;/script&gt;</code> before the <code>&lt;/body&gt;</code> tag</li>
-					</ul>
-				</li>
-				<li>Make sure jQuery is loaded before Videobox. Since some browsers don&#39;t support Web animations yet, you&#39;ll probably want to include the polyfill on the page as well.<ul>
-						<li>If you&#39;ve installed Videobox through npm, jQuery and Web animations polyfill are inside the <code>node_modules</code> folder</li>
-						<li>If you&#39;ve installed through bower, jQuery and Web animations polyfill are inside the <code>bower_components</code> folder</li>
-					</ul>
-				</li>
-			</ol>
-			<p><strong>That&#39;s it, you&#39;re now ready to start using Videobox on your page.</strong>  </p>
-			<h2 id="to-insert-a-pop-up-player">To insert a pop-up player</h2>
-			<pre><code>&lt;<span class="hljs-keyword">a</span>
-    href=<span class="hljs-string">"player-url"</span>  
-    <span class="hljs-built_in">rel</span>=<span class="hljs-string">"videobox"</span> 
-    title=<span class="hljs-string">"Video title"</span> 
-    data-videobox=<span class="hljs-string">"JSON-encoded options"</span>
-&gt;
-    Link <span class="hljs-keyword">text</span> / thumbnail
-&lt;/<span class="hljs-keyword">a</span>&gt;
-</code></pre><h2 id="to-insert-an-inline-player">To insert an inline player</h2>
-			<pre><code>&lt;<span class="hljs-keyword">a</span>
-    href=<span class="hljs-string">"player-url"</span>  
-    <span class="hljs-built_in">rel</span>=<span class="hljs-string">"vbinline"</span> 
-    title=<span class="hljs-string">"Video title"</span> 
-    data-videobox=<span class="hljs-string">"JSON-encoded options"</span>
-&gt;
-    Link <span class="hljs-keyword">text</span> / thumbnail
-&lt;/<span class="hljs-keyword">a</span>&gt;
-</code></pre><h2 id="videobox-extensions">Videobox extensions</h2>
-			<p>Videobox is a javascript player, if you&#39;re looking for Videobox extensions, you can find them here:</p>
-			<ul>
-				<li><a href="https://github.com/HitkoDev/Videobox-Joomla">Joomla!</a></li>
-				<li><a href="https://github.com/HitkoDev/Videobox-MODX">MODX</a></li>
-			</ul>
 		</div>
-		<div style="position:relative;"><a name="typedoc-main-index" class="tsd-anchor"></a></div>
+		<section class="tsd-panel tsd-hierarchy">
+			<h3>Hierarchy</h3>
+			<ul class="tsd-hierarchy">
+				<li>
+					<span class="target">VbInline</span>
+				</li>
+			</ul>
+		</section>
 		<section class="tsd-panel-group tsd-index-group">
 			<h2>Index</h2>
 			<section class="tsd-panel tsd-index-panel">
 				<div class="tsd-index-content">
 					<section class="tsd-index-section ">
-						<h3>Classes</h3>
+						<h3>Methods</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-class"><a href="classes/vbinline.html" class="tsd-kind-icon">Vb<wbr>Inline</a></li>
-							<li class="tsd-kind-class"><a href="classes/vbslider.html" class="tsd-kind-icon">Vb<wbr>Slider</a></li>
-							<li class="tsd-kind-class"><a href="classes/videobox.html" class="tsd-kind-icon">Videobox</a></li>
-						</ul>
-					</section>
-					<section class="tsd-index-section ">
-						<h3>Interfaces</h3>
-						<ul class="tsd-index-list">
-							<li class="tsd-kind-interface"><a href="interfaces/jquery.html" class="tsd-kind-icon">JQuery</a></li>
-							<li class="tsd-kind-interface"><a href="interfaces/jquerystatic.html" class="tsd-kind-icon">JQuery<wbr>Static</a></li>
-							<li class="tsd-kind-interface"><a href="interfaces/vboptions.html" class="tsd-kind-icon">vb<wbr>Options</a></li>
-							<li class="tsd-kind-interface"><a href="interfaces/vborigin.html" class="tsd-kind-icon">vb<wbr>Origin</a></li>
-							<li class="tsd-kind-interface"><a href="interfaces/vbslideroptions.html" class="tsd-kind-icon">vb<wbr>Slider<wbr>Options</a></li>
-							<li class="tsd-kind-interface"><a href="interfaces/vbvideo.html" class="tsd-kind-icon">vb<wbr>Video</a></li>
-						</ul>
-					</section>
-					<section class="tsd-index-section ">
-						<h3>Variables</h3>
-						<ul class="tsd-index-list">
-							<li class="tsd-kind-variable"><a href="globals.html#vbinlineobj" class="tsd-kind-icon">Vb<wbr>Inline<wbr>Obj</a></li>
-							<li class="tsd-kind-variable"><a href="globals.html#videoboxobj" class="tsd-kind-icon">Videobox<wbr>Obj</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="vbinline.html#bind" class="tsd-kind-icon">bind</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="vbinline.html#close" class="tsd-kind-icon">close</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="vbinline.html#open" class="tsd-kind-icon">open</a></li>
 						</ul>
 					</section>
 				</div>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group ">
-			<h2>Variables</h2>
-			<section class="tsd-panel tsd-member tsd-kind-variable">
-				<a name="vbinlineobj" class="tsd-anchor"></a>
-				<h3>Vb<wbr>Inline<wbr>Obj</h3>
-				<div class="tsd-signature tsd-kind-icon">Vb<wbr>Inline<wbr>Obj<span class="tsd-signature-symbol">:</span> <a href="classes/vbinline.html" class="tsd-signature-type">VbInline</a></div>
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in build/components/inline.d.ts:41</li>
-					</ul>
-				</aside>
+			<h2>Methods</h2>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="bind" class="tsd-anchor"></a>
+				<h3>bind</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">bind<span class="tsd-signature-symbol">(</span>links<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/vboptions.html" class="tsd-signature-type">vbOptions</a>, linkMapper<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in build/components/inline.d.ts:21</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Map inline player to elements matched by the query</p>
+							</div>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>links: <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>array of elements or query selector to bind inline player to</p>
+								</div>
+							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../interfaces/vboptions.html" class="tsd-signature-type">vbOptions</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>player configuration</p>
+								</div>
+							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> linkMapper: <span class="tsd-signature-type">function</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>function to get a Videobox video object from the clicked element</p>
+								</div>
+								<ul class="tsd-parameters">
+									<li class="tsd-parameter-siganture">
+										<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+											<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>el<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/vbvideo.html" class="tsd-signature-type">vbVideo</a></li>
+										</ul>
+										<ul class="tsd-descriptions">
+											<li class="tsd-description">
+												<h4 class="tsd-parameters-title">Parameters</h4>
+												<ul class="tsd-parameters">
+													<li>
+														<h5>el: <span class="tsd-signature-type">HTMLElement</span></h5>
+													</li>
+												</ul>
+												<h4 class="tsd-returns-title">Returns <a href="../interfaces/vbvideo.html" class="tsd-signature-type">vbVideo</a></h4>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
 			</section>
-			<section class="tsd-panel tsd-member tsd-kind-variable">
-				<a name="videoboxobj" class="tsd-anchor"></a>
-				<h3>Videobox<wbr>Obj</h3>
-				<div class="tsd-signature tsd-kind-icon">Videobox<wbr>Obj<span class="tsd-signature-symbol">:</span> <a href="classes/videobox.html" class="tsd-signature-type">Videobox</a></div>
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in build/components/box.d.ts:49</li>
-					</ul>
-				</aside>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="close" class="tsd-anchor"></a>
+				<h3>close</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">close<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in build/components/inline.d.ts:33</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Close the open inline player</p>
+							</div>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> callback: <span class="tsd-signature-type">function</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>function to run when close animation is over</p>
+								</div>
+								<ul class="tsd-parameters">
+									<li class="tsd-parameter-siganture">
+										<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+											<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+										</ul>
+										<ul class="tsd-descriptions">
+											<li class="tsd-description">
+												<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="open" class="tsd-anchor"></a>
+				<h3>open</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">open<span class="tsd-signature-symbol">(</span>video<span class="tsd-signature-symbol">: </span><a href="../interfaces/vbvideo.html" class="tsd-signature-type">vbVideo</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in build/components/inline.d.ts:27</li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Open an inline player</p>
+							</div>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>video: <a href="../interfaces/vbvideo.html" class="tsd-signature-type">vbVideo</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>video to show</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
 			</section>
 		</section>
 		<footer class="with-border-bottom">

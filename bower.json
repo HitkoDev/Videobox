@@ -32,7 +32,6 @@
         "tests"
     ],
     "dependencies": {
-        "jquery": "^2.2.2",
-        "web-animations-js": "^2.1.4"
+        "web-animations-js": "^2.2.2"
     }
 }

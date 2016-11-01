@@ -1,5 +1,4 @@
 var gulp = require('gulp')
-var ts = require('gulp-typescript')
 var rename = require("gulp-rename")
 var cssBase64 = require('gulp-css-base64')
 var cleanCSS = require('gulp-clean-css')
@@ -9,21 +8,15 @@ var replace = require('gulp-replace')
 var imagemin = require('gulp-imagemin')
 var changed = require("gulp-changed")
 var merge = require("merge2")
-var typedoc = require("gulp-typedoc")
 var addsrc = require('gulp-add-src')
 var svgmin = require('gulp-svgmin')
 var insert = require('gulp-insert')
 var sourcemaps = require('gulp-sourcemaps')
 var bourbon = require('bourbon')
 var sass = require('gulp-sass')
-var shell = require('gulp-shell')
-
-var projectFile = 'tsconfig.json'
-var tsProject = ts.createProject(projectFile)
-var projectDefinitions = ts.createProject(projectFile, {
-    declaration: true,
-    out: './videobox.js'
-})
+var closureCompiler = require('gulp-closure-compiler')
+var uglify = require('gulp-uglify')
+var typedoc = require("gulp-typedoc")
 
 var comment = `/*!	
  *	@author		HitkoDev http://hitko.eu/videobox
@@ -48,55 +41,31 @@ gulp.task('default', ['licence'], () => { })
 
 gulp.task('build', [
     'compress',
-    'bundle',
     'documentation'
 ], () => {
     return gulp.src(['./build/**/*.min.css', './build/**/*.css.map'])
-        .pipe(gulp.dest('.'))
+        .pipe(gulp.dest('./dist'))
 })
 
 gulp.task('licence', [
     'build'
 ], () => {
-    return gulp.src(['./videobox.min.js', './videobox.min.css'])
+    return gulp.src(['./dist/videobox.min.js', './dist/videobox.min.css'])
         .pipe(insert.prepend(comment + "\n"))
-        .pipe(gulp.dest('.'))
+        .pipe(gulp.dest('./dist'))
 })
 
-gulp.task('bundle', [
-    'scripts'
-], shell.task([
-    'jspm bundle-sfx build/index.js videobox.min.js --minify'
-]))
-
-gulp.task('scripts', () => {
-    return merge([
-        tsProject.src()
-            .pipe(sourcemaps.init())
-            .pipe(ts(tsProject)).js
-            .pipe(sourcemaps.write('.'))
-            .pipe(gulp.dest('./build')),
-
-        projectDefinitions.src()
-            .pipe(ts(projectDefinitions)).dts
-            .pipe(gulp.dest('.'))
-    ])
-})
-
-gulp.task('documentation', [
-    'scripts'
-], () => {
-    return gulp.src([
-        './videobox.d.ts'
-    ])
+gulp.task('documentation', () => {
+    return gulp.src(['./build/**/*.d.ts', './typings/index.d.ts'])
         .pipe(typedoc({
-            module: "commonjs",
-            target: "es5",
+            module: "es2015",
+            target: "es6",
             includeDeclarations: true,
             out: "./docs",
             mode: "file",
             excludeExternals: true,
-            theme: 'minimal'
+            theme: 'minimal',
+            excludePrivate: true
         }))
 })
 
@@ -110,6 +79,20 @@ gulp.task('images', () => {
             interlaced: true
         }))
         .pipe(gulp.dest('./build/images'))
+})
+
+gulp.task('scripts', () => {
+    return gulp.src('./build/videobox.js')
+        .pipe(closureCompiler({
+            compilerPath: 'closure.jar',
+            compilerFlags: {
+                language_out: 'ES5',
+                create_source_map: 'dist/videobox.js.map',
+                source_map_input: 'build/videobox.js|build/videobox.js.map'
+            },
+            fileName: 'videobox.min.js'
+        }))
+        .pipe(gulp.dest('./dist'))
 })
 
 gulp.task('sass', [
@@ -152,14 +135,27 @@ gulp.task('overrides', () => {
 
 gulp.task('compress', [
     'sass',
-    'images'
+    'images',
+    'scripts'
 ], () => {
-    return gulp.src(['./build/**/*.css', '!./build/**/*.min.css'])
-        .pipe(cleanCSS())
-        .pipe(rename({
-            suffix: '.min'
-        }))
-        .pipe(gulp.dest('./build'))
+    return merge([
+        gulp.src(['./build/**/*.css', '!./build/**/*.min.css'])
+            .pipe(cleanCSS())
+            .pipe(rename({
+                suffix: '.min'
+            }))
+            .pipe(gulp.dest('./build')),
+
+        gulp.src('./dist/videobox.min.js')
+            .pipe(sourcemaps.init())
+            .pipe(uglify())
+            .pipe(sourcemaps.write('.', {
+                mapFile: (mapFilePath) => {
+                    return mapFilePath.replace('.min.js.map', '.js.map')
+                }
+            }))
+            .pipe(gulp.dest('./dist'))
+    ])
 })
 
 gulp.task('icons:font', () => {

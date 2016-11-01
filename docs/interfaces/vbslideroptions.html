@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>videobox | videobox</title>
+	<title>vbSliderOptions | videobox</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">/*! normalize.css v1.1.3 | MIT License | git.io/normalize */
@@ -908,142 +908,169 @@ img { max-width: 100%; }
 <nav class="tsd-navigation secondary">
 	<ul>
 		<li class=" tsd-kind-class">
-			<a href="classes/vbinline.html" class="tsd-kind-icon">Vb<wbr>Inline</a>
+			<a href="../classes/vbinline.html" class="tsd-kind-icon">Vb<wbr>Inline</a>
 		</li>
 		<li class=" tsd-kind-class">
-			<a href="classes/vbslider.html" class="tsd-kind-icon">Vb<wbr>Slider</a>
+			<a href="../classes/vbslider.html" class="tsd-kind-icon">Vb<wbr>Slider</a>
 		</li>
 		<li class=" tsd-kind-class">
-			<a href="classes/videobox.html" class="tsd-kind-icon">Videobox</a>
+			<a href="../classes/videobox.html" class="tsd-kind-icon">Videobox</a>
 		</li>
 		<li class=" tsd-kind-interface">
-			<a href="interfaces/jquery.html" class="tsd-kind-icon">JQuery</a>
+			<a href="jquery.html" class="tsd-kind-icon">JQuery</a>
 		</li>
 		<li class=" tsd-kind-interface">
-			<a href="interfaces/jquerystatic.html" class="tsd-kind-icon">JQuery<wbr>Static</a>
+			<a href="jquerystatic.html" class="tsd-kind-icon">JQuery<wbr>Static</a>
 		</li>
 		<li class=" tsd-kind-interface">
-			<a href="interfaces/vboptions.html" class="tsd-kind-icon">vb<wbr>Options</a>
+			<a href="vboptions.html" class="tsd-kind-icon">vb<wbr>Options</a>
 		</li>
 		<li class=" tsd-kind-interface">
-			<a href="interfaces/vborigin.html" class="tsd-kind-icon">vb<wbr>Origin</a>
+			<a href="vborigin.html" class="tsd-kind-icon">vb<wbr>Origin</a>
+		</li>
+		<li class="current tsd-kind-interface">
+			<a href="vbslideroptions.html" class="tsd-kind-icon">vb<wbr>Slider<wbr>Options</a>
+			<ul>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="vbslideroptions.html#animation" class="tsd-kind-icon">animation</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="vbslideroptions.html#doubleclicktimeout" class="tsd-kind-icon">double<wbr>Click<wbr>Timeout</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="vbslideroptions.html#moveall" class="tsd-kind-icon">move<wbr>All</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="vbslideroptions.html#singleduration" class="tsd-kind-icon">single<wbr>Duration</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="vbslideroptions.html#target" class="tsd-kind-icon">target</a>
+				</li>
+			</ul>
 		</li>
 		<li class=" tsd-kind-interface">
-			<a href="interfaces/vbslideroptions.html" class="tsd-kind-icon">vb<wbr>Slider<wbr>Options</a>
-		</li>
-		<li class=" tsd-kind-interface">
-			<a href="interfaces/vbvideo.html" class="tsd-kind-icon">vb<wbr>Video</a>
+			<a href="vbvideo.html" class="tsd-kind-icon">vb<wbr>Video</a>
 		</li>
 		<li class=" tsd-kind-variable">
-			<a href="globals.html#vbinlineobj" class="tsd-kind-icon">Vb<wbr>Inline<wbr>Obj</a>
+			<a href="../globals.html#vbinlineobj" class="tsd-kind-icon">Vb<wbr>Inline<wbr>Obj</a>
 		</li>
 		<li class=" tsd-kind-variable">
-			<a href="globals.html#videoboxobj" class="tsd-kind-icon">Videobox<wbr>Obj</a>
+			<a href="../globals.html#videoboxobj" class="tsd-kind-icon">Videobox<wbr>Obj</a>
 		</li>
 	</ul>
 </nav>
 <div class="container container-main">
 	<div class="content-wrap">
 		<div class="tsd-panel tsd-typography">
-			<p><img src="https://cloud.githubusercontent.com/assets/4700881/10467953/b5fb0616-71fc-11e5-9847-0e2afd05ff1f.png" alt="videobox logo" width="200" align="right"></p>
-			<h1 id="-videobox-a-lightweight-video-player-http-hitko-eu-videobox-"><a href="http://hitko.eu/videobox">Videobox - a lightweight video player</a></h1>
-			<p>I&#39;ve created Videobox with one thing on my mind: <strong>to replace huge, content-obscuring video players with a clean pop-up / collapsible player</strong>. </p>
-			<h2 id="getting-started">Getting started</h2>
-			<ol>
-				<li><a href="https://github.com/HitkoDev/Videobox/releases" target="_blank">Download the latest version of Videobox</a></li>
-				<li>Check out the <code>examples</code> directory for some basic examples</li>
-				<li>Include Videobox on your website:<ul>
-						<li>add <code>&lt;link href=&quot;path/to/videobox/videobox.min.css&quot; rel=&quot;stylesheet&quot; &gt;</code> to the <code>&lt;head&gt;</code> tag</li>
-						<li>include <code>&lt;script src=&quot;path/to/videobox/videobox.min.js&quot; type=&quot;text/javascript&quot; &gt;&lt;/script&gt;</code> before the <code>&lt;/body&gt;</code> tag</li>
-					</ul>
-				</li>
-				<li>Make sure jQuery is loaded before Videobox. Since some browsers don&#39;t support Web animations yet, you&#39;ll probably want to include the polyfill on the page as well.<ul>
-						<li>If you&#39;ve installed Videobox through npm, jQuery and Web animations polyfill are inside the <code>node_modules</code> folder</li>
-						<li>If you&#39;ve installed through bower, jQuery and Web animations polyfill are inside the <code>bower_components</code> folder</li>
-					</ul>
-				</li>
-			</ol>
-			<p><strong>That&#39;s it, you&#39;re now ready to start using Videobox on your page.</strong>  </p>
-			<h2 id="to-insert-a-pop-up-player">To insert a pop-up player</h2>
-			<pre><code>&lt;<span class="hljs-keyword">a</span>
-    href=<span class="hljs-string">"player-url"</span>  
-    <span class="hljs-built_in">rel</span>=<span class="hljs-string">"videobox"</span> 
-    title=<span class="hljs-string">"Video title"</span> 
-    data-videobox=<span class="hljs-string">"JSON-encoded options"</span>
-&gt;
-    Link <span class="hljs-keyword">text</span> / thumbnail
-&lt;/<span class="hljs-keyword">a</span>&gt;
-</code></pre><h2 id="to-insert-an-inline-player">To insert an inline player</h2>
-			<pre><code>&lt;<span class="hljs-keyword">a</span>
-    href=<span class="hljs-string">"player-url"</span>  
-    <span class="hljs-built_in">rel</span>=<span class="hljs-string">"vbinline"</span> 
-    title=<span class="hljs-string">"Video title"</span> 
-    data-videobox=<span class="hljs-string">"JSON-encoded options"</span>
-&gt;
-    Link <span class="hljs-keyword">text</span> / thumbnail
-&lt;/<span class="hljs-keyword">a</span>&gt;
-</code></pre><h2 id="videobox-extensions">Videobox extensions</h2>
-			<p>Videobox is a javascript player, if you&#39;re looking for Videobox extensions, you can find them here:</p>
-			<ul>
-				<li><a href="https://github.com/HitkoDev/Videobox-Joomla">Joomla!</a></li>
-				<li><a href="https://github.com/HitkoDev/Videobox-MODX">MODX</a></li>
-			</ul>
 		</div>
-		<div style="position:relative;"><a name="typedoc-main-index" class="tsd-anchor"></a></div>
+		<section class="tsd-panel tsd-comment">
+			<div class="tsd-comment tsd-typography">
+				<div class="lead">
+					<p>Interface for Videobox slider configuration</p>
+				</div>
+			</div>
+		</section>
+		<section class="tsd-panel tsd-hierarchy">
+			<h3>Hierarchy</h3>
+			<ul class="tsd-hierarchy">
+				<li>
+					<span class="target">vbSliderOptions</span>
+				</li>
+			</ul>
+		</section>
 		<section class="tsd-panel-group tsd-index-group">
 			<h2>Index</h2>
 			<section class="tsd-panel tsd-index-panel">
 				<div class="tsd-index-content">
 					<section class="tsd-index-section ">
-						<h3>Classes</h3>
+						<h3>Properties</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-class"><a href="classes/vbinline.html" class="tsd-kind-icon">Vb<wbr>Inline</a></li>
-							<li class="tsd-kind-class"><a href="classes/vbslider.html" class="tsd-kind-icon">Vb<wbr>Slider</a></li>
-							<li class="tsd-kind-class"><a href="classes/videobox.html" class="tsd-kind-icon">Videobox</a></li>
-						</ul>
-					</section>
-					<section class="tsd-index-section ">
-						<h3>Interfaces</h3>
-						<ul class="tsd-index-list">
-							<li class="tsd-kind-interface"><a href="interfaces/jquery.html" class="tsd-kind-icon">JQuery</a></li>
-							<li class="tsd-kind-interface"><a href="interfaces/jquerystatic.html" class="tsd-kind-icon">JQuery<wbr>Static</a></li>
-							<li class="tsd-kind-interface"><a href="interfaces/vboptions.html" class="tsd-kind-icon">vb<wbr>Options</a></li>
-							<li class="tsd-kind-interface"><a href="interfaces/vborigin.html" class="tsd-kind-icon">vb<wbr>Origin</a></li>
-							<li class="tsd-kind-interface"><a href="interfaces/vbslideroptions.html" class="tsd-kind-icon">vb<wbr>Slider<wbr>Options</a></li>
-							<li class="tsd-kind-interface"><a href="interfaces/vbvideo.html" class="tsd-kind-icon">vb<wbr>Video</a></li>
-						</ul>
-					</section>
-					<section class="tsd-index-section ">
-						<h3>Variables</h3>
-						<ul class="tsd-index-list">
-							<li class="tsd-kind-variable"><a href="globals.html#vbinlineobj" class="tsd-kind-icon">Vb<wbr>Inline<wbr>Obj</a></li>
-							<li class="tsd-kind-variable"><a href="globals.html#videoboxobj" class="tsd-kind-icon">Videobox<wbr>Obj</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="vbslideroptions.html#animation" class="tsd-kind-icon">animation</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="vbslideroptions.html#doubleclicktimeout" class="tsd-kind-icon">double<wbr>Click<wbr>Timeout</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="vbslideroptions.html#moveall" class="tsd-kind-icon">move<wbr>All</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="vbslideroptions.html#singleduration" class="tsd-kind-icon">single<wbr>Duration</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="vbslideroptions.html#target" class="tsd-kind-icon">target</a></li>
 						</ul>
 					</section>
 				</div>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group ">
-			<h2>Variables</h2>
-			<section class="tsd-panel tsd-member tsd-kind-variable">
-				<a name="vbinlineobj" class="tsd-anchor"></a>
-				<h3>Vb<wbr>Inline<wbr>Obj</h3>
-				<div class="tsd-signature tsd-kind-icon">Vb<wbr>Inline<wbr>Obj<span class="tsd-signature-symbol">:</span> <a href="classes/vbinline.html" class="tsd-signature-type">VbInline</a></div>
+			<h2>Properties</h2>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="animation" class="tsd-anchor"></a>
+				<h3>animation</h3>
+				<div class="tsd-signature tsd-kind-icon">animation<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">KeyframeAnimationOptions</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in build/components/inline.d.ts:41</li>
+						<li>Defined in build/components/slider.d.ts:24</li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>animation properties (see <a href="https://w3c.github.io/web-animations/">web animations specifications</a>)</p>
+					</div>
+				</div>
 			</section>
-			<section class="tsd-panel tsd-member tsd-kind-variable">
-				<a name="videoboxobj" class="tsd-anchor"></a>
-				<h3>Videobox<wbr>Obj</h3>
-				<div class="tsd-signature tsd-kind-icon">Videobox<wbr>Obj<span class="tsd-signature-symbol">:</span> <a href="classes/videobox.html" class="tsd-signature-type">Videobox</a></div>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="doubleclicktimeout" class="tsd-anchor"></a>
+				<h3>double<wbr>Click<wbr>Timeout</h3>
+				<div class="tsd-signature tsd-kind-icon">double<wbr>Click<wbr>Timeout<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in build/components/box.d.ts:49</li>
+						<li>Defined in build/components/slider.d.ts:20</li>
 					</ul>
 				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>clicks within the timeout are processed together</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="moveall" class="tsd-anchor"></a>
+				<h3>move<wbr>All</h3>
+				<div class="tsd-signature tsd-kind-icon">move<wbr>All<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in build/components/slider.d.ts:8</li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>if true, slider will scroll all visible elements</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="singleduration" class="tsd-anchor"></a>
+				<h3>single<wbr>Duration</h3>
+				<div class="tsd-signature tsd-kind-icon">single<wbr>Duration<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in build/components/slider.d.ts:16</li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>transition duration for one element</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="target" class="tsd-anchor"></a>
+				<h3>target</h3>
+				<div class="tsd-signature tsd-kind-icon">target<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in build/components/slider.d.ts:12</li>
+					</ul>
+				</aside>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>target selector</p>
+					</div>
+				</div>
 			</section>
 		</section>
 		<footer class="with-border-bottom">
