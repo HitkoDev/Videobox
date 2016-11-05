@@ -2,7 +2,7 @@
 [Videobox - a lightweight video player](http://hitko.eu/videobox)
 ========================================================================
 
-> A picture is worth a thousand words - by that logic, video tells 30.000 words per second
+> A picture is worth a thousand words - by that logic, a video tells 30.000 words per second
 
 It's important to remove videos from your page
 ----------------------------------------------
