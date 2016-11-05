@@ -1,6 +1,6 @@
 {
   "license": "GPL-3.0",
-  "version": "6.0.0-rc2",
+  "version": "6.0.0-rc3",
   "name": "videobox",
   "description": "Pop-up video player plugin",
   "copyright": "Hitko",
@@ -25,10 +25,7 @@
   "main": "./dist/videobox.min.js",
   "style": "./dist/videobox.min.css",
   "files": [
-    "dist/videobox.min.js",
-    "dist/videobox.min.css",
-    "dist/overrides.min.css",
-    "dist/videobox.d.ts"
+    "dist/**/*"
   ],
   "devDependencies": {
     "@types/jquery": "^2.0.33",
