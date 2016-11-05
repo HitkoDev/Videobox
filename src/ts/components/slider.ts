@@ -40,7 +40,7 @@ export interface vbSliderOptions {
 }
 
 /**
- * Implementation of the Videobox thumbnail slider interface 
+ * Videobox thumbnail slider
  */
 export class VbSlider {
 
@@ -264,17 +264,22 @@ export class VbSlider {
 
         let animationProperties = this.options.singleDuration ? Object.assign({}, this.options.animation, { duration: this.options.singleDuration * count }) : this.options.animation
 
+        let w = width + 100
+        w = 100 * width / w
+
         let positionOrigin = {
-            'marginLeft': (dir == 'l' ? 0 : -width) + '%',
-            'marginRight': (dir == 'l' ? -width : 0) + '%',
+            'transform': 'translate(' + (dir == 'l' ? 0 : -w) + '%)'
         }
         let positionDest = {
-            'marginLeft': (dir == 'l' ? -width : 0) + '%',
-            'marginRight': (dir == 'l' ? 0 : -width) + '%',
+            'transform': 'translate(' + (dir == 'l' ? -w : 0) + '%)'
         }
+        this.content.style.width = (width + 100) + '%'
 
         let anim = this.content.animate([positionOrigin, positionDest], animationProperties)
-        anim.addEventListener('finish', () => this.skip(dir))
+        anim.addEventListener('finish', () => {
+            this.content.style.width = '100%'
+            this.skip(dir)
+        })
 
         anim = this.content.animate([
             {

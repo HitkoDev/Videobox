@@ -947,7 +947,17 @@ img { max-width: 100%; }
 		<div class="tsd-panel tsd-typography">
 			<p><img src="https://cloud.githubusercontent.com/assets/4700881/10467953/b5fb0616-71fc-11e5-9847-0e2afd05ff1f.png" alt="videobox logo" width="200" align="right"></p>
 			<h1 id="-videobox-a-lightweight-video-player-http-hitko-eu-videobox-"><a href="http://hitko.eu/videobox">Videobox - a lightweight video player</a></h1>
-			<p>I&#39;ve created Videobox with one thing on my mind: <strong>to replace huge, content-obscuring video players with a clean pop-up / collapsible player</strong>. </p>
+			<p>Videobox is a JavaScript widget and Joomla! / MODX extension for adding video (and audio) to the page in a clean way. It&#39;s been created with one thing in mind: <strong>to replace huge, content-obscuring video players with a clean pop-up / collapsible player</strong>.</p>
+			<h2 id="why-videobox-">Why Videobox?</h2>
+			<p>Well, why no? It has several benefits over the traditional way of embedding videos with iframes:</p>
+			<ul>
+				<li>An iframe element takes time and bandwidth to render, while a small thumbnail renders almost instantly and consumes only a few KB of bandwidth - and if you use a text link, it get even faster!</li>
+				<li>An iframe contains tens or even hundreds of other elements - this can significantly affect animations and rendering on mobile devices. With Videobox, an iframe is only visible when user is actually watching the video, so it gives your page a significant performance boost.</li>
+				<li>No matter how many videos there are on your page, Videobox only requires a single iframe, so you can insert your whole playlist without having to worry about page performance.</li>
+				<li>Since external content is only required when the user opens the video, it helps you eliminate external cookies, and protect the privacy of your users.</li>
+				<li>Unlike many other similar widgets, Videobox uses the new web animations API, thus allowing modern browsers to better optimise animations and to utilise hardware acceleration in doing so.</li>
+				<li>Most Videobox alternatives require jQuery or other external libraries, which can quickly lead to compatibility issues. Videobox doesn&#39;t use third-party libraries*, so you don&#39;t have to worry about that.</li>
+			</ul>
 			<h2 id="getting-started">Getting started</h2>
 			<ol>
 				<li><a href="https://github.com/HitkoDev/Videobox/releases" target="_blank">Download the latest version of Videobox</a></li>
@@ -957,9 +967,9 @@ img { max-width: 100%; }
 						<li>include <code>&lt;script src=&quot;path/to/videobox/dist/videobox.min.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</code> before the <code>&lt;/body&gt;</code> tag</li>
 					</ul>
 				</li>
-				<li>(Optional) Since some browsers don&#39;t support Web animations yet, you&#39;ll probably want to include the polyfill on the page as well:<ul>
-						<li>If you&#39;ve installed Videobox through npm, Web animations polyfill is inside the <code>node_modules</code> folder</li>
-						<li>If you&#39;ve installed through bower, Web animations polyfill is inside the <code>bower_components</code> folder</li>
+				<li>*Since some older browsers don&#39;t support web animations yet, you&#39;ll probably want to use the web animations polyfill:<ul>
+						<li>If you&#39;ve installed Videobox through npm, web animations polyfill can be found in the <code>node_modules</code> folder</li>
+						<li>If you&#39;ve installed through bower, web animations polyfill is inside the <code>bower_components</code> folder</li>
 					</ul>
 				</li>
 			</ol>

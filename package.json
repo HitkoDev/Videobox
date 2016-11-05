@@ -30,6 +30,9 @@
     "dist/overrides.min.css",
     "dist/videobox.d.ts"
   ],
+  "scripts": {
+    "postinstall": "bundler install"
+  },
   "devDependencies": {
     "@types/jquery": "^2.0.33",
     "bourbon": "^4.2.7",

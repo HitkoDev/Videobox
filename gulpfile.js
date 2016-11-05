@@ -41,20 +41,21 @@ var comment = `/*!
 
 gulp.task('default', ['licence'], () => { })
 
-gulp.task('build', [
-    'compress'
-], () => {
-    return gulp.src(['./build/**/*.min.css', './build/**/*.css.map'])
-        .pipe(gulp.dest('./dist'))
-})
-
 gulp.task('licence', [
-    'build',
+    'compress',
     'documentation'
 ], () => {
     return gulp.src(['./dist/videobox.min.js', './dist/videobox.min.css'])
         .pipe(insert.prepend(comment + "\n"))
         .pipe(gulp.dest('./dist'))
+})
+
+gulp.task('wrap', [
+    'compress:nodep',
+    'documentation',
+    'images'
+], () => {
+
 })
 
 gulp.task('documentation', () => {
@@ -127,7 +128,7 @@ gulp.task('sass', [
 gulp.task('sass:convert', [
     'overrides'
 ], () => {
-    return gulp.src(['./src/sass/**/*.scss'], { read: false })
+    return gulp.src(['./src/sass/**/*.scss', '!./src/sass/_icons.scss'], { read: false })
         .pipe(changed('.', {
             hasChanged: (stream, cb, sourceFile, targetPath) => changed.compareLastModifiedTime(stream, cb, sourceFile, path.resolve(process.cwd(), './build/videobox.css'))
         }))
@@ -159,16 +160,30 @@ gulp.task('compress', [
     'images',
     'scripts'
 ], () => {
+    return compress()
+})
+
+gulp.task('compress:nodep', () => {
+    return compress()
+})
+
+function compress() {
     return merge([
-        gulp.src(['./build/**/*.css', '!./build/**/*.min.css'])
+        gulp.src('./build/*.css')
+            .pipe(sourcemaps.init({ loadMaps: true }))
             .pipe(cleanCSS())
             .pipe(rename({
                 suffix: '.min'
             }))
-            .pipe(gulp.dest('./build')),
+            .pipe(sourcemaps.write('.', {
+                mapFile: (mapFilePath) => {
+                    return mapFilePath.replace('.min.js.map', '.js.map').replace('.min.css.map', '.css.map')
+                }
+            }))
+            .pipe(gulp.dest('./dist')),
 
         gulp.src('./dist/videobox.min.js')
-            .pipe(sourcemaps.init())
+            .pipe(sourcemaps.init({ loadMaps: true }))
             .pipe(uglify())
             .pipe(sourcemaps.write('.', {
                 mapFile: (mapFilePath) => {
@@ -177,34 +192,50 @@ gulp.task('compress', [
             }))
             .pipe(gulp.dest('./dist'))
     ])
-})
+}
 
 gulp.task('icons:font', () => {
+    return gulp.src(['./src/icons/*.svg'])
+        .pipe(fontcustom({
+            font_name: 'Videobox',
+            'css-selector': '.vb-icon-{{glyph}}',
+            templates: ['_icons.scss'],
+            preprocessor_path: '/font'
+        }))
+        .pipe(gulp.dest('./build/font'))
+})
+
+gulp.task('icons:sass', [
+    'icons:font'
+], () => {
+    return gulp.src('./build/font/*.scss')
+        .pipe(replace('-{{glyph}}', ', [class^="vb-icon-"], [class*=" vb-icon-"]'))
+        .pipe(concat('_icons.scss'))
+        .pipe(gulp.dest('./build/font'))
+        .pipe(shell([
+            'sass-convert -i --indent 4 <%= file.path %>'
+        ]))
+})
+
+gulp.task('icons', [
+    'icons:sass'
+], () => {
     return merge([
-        gulp.src(['./src/icons/*.svg'])
-            .pipe(fontcustom({
-                font_name: 'Videobox',
-                'css-selector': '.vb-icon-{{glyph}}',
-                templates: ['_icons.scss'],
-                preprocessor_path: '/font'
+        gulp.src('./build/font/*.svg')
+            .pipe(svgmin({
+                plugins: [{
+                    removeUselessDefs: false
+                }]
             }))
             .pipe(gulp.dest('./build/font')),
 
-        gulp.src('./build/font/*.scss')
-            .pipe(replace('-{{glyph}}', ', [class^="vb-icon-"], [class*=" vb-icon-"]'))
-            .pipe(concat('_icons.scss'))
+        gulp.src('./build/font/_icons.scss')
             .pipe(gulp.dest('./src/sass'))
     ])
 })
 
-gulp.task('icons', [
-    'icons:font'
-], () => {
-    return gulp.src('./build/font/*.svg')
-        .pipe(svgmin({
-            plugins: [{
-                removeUselessDefs: false
-            }]
-        }))
-        .pipe(gulp.dest('./build/font'))
+gulp.task('watch', () => {
+    gulp.watch('./build/**/*.d.ts', ['documentation'])
+    gulp.watch('./build/**/*.js', ['scripts'])
+    gulp.watch('./src/sass/**/*.scss', ['sass'])
 })
