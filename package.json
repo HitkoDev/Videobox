@@ -46,6 +46,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
     "gulp-sass": "^2.3.2",
+    "gulp-shell": "^0.5.2",
     "gulp-sourcemaps": "^2.2.0",
     "gulp-svgmin": "^1.2.3",
     "gulp-typedoc": "^2.0.0",

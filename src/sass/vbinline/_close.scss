@@ -1,6 +1,6 @@
 #vbiClose {
     @extend .vb-hover-animated;
-    
+
     position: absolute;
     top: 0;
     right: 0;
@@ -12,15 +12,15 @@
     cursor: pointer;
     padding: 12px;
     opacity: 0;
-	z-index: 300;
+    z-index: 300;
     box-sizing: border-box;
 }
 
-#vbiWrap:hover #vbiClose { 
-	opacity: 1; 
+#vbiWrap:hover #vbiClose {
+    opacity: 1;
 }
 
 #vbiClose:hover,
 #vbiClose:focus {
-	color: $primary-light;
+    color: $primary-light;
 }

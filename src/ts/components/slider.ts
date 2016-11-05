@@ -377,6 +377,11 @@ export declare interface JQuery {
     /**
      * Map Videobox slider to elements matched by the query
      * 
+     * @example 
+     * ```javascript
+     * var sliders = $('ul.vb_slider').vbSlider() // Create a Videobox slider for every <ul class="vb_slider"> element
+     * ```
+     * 
      * @param options slider configuration
      * @returns array of sliders matching the corresponding elements
      */

@@ -1,14 +1,14 @@
 .vjs-poster {
-    background-color: #000;
-	background-repeat: no-repeat;
-	background-position: 50% 50%;
-	background-size: contain;
+    background-color: $color-contrast-dark;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-size: contain;
     cursor: pointer;
-	position: absolute;
+    position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
-    right : 0;
+    right: 0;
     z-index: 2;
 }
 

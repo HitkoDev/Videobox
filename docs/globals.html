@@ -951,39 +951,41 @@ img { max-width: 100%; }
 			<h2 id="getting-started">Getting started</h2>
 			<ol>
 				<li><a href="https://github.com/HitkoDev/Videobox/releases" target="_blank">Download the latest version of Videobox</a></li>
-				<li>Check out the <code>examples</code> directory for some basic examples</li>
+				<li>Check out the <code>examples</code> directory for some basic examples, and <code>docs/index.html</code> for the documentation</li>
 				<li>Include Videobox on your website:<ul>
-						<li>add <code>&lt;link href=&quot;path/to/videobox/videobox.min.css&quot; rel=&quot;stylesheet&quot; &gt;</code> to the <code>&lt;head&gt;</code> tag</li>
-						<li>include <code>&lt;script src=&quot;path/to/videobox/videobox.min.js&quot; type=&quot;text/javascript&quot; &gt;&lt;/script&gt;</code> before the <code>&lt;/body&gt;</code> tag</li>
+						<li>add <code>&lt;link href=&quot;path/to/videobox/dist/videobox.min.css&quot; rel=&quot;stylesheet&quot;&gt;</code> to the <code>&lt;head&gt;</code> tag</li>
+						<li>include <code>&lt;script src=&quot;path/to/videobox/dist/videobox.min.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</code> before the <code>&lt;/body&gt;</code> tag</li>
 					</ul>
 				</li>
-				<li>Make sure jQuery is loaded before Videobox. Since some browsers don&#39;t support Web animations yet, you&#39;ll probably want to include the polyfill on the page as well.<ul>
-						<li>If you&#39;ve installed Videobox through npm, jQuery and Web animations polyfill are inside the <code>node_modules</code> folder</li>
-						<li>If you&#39;ve installed through bower, jQuery and Web animations polyfill are inside the <code>bower_components</code> folder</li>
+				<li>(Optional) Since some browsers don&#39;t support Web animations yet, you&#39;ll probably want to include the polyfill on the page as well:<ul>
+						<li>If you&#39;ve installed Videobox through npm, Web animations polyfill is inside the <code>node_modules</code> folder</li>
+						<li>If you&#39;ve installed through bower, Web animations polyfill is inside the <code>bower_components</code> folder</li>
 					</ul>
 				</li>
 			</ol>
 			<p><strong>That&#39;s it, you&#39;re now ready to start using Videobox on your page.</strong>  </p>
 			<h2 id="to-insert-a-pop-up-player">To insert a pop-up player</h2>
-			<pre><code>&lt;<span class="hljs-keyword">a</span>
-    href=<span class="hljs-string">"player-url"</span>  
-    <span class="hljs-built_in">rel</span>=<span class="hljs-string">"videobox"</span> 
-    title=<span class="hljs-string">"Video title"</span> 
-    data-videobox=<span class="hljs-string">"JSON-encoded options"</span>
-&gt;
-    Link <span class="hljs-keyword">text</span> / thumbnail
-&lt;/<span class="hljs-keyword">a</span>&gt;
-</code></pre><h2 id="to-insert-an-inline-player">To insert an inline player</h2>
-			<pre><code>&lt;<span class="hljs-keyword">a</span>
-    href=<span class="hljs-string">"player-url"</span>  
-    <span class="hljs-built_in">rel</span>=<span class="hljs-string">"vbinline"</span> 
-    title=<span class="hljs-string">"Video title"</span> 
-    data-videobox=<span class="hljs-string">"JSON-encoded options"</span>
-&gt;
-    Link <span class="hljs-keyword">text</span> / thumbnail
-&lt;/<span class="hljs-keyword">a</span>&gt;
-</code></pre><h2 id="videobox-extensions">Videobox extensions</h2>
-			<p>Videobox is a javascript player, if you&#39;re looking for Videobox extensions, you can find them here:</p>
+			<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">a</span>
+    <span class="hljs-attr">href</span>=<span class="hljs-string">"player-url"</span>  
+    <span class="hljs-attr">rel</span>=<span class="hljs-string">"videobox"</span> 
+    <span class="hljs-attr">title</span>=<span class="hljs-string">"Video title"</span> 
+    <span class="hljs-attr">data-videobox</span>=<span class="hljs-string">"JSON-encoded options"</span>
+&gt;</span>
+    Link text / thumbnail
+<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+</code></pre>
+			<h2 id="to-insert-an-inline-player">To insert an inline player</h2>
+			<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">a</span>
+    <span class="hljs-attr">href</span>=<span class="hljs-string">"player-url"</span>  
+    <span class="hljs-attr">rel</span>=<span class="hljs-string">"vbinline"</span> 
+    <span class="hljs-attr">title</span>=<span class="hljs-string">"Video title"</span> 
+    <span class="hljs-attr">data-videobox</span>=<span class="hljs-string">"JSON-encoded options"</span>
+&gt;</span>
+    Link text / thumbnail
+<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+</code></pre>
+			<h2 id="videobox-extensions">Videobox extensions</h2>
+			<p>Videobox is a javascript player effect, if you&#39;re looking for Videobox extensions, you can find them here:</p>
 			<ul>
 				<li><a href="https://github.com/HitkoDev/Videobox-Joomla">Joomla!</a></li>
 				<li><a href="https://github.com/HitkoDev/Videobox-MODX">MODX</a></li>

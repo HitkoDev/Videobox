@@ -1,21 +1,20 @@
 .vjs-fullscreen-control {
-    @extend .vb-icon; 
+    @extend .vb-icon;
+
     @extend .vb-hover-animated;
-    
-    @include flex(0 0 2*$base-font-size);
-    
+
+    @include flex(0 0 (2 * $base-font-size));
+
     &:hover {
         color: $primary-light;
     }
-    
+
     &:before {
         content: $font-Videobox-fullscreen-enter;
     }
-    
 }
 
 .vjs-fullscreen .vjs-fullscreen-control {
-    
     &:before {
         content: $font-Videobox-fullscreen-exit;
     }

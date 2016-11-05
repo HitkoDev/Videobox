@@ -1,68 +1,69 @@
 .vjs-volume-menu-button {
-    @extend .vb-icon; 
+    @extend .vb-icon;
+
     @extend .vb-hover-animated;
-    
+
     overflow: hidden;
-    
-    @include flex(0 0 2*$base-font-size);
-    
-    &:before { 
-	   flex: 0 0 2*$base-font-size;
+
+    @include flex(0 0 (2 * $base-font-size));
+
+    &:before {
+        flex: 0 0 (2 * $base-font-size);
     }
-    
+
     &.vjs-vol-3:before {
         content: $font-Videobox-volume-3;
-    } 
-    
+    }
+
     &.vjs-vol-2:before {
         content: $font-Videobox-volume-2;
     }
-    
+
     &.vjs-vol-1:before {
         content: $font-Videobox-volume-1;
-    } 
-    
+    }
+
     &.vjs-vol-0:before {
         content: $font-Videobox-volume-0;
-    }  
-    
+    }
+
     &:hover,
     &:focus {
         color: $primary-light;
-        
-        @include flex(0 0 7*$base-font-size);
+
+        @include flex(0 0 (7 * $base-font-size));
     }
-    
+
     .vjs-menu {
         @include flex(1 1 0px);
-        
-        color: #fff;
-        
+
+        color: $color-contrast-light;
+
         .vjs-menu-content {
-            padding: 0 $base-font-size/2;
+            padding: 0 ($base-font-size / 2);
         }
-        
+
         .vjs-volume-bar {
-            height: 0.25*$base-font-size;
-            background: rgba(255, 255, 255, 1 - $overlay-opacity);
+            height: 0.25 * $base-font-size;
+            background: rgba($color-contrast-light, 1 - $overlay-opacity);
             position: relative;
-            
+
             .vjs-volume-level {
-                @extend .vb-icon; 
-                
+                @extend .vb-icon;
+
                 height: 100%;
                 width: 100%;
-                background: rgb(255, 255, 255);
+                background: $color-contrast-light;
                 position: absolute;
                 top: 0;
                 left: 0;
-                
+
                 &:after {
                     content: $font-Videobox-circle;
                     position: absolute;
                     right: 0;
-                    margin: -$base-font-size/2;
-                    top: 0.125*$base-font-size;
+                    margin: -$base-font-size / 2;
+                    top: 0.125 * $base-font-size;
                     cursor: pointer;
                 }
             }

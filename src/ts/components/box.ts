@@ -307,7 +307,12 @@ export declare interface JQueryStatic {
 
 export declare interface JQuery {
     /**
-     * Map pop-up player to elements matched by the query 
+     * Map pop-up player to elements matched by the query
+     * 
+     * @example 
+     * ```javascript
+     * $('a[rel=videobox]').videobox() // Bind the pop-up effect to every <a rel="videobox"> element
+     * ```
      * 
      * @param options player configuration
      * @param linkMapper function to get a Videobox video object from the clicked element

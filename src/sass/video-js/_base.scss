@@ -1,4 +1,4 @@
-html.vb-html5-player, 
+html.vb-html5-player,
 body.vb-html5-player {
     position: fixed;
     top: 0;
@@ -7,8 +7,8 @@ body.vb-html5-player {
     right: 0;
     margin: 0;
     padding: 0;
-    background: #000;
-    
+    background: $color-contrast-dark;
+
     *:focus {
         border: none;
         outline: none;
@@ -18,36 +18,36 @@ body.vb-html5-player {
 #vb-html5-video {
     width: 100%;
     height: 100%;
-    background: #000;
+    background: $color-contrast-dark;
 }
 
 .video-js {
-    color: #fff;
-    background: #000;
+    color: $color-contrast-light;
+    background: $color-contrast-dark;
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
     position: relative;
-    font-size: 0.625*$base-font-size;
+    font-size: 0.625 * $base-font-size;
     line-height: 1em;
     font-family: "Roboto", "Arial", "Helvetica", sans-serif;
     font-weight: normal;
     font-style: normal;
     text-decoration: none;
-    
+
     @include user-select(none);
 }
 
 .video-js .vjs-control-text {
-	border: 0;
-	clip: rect(0 0 0 0);
-	height: 1px;
-	margin: -1px;
-	overflow: hidden;
-	padding: 0;
-	position: absolute;
-	width: 1px;
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
 }
 
 .vjs-hidden {

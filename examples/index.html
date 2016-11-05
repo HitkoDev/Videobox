@@ -1,16 +1,17 @@
-<!DOCTYPE html><!-- tell the browser we're using HTML5 -->
+<!DOCTYPE html>
+<!-- tell the browser we're using HTML5 -->
 <html lang="en">
 
 <head>
-    <title>Videobox</title>
-    <link rel="stylesheet" href="../build/videobox.min.css">
+	<title>Videobox</title>
+	<link rel="stylesheet" href="../dist/videobox.min.css">
 </head>
 
 <body>
-    <ul class="vb_gallery">
-        <li class="vb_video_cont vb_gal" style="max-width: 480px;">
-            
-            <!--
+	<ul class="vb_gallery">
+		<li class="vb_video_cont vb_gal" style="max-width: 480px;">
+
+			<!--
                 
                 href: url to embed
                 rel: attach Videobox to this link (use vbinline for the collapsible inline player)
@@ -18,28 +19,26 @@
                 data-videobox: adittional options in JSON format
                     
             -->
-            
-            <a 
-                href="https://www.youtube.com/embed/XfSfK8AkGVo?wmode=transparent&rel=0&fs=1&autoplay=1"  
-                rel="videobox" 
-                title="Therion - Symphony No. 9" 
-                data-videobox="{&quot;width&quot;:720,&quot;height&quot;:405}" 
-                data-target="img" 
-            >
-            
-	            <span class="vb_thub_wrap"><img src="thumbnail.jpg" alt="Therion - Symphony No. 9" width="480" height="360" /><span class="vb-icon-play"></span></span>
-	            <span class="vb_video_title" >Therion - Symphony No. 9</span>
-                
-            </a>
-        </li>
+
+			<a href="https://www.youtube.com/embed/XfSfK8AkGVo?wmode=transparent&rel=0&fs=1&autoplay=1" rel="videobox" title="Therion - Symphony No. 9"
+				data-videobox="{&quot;width&quot;:720,&quot;height&quot;:405}" data-target="img">
+
+				<span class="vb_thub_wrap"><img src="thumbnail.jpg" alt="Therion - Symphony No. 9" width="480" height="360" /><span class="vb-icon-play"></span></span>
+				<span class="vb_video_title">Therion - Symphony No. 9</span>
+
+			</a>
+		</li>
 	</ul>
-    
-    <!-- since some browsers don't support web animations yet, include the polyfill -->
-    <script src="../node_modules/web-animations-js/web-animations.min.js"></script>
-    
-    <!-- make sure jQuery and polyfill are loaded before Videobox -->
-    <script src="../dist/videobox.min.js"></script>
-    
+
+	<!-- since some browsers don't support web animations yet, include the polyfill before including Videobox -->
+	<script type="text/javascript" src="../node_modules/web-animations-js/web-animations.min.js"></script>
+
+	<!-- if you want to use Videobox with jQuery, you should include it here -->
+	<!-- Videobox adds the following methods to the jQuery object: $().videobox(), $.vbClose(), $().vbInline(), $.vbiClose(), and $().vbSlider() -->
+
+	<!-- include the Videobox script -->
+	<script type="text/javascript" src="../dist/videobox.min.js"></script>
+
 </body>
 
 </html>

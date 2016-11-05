@@ -1,51 +1,46 @@
 .pagination {
-	margin: 15px 0;
-	display: inline-block;
-	padding-left: 0;
-	margin: 20px 0;
-    
-    &>li {
+    margin: 15px 0;
+    display: inline-block;
+    padding-left: 0;
+    margin: 20px 0;
+
+    & > li {
         display: inline;
-        
-        &>a,
-        &>span {
+
+        & > a,
+        & > span {
             @extend .vb-hover-animated;
-            
-            background-color: #fff;
+
+            background-color: $color-contrast-light;
             color: $primary-color;
             border: none;
             font-weight: 400;
-            font-size: 0.625*$base-font-size;
-            padding: 0.3125*$base-font-size 0.625*$base-font-size;
+            font-size: 0.625 * $base-font-size;
+            padding: (0.3125 * $base-font-size) (0.625 * $base-font-size);
             text-decoration: none;
             text-shadow: 0px 0px 10px $primary-light;
-                
+
             &:hover,
             &:focus {
                 color: $primary-color;
                 background-color: $primary-light;
             }
         }
-        
-        &+li {
-            
-            &>a,
-            &>span {
-                border-left: 1px solid #fff;
+
+        & + li {
+            & > a,
+            & > span {
+                border-left: 1px solid $color-contrast-light;
                 margin-left: 0;
             }
-            
         }
-        
+
         &.active {
-            
-            &>a,
-            &>span {
+            & > a,
+            & > span {
                 color: $primary-color;
                 background-color: $primary-light;
             }
-            
         }
-        
     }
 }

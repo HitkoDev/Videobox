@@ -17,6 +17,8 @@ var sass = require('gulp-sass')
 var closureCompiler = require('gulp-closure-compiler')
 var uglify = require('gulp-uglify')
 var typedoc = require("gulp-typedoc")
+var shell = require('gulp-shell')
+var path = require('path')
 
 var comment = `/*!	
  *	@author		HitkoDev http://hitko.eu/videobox
@@ -40,15 +42,15 @@ var comment = `/*!
 gulp.task('default', ['licence'], () => { })
 
 gulp.task('build', [
-    'compress',
-    'documentation'
+    'compress'
 ], () => {
     return gulp.src(['./build/**/*.min.css', './build/**/*.css.map'])
         .pipe(gulp.dest('./dist'))
 })
 
 gulp.task('licence', [
-    'build'
+    'build',
+    'documentation'
 ], () => {
     return gulp.src(['./dist/videobox.min.js', './dist/videobox.min.css'])
         .pipe(insert.prepend(comment + "\n"))
@@ -81,7 +83,13 @@ gulp.task('images', () => {
         .pipe(gulp.dest('./build/images'))
 })
 
-gulp.task('scripts', () => {
+gulp.task('scripts:rollup', shell.task([
+    'rollup -c'
+]))
+
+gulp.task('scripts', [
+    'scripts:rollup'
+], () => {
     return gulp.src('./build/videobox.js')
         .pipe(closureCompiler({
             compilerPath: 'closure.jar',
@@ -96,7 +104,7 @@ gulp.task('scripts', () => {
 })
 
 gulp.task('sass', [
-    'overrides'
+    'sass:convert'
 ], () => {
     return gulp.src('./src/sass/*.scss')
         .pipe(sourcemaps.init())
@@ -114,6 +122,19 @@ gulp.task('sass', [
         }))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('./build'))
+})
+
+gulp.task('sass:convert', [
+    'overrides'
+], () => {
+    return gulp.src(['./src/sass/**/*.scss'], { read: false })
+        .pipe(changed('.', {
+            hasChanged: (stream, cb, sourceFile, targetPath) => changed.compareLastModifiedTime(stream, cb, sourceFile, path.resolve(process.cwd(), './build/videobox.css'))
+        }))
+        .pipe(shell([
+            'sass-convert -i --indent 4 <%= file.path %>'
+        ]))
+
 })
 
 gulp.task('overrides', () => {

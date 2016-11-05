@@ -3,29 +3,29 @@
 }
 
 .vb-line-fix {
-	white-space: nowrap;
-	max-width: 100%;
-	display: inline-block;
+    white-space: nowrap;
+    max-width: 100%;
+    display: inline-block;
 }
 
 .vb-icon-circle-close-invert {
-	position: relative;
-	display: block;
+    position: relative;
+    display: block;
 }
 
 .vb-icon-circle-close-invert:before,
 .vb-icon-circle-close-invert:after {
-	display: block;
-	position: absolute;
-	top: 0;
-	left: 0;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .vb-icon-circle-close-invert:before {
-	content: $font-Videobox-circle;
+    content: $font-Videobox-circle;
 }
 
 .vb-icon-circle-close-invert:after {
-	content: $font-Videobox-close-small;
-	color: #fff !important;
+    content: $font-Videobox-close-small;
+    color: $color-contrast-light !important;
 }

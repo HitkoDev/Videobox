@@ -1,8 +1,8 @@
 .vb_gallery.vb_slider {
     margin: 0;
-    
+
     @include flex-wrap(nowrap);
-    
+
     .vb_video_cont.vb_gal {
         margin: 12px;
     }

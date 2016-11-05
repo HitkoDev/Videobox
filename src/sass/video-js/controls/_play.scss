@@ -1,13 +1,14 @@
 .vjs-play-control {
-    @extend .vb-icon; 
+    @extend .vb-icon;
+
     @extend .vb-hover-animated;
-    
-    @include flex(0 0 2*$base-font-size);
-    
+
+    @include flex(0 0 (2 * $base-font-size));
+
     &:before {
         content: $font-Videobox-play;
     }
-    
+
     &:hover {
         color: $primary-light;
     }

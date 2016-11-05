@@ -241,7 +241,12 @@ export declare interface JQueryStatic {
 
 export declare interface JQuery {
     /**
-     * Map inline player to elements matched by the query 
+     * Map inline player to elements matched by the query
+     * 
+     * @example 
+     * ```javascript
+     * $('a[rel=vbinline]').vbInline() // Bind the inline effect to every <a rel="vbinline"> element
+     * ```
      * 
      * @param options player configuration
      * @param linkMapper function to get a Videobox video object from the clicked element
