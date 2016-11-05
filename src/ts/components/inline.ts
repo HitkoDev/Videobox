@@ -254,16 +254,16 @@ export declare interface JQuery {
     vbInline: (options?: vbOptions, linkMapper?: ((el: HTMLElement) => vbVideo)) => void
 }
 
-if (typeof (jQuery) !== 'undefined') {
-    jQuery['vbInline'] = function (video: vbVideo): void {
+function libBind($) {
+    $.vbInline = function (video: vbVideo): void {
         VbInlineObj.open(video)
     }
 
-    jQuery['vbiClose'] = function (callback?: () => any): void {
+    $.vbiClose = function (callback?: () => any): void {
         VbInlineObj.close(callback)
     }
 
-    jQuery.fn.vbInline = function (options: vbOptions = {}, linkMapper?: ((el: HTMLElement) => vbVideo)): void {
+    $.fn.vbInline = function (options: vbOptions = {}, linkMapper?: ((el: HTMLElement) => vbVideo)): void {
         let elements = iterableToArray<HTMLElement>(this)
         if (linkMapper)
             VbInlineObj.bind(elements, options, linkMapper)
@@ -271,3 +271,6 @@ if (typeof (jQuery) !== 'undefined') {
             VbInlineObj.bind(elements, options)
     }
 }
+
+if (typeof jQuery != 'undefined') libBind(jQuery)
+if (typeof Zepto != 'undefined') libBind(Zepto)

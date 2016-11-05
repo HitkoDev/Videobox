@@ -50,6 +50,14 @@ gulp.task('licence', [
         .pipe(gulp.dest('./dist'))
 })
 
+gulp.task('licence:nodep', [
+    'wrap'
+], () => {
+    return gulp.src(['./dist/videobox.min.js', './dist/videobox.min.css'])
+        .pipe(insert.prepend(comment + "\n"))
+        .pipe(gulp.dest('./dist'))
+})
+
 gulp.task('wrap', [
     'compress:nodep',
     'documentation',

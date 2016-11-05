@@ -947,16 +947,22 @@ img { max-width: 100%; }
 		<div class="tsd-panel tsd-typography">
 			<p><img src="https://cloud.githubusercontent.com/assets/4700881/10467953/b5fb0616-71fc-11e5-9847-0e2afd05ff1f.png" alt="videobox logo" width="200" align="right"></p>
 			<h1 id="-videobox-a-lightweight-video-player-http-hitko-eu-videobox-"><a href="http://hitko.eu/videobox">Videobox - a lightweight video player</a></h1>
-			<p>Videobox is a JavaScript widget and Joomla! / MODX extension for adding video (and audio) to the page in a clean way. It&#39;s been created with one thing in mind: <strong>to replace huge, content-obscuring video players with a clean pop-up / collapsible player</strong>.</p>
-			<h2 id="why-videobox-">Why Videobox?</h2>
-			<p>Well, why no? It has several benefits over the traditional way of embedding videos with iframes:</p>
+			<blockquote>
+				<p>A picture is worth a thousand words - by that logic, video tells 30.000 words per second</p>
+			</blockquote>
+			<h2 id="it-s-important-to-remove-videos-from-your-page">It&#39;s important to remove videos from your page</h2>
+			<p>Whatever the occasion, you can always open YouTube, find a video, and copy the embed code, which looks something like this: <code>&lt;iframe src=&quot;https://www.youtube.com/embed/...&quot;&gt;</code>. And when you put that code on your page, something horrible happens: visitors have to wait for the player to load, it&#39;s eating away their bandwidth, it&#39;s storing those pesky cookies, and, if they&#39;re using a not-so-powerful device, the additional rendering required by the iframe is making your site appear laggy. And that&#39;s just one iframe, if there are several videos on the page it just makes things worse!</p>
+			<p>Social networks are smart - they don&#39;t load the full player, they only show a play button with a thumbnail image. This reduces the total bandwidth and rendering time to a minimum, and only when user clicks the play button, the player actually loads and the video starts playing. You can do the same - that&#39;s where Videobox comes in. Just replace your existing <code>&lt;iframe src=&quot;{player_url}&quot;&gt;&lt;/iframe&gt;</code> with <code>&lt;a href=&quot;{player_url}&quot; rel=&quot;videobox&quot;&gt;Play video&lt;/a&gt;</code>, and you&#39;re ready for the next-generation video content.</p>
+			<h2 id="aren-t-there-already-widgets-for-this-">Aren&#39;t there already widgets for this?</h2>
+			<p>Yes there are ... umm, actually ... just google <code>video lightbox</code> or <code>video popup</code> and see for yourself, I won&#39;t blame you if you pick one of those over Videobox. And I&#39;ll totally understand when you come back and click <a href="https://github.com/HitkoDev/Videobox/releases/latest">Download</a>.</p>
+			<p>Videobox is different from other similar widgets in a few key aspects:</p>
 			<ul>
-				<li>An iframe element takes time and bandwidth to render, while a small thumbnail renders almost instantly and consumes only a few KB of bandwidth - and if you use a text link, it get even faster!</li>
-				<li>An iframe contains tens or even hundreds of other elements - this can significantly affect animations and rendering on mobile devices. With Videobox, an iframe is only visible when user is actually watching the video, so it gives your page a significant performance boost.</li>
-				<li>No matter how many videos there are on your page, Videobox only requires a single iframe, so you can insert your whole playlist without having to worry about page performance.</li>
-				<li>Since external content is only required when the user opens the video, it helps you eliminate external cookies, and protect the privacy of your users.</li>
-				<li>Unlike many other similar widgets, Videobox uses the new web animations API, thus allowing modern browsers to better optimise animations and to utilise hardware acceleration in doing so.</li>
-				<li>Most Videobox alternatives require jQuery or other external libraries, which can quickly lead to compatibility issues. Videobox doesn&#39;t use third-party libraries*, so you don&#39;t have to worry about that.</li>
+				<li><strong>Completely free</strong> - Even for commercial use</li>
+				<li><strong>Fully responsive &amp; mobile-friendly</strong> - Using vector icons instead of sprites, Videobox looks good even on high-density (retina) screens</li>
+				<li><strong>Better animations</strong> - Web animations API allows modern browsers to utilise GPU and make smooth animations while rendering Videobox effects</li>
+				<li><strong>More than just a pop-up</strong> - Videobox comes with a pop-up player, inline player, and a slider (carousel)</li>
+				<li><strong>No dependencies</strong> - Videobox doesn&#39;t depend on jQuery, Zepto, MooTools, or other third-party libraries*</li>
+				<li><strong>Small</strong> - Videobox is only 59 KB (16 KB gziped) total</li>
 			</ul>
 			<h2 id="getting-started">Getting started</h2>
 			<ol>
@@ -973,12 +979,11 @@ img { max-width: 100%; }
 					</ul>
 				</li>
 			</ol>
-			<p><strong>That&#39;s it, you&#39;re now ready to start using Videobox on your page.</strong>  </p>
 			<h2 id="to-insert-a-pop-up-player">To insert a pop-up player</h2>
 			<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">a</span>
-    <span class="hljs-attr">href</span>=<span class="hljs-string">"player-url"</span>  
-    <span class="hljs-attr">rel</span>=<span class="hljs-string">"videobox"</span> 
-    <span class="hljs-attr">title</span>=<span class="hljs-string">"Video title"</span> 
+    <span class="hljs-attr">href</span>=<span class="hljs-string">"player-url"</span>
+    <span class="hljs-attr">rel</span>=<span class="hljs-string">"videobox"</span>
+    <span class="hljs-attr">title</span>=<span class="hljs-string">"Video title"</span>
     <span class="hljs-attr">data-videobox</span>=<span class="hljs-string">"JSON-encoded options"</span>
 &gt;</span>
     Link text / thumbnail
@@ -986,16 +991,16 @@ img { max-width: 100%; }
 </code></pre>
 			<h2 id="to-insert-an-inline-player">To insert an inline player</h2>
 			<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">a</span>
-    <span class="hljs-attr">href</span>=<span class="hljs-string">"player-url"</span>  
-    <span class="hljs-attr">rel</span>=<span class="hljs-string">"vbinline"</span> 
-    <span class="hljs-attr">title</span>=<span class="hljs-string">"Video title"</span> 
+    <span class="hljs-attr">href</span>=<span class="hljs-string">"player-url"</span>
+    <span class="hljs-attr">rel</span>=<span class="hljs-string">"vbinline"</span>
+    <span class="hljs-attr">title</span>=<span class="hljs-string">"Video title"</span>
     <span class="hljs-attr">data-videobox</span>=<span class="hljs-string">"JSON-encoded options"</span>
 &gt;</span>
     Link text / thumbnail
 <span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
 </code></pre>
 			<h2 id="videobox-extensions">Videobox extensions</h2>
-			<p>Videobox is a javascript player effect, if you&#39;re looking for Videobox extensions, you can find them here:</p>
+			<p>Videobox is a JavaScript player effect, if you&#39;re looking for Videobox extensions, you can find them here:</p>
 			<ul>
 				<li><a href="https://github.com/HitkoDev/Videobox-Joomla">Joomla!</a></li>
 				<li><a href="https://github.com/HitkoDev/Videobox-MODX">MODX</a></li>

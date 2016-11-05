@@ -337,3 +337,24 @@ if (typeof (jQuery) !== 'undefined') {
             VideoboxObj.bind(elements, options)
     }
 }
+
+function libBind($) {
+    $.videobox = function (video: vbVideo): void {
+        VideoboxObj.open(video)
+    }
+
+    $.vbClose = function (): void {
+        VideoboxObj.close()
+    }
+
+    $.fn.videobox = function (options: vbOptions = {}, linkMapper?: ((el: HTMLElement) => vbVideo)): void {
+        let elements = iterableToArray<HTMLElement>(this)
+        if (linkMapper)
+            VideoboxObj.bind(elements, options, linkMapper)
+        else
+            VideoboxObj.bind(elements, options)
+    }
+}
+
+if (typeof jQuery != 'undefined') libBind(jQuery)
+if (typeof Zepto != 'undefined') libBind(Zepto)

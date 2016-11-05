@@ -393,15 +393,18 @@ export declare interface JQuery {
     vbSlider: (options?: vbSliderOptions) => Array<VbSlider>
 }
 
-if (typeof (jQuery) !== 'undefined') {
-    jQuery['vbSlider'] = function (target: HTMLElement | JQuery, options: vbSliderOptions = {}): VbSlider {
+function libBind($) {
+    $.vbSlider = function (target: HTMLElement | JQuery, options: vbSliderOptions = {}): VbSlider {
         if ('length' in target)
             target = target[0]
         return VbSlider.getSlider(<HTMLElement>target, options)
     }
 
-    jQuery.fn.vbSlider = function (options: vbSliderOptions = {}): Array<VbSlider> {
+    $.fn.vbSlider = function (options: vbSliderOptions = {}): Array<VbSlider> {
         let elements = iterableToArray<HTMLElement>(this)
         return VbSlider.bind(elements, options)
     }
 }
+
+if (typeof jQuery != 'undefined') libBind(jQuery)
+if (typeof Zepto != 'undefined') libBind(Zepto)
