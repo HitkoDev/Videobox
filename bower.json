@@ -25,11 +25,15 @@
     "homepage": "https://hitko.eu/videobox",
     "moduleType": [],
     "ignore": [
-        "**/.*",
-        "node_modules",
-        "bower_components",
-        "test",
-        "tests"
+        "*",
+        "!dist/",
+        "!dist/*",
+        "!docs/",
+        "!docs/*",
+        "!examples/",
+        "!examples/*",
+        "!LICENSE.md",
+        "!README.md"
     ],
     "dependencies": {
         "web-animations-js": "^2.2.2"
