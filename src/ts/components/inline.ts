@@ -1,4 +1,4 @@
-import { create, applyStyles, vbOptions, vbVideo, hide, show, iterableToArray, insertAfter } from './helpers'
+import { create, applyStyles, vbOptions, vbVideo, hide, show, iterableToArray, insertAfter, toggleClass } from './helpers'
 import { VideoboxObj as Videobox } from './box'
 
 export class VbInline {
@@ -69,14 +69,19 @@ export class VbInline {
         if (typeof links == 'string')
             links = iterableToArray<HTMLElement>(document.querySelectorAll(links))
 
-        links.forEach(link => link.addEventListener('click', evt => {
-            evt.preventDefault()
-            evt.stopPropagation()
-            let video = linkMapper(link)
-            video.options = Object.assign({}, options, video.options)
-            this.open(video)
-            return false
-        }))
+        links.forEach(link => {
+            if (link['vbListener']) link.removeEventListener('click', link['vbListener'])
+            if (link['vbiListener']) link.removeEventListener('click', link['vbiListener'])
+            link['vbiListener'] = (evt) => {
+                evt.preventDefault()
+                evt.stopPropagation()
+                let video = linkMapper(link)
+                video.options = Object.assign({}, options, video.options)
+                this.open(video)
+                return false
+            }
+            link.addEventListener('click', link['vbiListener'])
+        })
     }
 
     /**
@@ -90,16 +95,16 @@ export class VbInline {
         video.options = Object.assign({}, this.defaults, video.options)
 
         let link = video.origin.target
-        let target = link.querySelector(link.getAttribute("data-target")) || link
+        let target = <HTMLElement>link.querySelector(link.getAttribute("data-target")) || link
 
-        target.classList.toggle('vb_line_fix', true)
+        toggleClass(target, 'vb_line_fix', true)
         video.origin = Object.assign({}, {
             x: target.clientWidth / 2,
             y: target.clientHeight / 2,
             width: target.clientWidth,
             height: target.clientHeight
         }, video.origin)
-        target.classList.toggle('vb_line_fix', false)
+        toggleClass(target, 'vb_line_fix', false)
 
         this.close(() => this.changeVideo(video))
     }
@@ -200,7 +205,7 @@ export class VbInline {
 
     private hide(callback?: () => any) {
         if (this.wrap.parentElement)
-            this.wrap.remove()
+            this.wrap.parentNode.removeChild(this.wrap)
 
         this.hidden.forEach(el => show(el))
         this.hidden = []

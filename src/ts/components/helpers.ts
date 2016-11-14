@@ -158,4 +158,9 @@ export function show(el: HTMLElement) {
 /** @internal */
 export function insertAfter(el: HTMLElement, target: HTMLElement) {
     target.parentElement.insertBefore(el, target.nextSibling)
-} 
+}
+
+/** @internal */
+export function toggleClass(el: HTMLElement, className: string, on: boolean) {
+    if (el.classList.contains(className) ? !on : on) el.classList.toggle(className)
+}

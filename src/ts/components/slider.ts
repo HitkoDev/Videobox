@@ -1,10 +1,10 @@
-import { createClass, applyStyles, vbOptions, vbVideo, hide, show, iterableToArray, insertAfter } from './helpers'
+import { createClass, applyStyles, vbOptions, vbVideo, hide, show, iterableToArray, insertAfter, toggleClass } from './helpers'
 import { VbInlineObj as VbInline } from './inline'
 
 function detach(elements: Array<HTMLElement>): void {
     elements.forEach(el => {
         if ('querySelector' in el && el.querySelector('#vbiWrap')) VbInline.close()
-        el.remove()
+        el.parentNode.removeChild(el)
     })
 }
 
@@ -199,7 +199,7 @@ export class VbSlider {
 
         this.options = Object.assign(this.options, options)
 
-        this.content.classList.toggle('vb-slider__move-all', this.options.moveAll)
+        toggleClass(this.content, 'vb-slider__move-all', this.options.moveAll)
 
         this.setCount()
     }

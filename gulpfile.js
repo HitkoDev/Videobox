@@ -45,7 +45,7 @@ gulp.task('licence', [
     'compress',
     'documentation'
 ], () => {
-    return gulp.src(['./dist/videobox.min.js', './dist/videobox.min.css'])
+    return gulp.src(['./dist/videobox.*.js', './dist/videobox.*.css'])
         .pipe(insert.prepend(comment + "\n"))
         .pipe(gulp.dest('./dist'))
 })
@@ -53,7 +53,7 @@ gulp.task('licence', [
 gulp.task('licence:nodep', [
     'wrap'
 ], () => {
-    return gulp.src(['./dist/videobox.min.js', './dist/videobox.min.css'])
+    return gulp.src(['./dist/videobox.*.js', './dist/videobox.*.css'])
         .pipe(insert.prepend(comment + "\n"))
         .pipe(gulp.dest('./dist'))
 })
@@ -99,17 +99,33 @@ gulp.task('scripts:rollup', shell.task([
 gulp.task('scripts', [
     'scripts:rollup'
 ], () => {
-    return gulp.src('./build/videobox.js')
-        .pipe(closureCompiler({
-            compilerPath: 'closure.jar',
-            compilerFlags: {
-                language_out: 'ES5',
-                create_source_map: 'dist/videobox.js.map',
-                source_map_input: 'build/videobox.js|build/videobox.js.map'
-            },
-            fileName: 'videobox.min.js'
-        }))
-        .pipe(gulp.dest('./dist'))
+    return merge([
+        gulp.src('./build/videobox.js')
+            .pipe(closureCompiler({
+                compilerPath: 'closure.jar',
+                compilerFlags: {
+                    language_out: 'ES5',
+                    create_source_map: 'dist/videobox.js.map',
+                    source_map_input: 'build/videobox.js|build/videobox.js.map'
+                },
+                fileName: 'videobox.min.js'
+            }))
+            .pipe(gulp.dest('./dist')),
+
+        gulp.src(['./node_modules/web-animations-js/web-animations.min.js', './build/videobox.js'])
+            .pipe(closureCompiler({
+                compilerPath: 'closure.jar',
+                compilerFlags: {
+                    language_out: 'ES5',
+                    create_source_map: 'dist/videobox.bundle.map',
+                    source_map_input: 'build/videobox.js|build/videobox.js.map'
+                },
+                continueWithWarnings: true,
+                fileName: 'videobox.bundle.js'
+            }))
+            .pipe(gulp.dest('./dist'))
+
+    ])
 })
 
 gulp.task('sass', [
@@ -185,17 +201,17 @@ function compress() {
             }))
             .pipe(sourcemaps.write('.', {
                 mapFile: (mapFilePath) => {
-                    return mapFilePath.replace('.min.js.map', '.js.map').replace('.min.css.map', '.css.map')
+                    return mapFilePath.replace('.min.css.map', '.css.map')
                 }
             }))
             .pipe(gulp.dest('./dist')),
 
-        gulp.src('./dist/videobox.min.js')
+        gulp.src('./dist/*.js')
             .pipe(sourcemaps.init({ loadMaps: true }))
             .pipe(uglify())
             .pipe(sourcemaps.write('.', {
                 mapFile: (mapFilePath) => {
-                    return mapFilePath.replace('.min.js.map', '.js.map')
+                    return mapFilePath.replace('.min.js.map', '.js.map').replace('.bundle.js.map', '.bundle.map')
                 }
             }))
             .pipe(gulp.dest('./dist'))

@@ -20,7 +20,7 @@ Videobox is different from other similar widgets in a few key aspects:
  * **Better animations** - Web animations API allows modern browsers to utilise GPU and make smooth animations while rendering Videobox effects
  * **More than just a pop-up** - Videobox comes with a pop-up player, inline player, and a slider (carousel)
  * **No dependencies** - Videobox doesn't depend on jQuery, Zepto, MooTools, or other third-party libraries*
- * **Small** - Videobox is only 59 KB (16 KB gziped) total
+ * **Small** - Videobox is only 19 KB (5 KB gziped) total
 
 Getting started
 ---------------
@@ -28,10 +28,12 @@ Getting started
 2. Check out the ```examples``` directory for some basic examples, and ```docs/index.html``` for the documentation
 3. Include Videobox on your website:
  + add ```<link href="path/to/videobox/dist/videobox.min.css" rel="stylesheet">``` to the ```<head>``` tag
- + include ```<script src="path/to/videobox/dist/videobox.min.js" type="text/javascript"></script>``` before the ```</body>``` tag
-4. *Since some older browsers don't support web animations yet, you'll probably want to use the web animations polyfill:
- + If you've installed Videobox through npm, web animations polyfill can be found in the ```node_modules``` folder
- + If you've installed through bower, web animations polyfill is inside the ```bower_components``` folder
+ + include ```<script src="path/to/videobox/dist/videobox.min.js" type="text/javascript"></script>``` before the ```</body>``` tag*
+
+*Since some older browsers don't support web animations yet, there's a Videobox + polyfill bundle in the dist filder:
+ + use ```videobox.bundle.js``` instead of ```videobox.min.js```, or
+ + there's a web animations polyfill in the ```node_modules``` folder if you've installed Videobox through npm, or
+ + there's a web animations polyfill is inside the ```bower_components``` folder if you've installed Videobox through bower
 
 To insert a pop-up player
 -------------------------

@@ -1,4 +1,4 @@
-import { create, applyStyles, vbOptions, vbVideo, hide, show, iterableToArray } from './helpers'
+import { create, applyStyles, vbOptions, vbVideo, hide, show, iterableToArray, toggleClass } from './helpers'
 import { VbInlineObj as VbInline } from './inline'
 
 export class Videobox {
@@ -92,14 +92,19 @@ export class Videobox {
         if (typeof links == 'string')
             links = iterableToArray<HTMLElement>(document.querySelectorAll(links))
 
-        links.forEach(link => link.addEventListener('click', evt => {
-            evt.preventDefault()
-            evt.stopPropagation()
-            let video = linkMapper(link)
-            video.options = Object.assign({}, options, video.options)
-            this.open(video)
-            return false
-        }))
+        links.forEach(link => {
+            if (link['vbListener']) link.removeEventListener('click', link['vbListener'])
+            if (link['vbiListener']) link.removeEventListener('click', link['vbiListener'])
+            link['vbListener'] = (evt) => {
+                evt.preventDefault()
+                evt.stopPropagation()
+                let video = linkMapper(link)
+                video.options = Object.assign({}, options, video.options)
+                this.open(video)
+                return false
+            }
+            link.addEventListener('click', link['vbListener'])
+        })
     }
 
     /**
@@ -115,19 +120,19 @@ export class Videobox {
         this.setup(video)
 
         let link = video.origin.target
-        let target = link.querySelector(link.getAttribute("data-target")) || link
+        let target = <HTMLElement>link.querySelector(link.getAttribute("data-target")) || link
 
         let bw = this.wrap.getBoundingClientRect()
         let bt = target.getBoundingClientRect()
 
-        target.classList.toggle('vb_line_fix', true)
+        toggleClass(target, 'vb_line_fix', true)
         video.origin = Object.assign({}, {
             x: bt.left - bw.left + target.clientWidth / 2,
             y: bt.top - bw.top + target.clientHeight / 2,
             width: target.clientWidth,
             height: target.clientHeight
         }, video.origin)
-        target.classList.toggle('vb_line_fix', false)
+        toggleClass(target, 'vb_line_fix', false)
 
         this.changeVideo(video)
     }
@@ -137,7 +142,7 @@ export class Videobox {
      */
     close() {
         this.stop()
-        new Array(this.wrap, this.bottomContainer, this.overlay).forEach(el => el.classList.toggle('visible', false))
+        new Array(this.wrap, this.bottomContainer, this.overlay).forEach(el => toggleClass(el, 'visible', false))
         this.wrap.style.top = '0px'
         this.wrap.style.left = '0px'
         this.activeVideo = null
@@ -196,24 +201,18 @@ export class Videobox {
 
     private setPlayerPosition(root: HTMLElement = this.activeVideo.options.root): void {
         let parent = <HTMLElement>this.wrap.offsetParent
+        let wbr = this.wrap.getBoundingClientRect()
+        let obr = this.overlay.getBoundingClientRect()
         let pos = {
             top: this.wrap.offsetTop - parent.offsetTop,
             left: this.wrap.offsetLeft - parent.offsetLeft
         }
-        let rect = {
-            top: this.wrap.offsetTop,
-            left: this.wrap.offsetLeft
+        let diff = {
+            top: obr.top - wbr.top,
+            left: obr.left - wbr.left
         }
-        let bdy = {
-            top: document.documentElement.offsetTop,
-            left: document.documentElement.offsetLeft
-        }
-        if (root != document.body) {
-            pos.top += root.scrollTop
-            pos.left += root.scrollLeft
-        }
-        this.wrap.style.top = (pos.top + bdy.top + window.scrollY - rect.top) + 'px'
-        this.wrap.style.left = (pos.left + bdy.left + window.scrollX - rect.left) + 'px'
+        this.wrap.style.top = (pos.top + diff.top) + 'px'
+        this.wrap.style.left = (pos.left + diff.left) + 'px'
     }
 
     private changeVideo(newVideo: vbVideo): void {
@@ -237,8 +236,8 @@ export class Videobox {
         }
 
         applyStyles(this.center, centerOrigin)
-        new Array(this.wrap, this.overlay).forEach(el => el.classList.toggle('visible', true))
-        this.wrap.classList.toggle('animating', true)
+        new Array(this.wrap, this.overlay).forEach(el => toggleClass(el, 'visible', true))
+        toggleClass(this.wrap, 'animating', true)
 
         if (this.activeVideo.origin) {
             let originRatio = ((this.activeVideo.origin.height * 100) / this.activeVideo.origin.width) || targetRatio
@@ -265,7 +264,7 @@ export class Videobox {
             { 'maxHeight': '0px' },
             { 'maxHeight': '200px' }
         ], this.activeVideo.options.animation)
-        this.bottomContainer.classList.toggle('visible', true)
+        toggleClass(this.bottomContainer, 'visible', true)
         bottomAnimation.onfinish = () => this.showVideo()
         this.animations.push(bottomAnimation)
         bottomAnimation.play()
@@ -275,7 +274,7 @@ export class Videobox {
         if (!this.isOpen || this.video.getAttribute('src')) return
         show(this.video)
         this.video.setAttribute('src', this.activeVideo.url)
-        this.wrap.classList.toggle('animating', false)
+        toggleClass(this.wrap, 'animating', false)
     }
 
     private stop(): void {
@@ -284,7 +283,7 @@ export class Videobox {
         this.isOpen = false
         this.video.setAttribute('src', '')
         hide(this.video)
-        this.wrap.classList.toggle('animating', false)
+        toggleClass(this.wrap, 'animating', false)
     }
 }
 
