@@ -128,23 +128,6 @@
 
     .vb_play_button .vb_thub_wrap .vb-icon-play {}
 
-    #vbiClose {}
-
-    #vbiWrap:hover #vbiClose {}
-
-    #vbiClose:hover,
-    #vbiClose:focus {
-        color: $primary-light;
-    }
-
-    #vbiResponsive {}
-
-    #vbiVideo {}
-
-    #vbiWrap {
-        color: $primary-color;
-    }
-
     .vb_slider_outer {
         .vb_slider_prev,
         .vb_slider_next {
@@ -165,6 +148,23 @@
         color: $primary-color;
 
         .vb_slider_wrap {}
+    }
+
+    #vbiClose {}
+
+    #vbiWrap:hover #vbiClose {}
+
+    #vbiClose:hover,
+    #vbiClose:focus {
+        color: $primary-light;
+    }
+
+    #vbiResponsive {}
+
+    #vbiVideo {}
+
+    #vbiWrap {
+        color: $primary-color;
     }
 
     html.vb-html5-player,

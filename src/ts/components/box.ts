@@ -36,10 +36,10 @@ export class Videobox {
     /** @internal */
     constructor(links?: Array<HTMLElement> | string, options: vbOptions = {}, linkMapper?: ((el: HTMLElement) => vbVideo)) {
         this.overlay = <HTMLDivElement>create('div', 'vbOverlay', () => this.close())
-        this.defaults.root.appendChild(this.overlay)
+        //this.defaults.root.appendChild(this.overlay)
 
         this.wrap = <HTMLDivElement>create('div', 'vbWrap')
-        this.defaults.root.appendChild(this.wrap)
+        //this.defaults.root.appendChild(this.wrap)
 
         this.center = <HTMLDivElement>create('div', 'vbCenter')
         this.wrap.appendChild(this.center)
@@ -117,6 +117,7 @@ export class Videobox {
         this.close()
 
         video.options = Object.assign({}, this.defaults, video.options)
+        if(!video.options.root) video.options.root = document.body
         this.setup(video)
 
         let link = video.origin.target
