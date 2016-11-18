@@ -1,6 +1,6 @@
 {
   "license": "GPL-3.0",
-  "version": "6.0.0-rc5",
+  "version": "6.0.0-rc6",
   "name": "videobox",
   "description": "Pop-up video player plugin",
   "copyright": "Hitko",

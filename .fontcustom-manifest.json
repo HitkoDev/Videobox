@@ -1,7 +1,7 @@
 {
   "checksum": {
-    "previous": "e4c6b416b1b8cb2f0b8996bcdcfc4fa9fa9e99873cd0be32152beedf64841c82",
-    "current": "e4c6b416b1b8cb2f0b8996bcdcfc4fa9fa9e99873cd0be32152beedf64841c82"
+    "previous": "38702529a498eb35876bd8e2c569645ef04b73ad3e575555be568a71a6e51520",
+    "current": "38702529a498eb35876bd8e2c569645ef04b73ad3e575555be568a71a6e51520"
   },
   "fonts": [
     "./___tmp___/Videobox.ttf",
@@ -12,55 +12,55 @@
   "glyphs": {
     "circle": {
       "codepoint": 61696,
-      "source": "/mnt/d/Development/Videobox/src/icons/circle.svg"
+      "source": "/srv/htdocs/Videobox/src/icons/circle.svg"
     },
     "close": {
       "codepoint": 61697,
-      "source": "/mnt/d/Development/Videobox/src/icons/close.svg"
+      "source": "/srv/htdocs/Videobox/src/icons/close.svg"
     },
     "close-small": {
       "codepoint": 61698,
-      "source": "/mnt/d/Development/Videobox/src/icons/close-small.svg"
+      "source": "/srv/htdocs/Videobox/src/icons/close-small.svg"
     },
     "fullscreen-enter": {
       "codepoint": 61702,
-      "source": "/mnt/d/Development/Videobox/src/icons/fullscreen-enter.svg"
+      "source": "/srv/htdocs/Videobox/src/icons/fullscreen-enter.svg"
     },
     "fullscreen-exit": {
       "codepoint": 61703,
-      "source": "/mnt/d/Development/Videobox/src/icons/fullscreen-exit.svg"
+      "source": "/srv/htdocs/Videobox/src/icons/fullscreen-exit.svg"
     },
     "next": {
       "codepoint": 61700,
-      "source": "/mnt/d/Development/Videobox/src/icons/next.svg"
+      "source": "/srv/htdocs/Videobox/src/icons/next.svg"
     },
     "pause": {
       "codepoint": 61704,
-      "source": "/mnt/d/Development/Videobox/src/icons/pause.svg"
+      "source": "/srv/htdocs/Videobox/src/icons/pause.svg"
     },
     "play": {
       "codepoint": 61699,
-      "source": "/mnt/d/Development/Videobox/src/icons/play.svg"
+      "source": "/srv/htdocs/Videobox/src/icons/play.svg"
     },
     "prev": {
       "codepoint": 61701,
-      "source": "/mnt/d/Development/Videobox/src/icons/prev.svg"
+      "source": "/srv/htdocs/Videobox/src/icons/prev.svg"
     },
     "volume-0": {
       "codepoint": 61705,
-      "source": "/mnt/d/Development/Videobox/src/icons/volume-0.svg"
+      "source": "/srv/htdocs/Videobox/src/icons/volume-0.svg"
     },
     "volume-1": {
       "codepoint": 61706,
-      "source": "/mnt/d/Development/Videobox/src/icons/volume-1.svg"
+      "source": "/srv/htdocs/Videobox/src/icons/volume-1.svg"
     },
     "volume-2": {
       "codepoint": 61707,
-      "source": "/mnt/d/Development/Videobox/src/icons/volume-2.svg"
+      "source": "/srv/htdocs/Videobox/src/icons/volume-2.svg"
     },
     "volume-3": {
       "codepoint": 61708,
-      "source": "/mnt/d/Development/Videobox/src/icons/volume-3.svg"
+      "source": "/srv/htdocs/Videobox/src/icons/volume-3.svg"
     }
   },
   "options": {
@@ -75,8 +75,8 @@
     "font_name": "Videobox",
     "force": true,
     "input": {
-      "templates": "/mnt/d/Development/Videobox/src/icons",
-      "vectors": "/mnt/d/Development/Videobox/src/icons"
+      "templates": "/srv/htdocs/Videobox/src/icons",
+      "vectors": "/srv/htdocs/Videobox/src/icons"
     },
     "no_hash": true,
     "output": {
