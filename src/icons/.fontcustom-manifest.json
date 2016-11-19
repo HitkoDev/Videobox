@@ -1,0 +1,96 @@
+{
+  "checksum": {
+    "previous": "6904bdc8c105d8f84874a7e7af2d9a4b6f5b74abfe8d9b249aaf9b6e307676c4",
+    "current": "6904bdc8c105d8f84874a7e7af2d9a4b6f5b74abfe8d9b249aaf9b6e307676c4"
+  },
+  "fonts": [
+    "./___tmp___/Videobox.ttf",
+    "./___tmp___/Videobox.svg",
+    "./___tmp___/Videobox.woff",
+    "./___tmp___/Videobox.eot"
+  ],
+  "glyphs": {
+    "circle": {
+      "codepoint": 61696,
+      "source": "/mnt/d/Development/Videobox/src/icons/circle.svg"
+    },
+    "close": {
+      "codepoint": 61697,
+      "source": "/mnt/d/Development/Videobox/src/icons/close.svg"
+    },
+    "close-small": {
+      "codepoint": 61698,
+      "source": "/mnt/d/Development/Videobox/src/icons/close-small.svg"
+    },
+    "fullscreen-enter": {
+      "codepoint": 61699,
+      "source": "/mnt/d/Development/Videobox/src/icons/fullscreen-enter.svg"
+    },
+    "fullscreen-exit": {
+      "codepoint": 61700,
+      "source": "/mnt/d/Development/Videobox/src/icons/fullscreen-exit.svg"
+    },
+    "next": {
+      "codepoint": 61701,
+      "source": "/mnt/d/Development/Videobox/src/icons/next.svg"
+    },
+    "pause": {
+      "codepoint": 61702,
+      "source": "/mnt/d/Development/Videobox/src/icons/pause.svg"
+    },
+    "play": {
+      "codepoint": 61703,
+      "source": "/mnt/d/Development/Videobox/src/icons/play.svg"
+    },
+    "prev": {
+      "codepoint": 61704,
+      "source": "/mnt/d/Development/Videobox/src/icons/prev.svg"
+    },
+    "volume-0": {
+      "codepoint": 61705,
+      "source": "/mnt/d/Development/Videobox/src/icons/volume-0.svg"
+    },
+    "volume-1": {
+      "codepoint": 61706,
+      "source": "/mnt/d/Development/Videobox/src/icons/volume-1.svg"
+    },
+    "volume-2": {
+      "codepoint": 61707,
+      "source": "/mnt/d/Development/Videobox/src/icons/volume-2.svg"
+    },
+    "volume-3": {
+      "codepoint": 61708,
+      "source": "/mnt/d/Development/Videobox/src/icons/volume-3.svg"
+    }
+  },
+  "options": {
+    "autowidth": false,
+    "config": false,
+    "css_selector": ".vb-icon-{{glyph}}",
+    "debug": false,
+    "font_ascent": 448,
+    "font_descent": 64,
+    "font_design_size": 16,
+    "font_em": 512,
+    "font_name": "Videobox",
+    "force": true,
+    "input": {
+      "templates": "/mnt/d/Development/Videobox/src/icons",
+      "vectors": "/mnt/d/Development/Videobox/src/icons"
+    },
+    "no_hash": true,
+    "output": {
+      "css": "./___tmp___",
+      "fonts": "./___tmp___",
+      "preview": "./___tmp___"
+    },
+    "preprocessor_path": "/font",
+    "quiet": false,
+    "templates": [
+      "_icons.scss"
+    ]
+  },
+  "templates": [
+    "./___tmp___/_icons.scss"
+  ]
+}

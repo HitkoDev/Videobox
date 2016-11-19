@@ -53,27 +53,27 @@
 }
 
 .vb-icon-fullscreen-enter:before {
-    content: "\f106";
-}
-
-.vb-icon-fullscreen-exit:before {
-    content: "\f107";
-}
-
-.vb-icon-next:before {
-    content: "\f104";
-}
-
-.vb-icon-pause:before {
-    content: "\f108";
-}
-
-.vb-icon-play:before {
     content: "\f103";
 }
 
-.vb-icon-prev:before {
+.vb-icon-fullscreen-exit:before {
+    content: "\f104";
+}
+
+.vb-icon-next:before {
     content: "\f105";
+}
+
+.vb-icon-pause:before {
+    content: "\f106";
+}
+
+.vb-icon-play:before {
+    content: "\f107";
+}
+
+.vb-icon-prev:before {
+    content: "\f108";
 }
 
 .vb-icon-volume-0:before {
@@ -95,12 +95,12 @@
 $font-Videobox-circle: "";
 $font-Videobox-close: "";
 $font-Videobox-close-small: "";
-$font-Videobox-fullscreen-enter: "";
-$font-Videobox-fullscreen-exit: "";
-$font-Videobox-next: "";
-$font-Videobox-pause: "";
-$font-Videobox-play: "";
-$font-Videobox-prev: "";
+$font-Videobox-fullscreen-enter: "";
+$font-Videobox-fullscreen-exit: "";
+$font-Videobox-next: "";
+$font-Videobox-pause: "";
+$font-Videobox-play: "";
+$font-Videobox-prev: "";
 $font-Videobox-volume-0: "";
 $font-Videobox-volume-1: "";
 $font-Videobox-volume-2: "";

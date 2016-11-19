@@ -3,13 +3,11 @@ var rename = require("gulp-rename")
 var cssBase64 = require('gulp-css-base64')
 var cleanCSS = require('gulp-clean-css')
 var concat = require('gulp-concat')
-var fontcustom = require('gulp-fontcustom')
 var replace = require('gulp-replace')
 var imagemin = require('gulp-imagemin')
 var changed = require("gulp-changed")
 var merge = require("merge2")
 var addsrc = require('gulp-add-src')
-var svgmin = require('gulp-svgmin')
 var insert = require('gulp-insert')
 var sourcemaps = require('gulp-sourcemaps')
 var bourbon = require('bourbon')
@@ -60,8 +58,7 @@ gulp.task('licence:nodep', [
 
 gulp.task('wrap', [
     'compress:nodep',
-    'documentation',
-    'images'
+    'documentation'
 ], () => {
 
 })
@@ -206,6 +203,9 @@ function compress() {
             }))
             .pipe(gulp.dest('./dist')),
 
+        gulp.src('./build/images/**/*.png')
+            .pipe(gulp.dest('./dist')),
+
         gulp.src('./dist/*.js')
             .pipe(sourcemaps.init({ loadMaps: true }))
             .pipe(uglify())
@@ -217,46 +217,6 @@ function compress() {
             .pipe(gulp.dest('./dist'))
     ])
 }
-
-gulp.task('icons:font', () => {
-    return gulp.src(['./src/icons/*.svg'])
-        .pipe(fontcustom({
-            font_name: 'Videobox',
-            'css-selector': '.vb-icon-{{glyph}}',
-            templates: ['_icons.scss'],
-            preprocessor_path: '/font'
-        }))
-        .pipe(gulp.dest('./build/font'))
-})
-
-gulp.task('icons:sass', [
-    'icons:font'
-], () => {
-    return gulp.src('./build/font/*.scss')
-        .pipe(replace('-{{glyph}}', ', [class^="vb-icon-"], [class*=" vb-icon-"]'))
-        .pipe(concat('_icons.scss'))
-        .pipe(gulp.dest('./build/font'))
-        .pipe(shell([
-            'sass-convert -i --indent 4 <%= file.path %>'
-        ]))
-})
-
-gulp.task('icons', [
-    'icons:sass'
-], () => {
-    return merge([
-        gulp.src('./build/font/*.svg')
-            .pipe(svgmin({
-                plugins: [{
-                    removeUselessDefs: false
-                }]
-            }))
-            .pipe(gulp.dest('./build/font')),
-
-        gulp.src('./build/font/_icons.scss')
-            .pipe(gulp.dest('./src/sass'))
-    ])
-})
 
 gulp.task('watch', () => {
     gulp.watch('./build/**/*.d.ts', ['documentation'])
