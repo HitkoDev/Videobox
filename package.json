@@ -1,6 +1,6 @@
 {
   "license": "GPL-3.0",
-  "version": "6.0.0-rc8",
+  "version": "6.0.0-rc9",
   "name": "videobox",
   "description": "Pop-up video player plugin",
   "copyright": "Hitko",
@@ -20,7 +20,8 @@
     "slider",
     "gallery",
     "oembed",
-    "iframe"
+    "iframe",
+    "zepto"
   ],
   "main": "./dist/videobox.min.js",
   "style": "./dist/videobox.min.css",
