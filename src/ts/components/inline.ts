@@ -14,12 +14,14 @@ export class VbInline {
     private hidding: boolean = false
     private animations: Array<Animation> = []
     private hidden: Array<HTMLElement> = []
+    private timer: number
 
     private defaults: vbOptions = {
         width: 720,
         height: 405,
         closeText: 'Close',
         padding: 30,
+        closeTimeout: 1000,
         animation: {
             duration: 500,
             iterations: 1,
@@ -90,7 +92,8 @@ export class VbInline {
      * @param video video to show
      */
     open(video: vbVideo): void {
-        Videobox.close()
+        if ('Videobox' in window)
+            window['Videobox'].close()
 
         video.options = Object.assign({}, this.defaults, video.options)
 
@@ -120,7 +123,7 @@ export class VbInline {
         if (!this.hidding)
             if (this.wrap.parentElement && this.activeVideo) {
                 this.hidding = true
-                let maxW = (this.activeVideo.origin ? this.activeVideo.origin.width : this.activeVideo.options.initialWidth) + 'px'
+                let maxW = this.activeVideo.origin.width + 'px'
                 let v1 = this.wrap.animate([
                     { 'maxWidth': (this.activeVideo.options.width + 2 * this.activeVideo.options.padding) + 'px' },
                     { 'maxWidth': maxW }
@@ -130,15 +133,13 @@ export class VbInline {
                 this.wrap.style.maxWidth = maxW
                 v1.play()
 
-                if (this.activeVideo.origin) {
-                    let padding = ((this.activeVideo.origin.height * 100) / this.activeVideo.origin.width) + '%'
-                    let v2 = this.responsive.animate([
-                        { 'paddingBottom': ((this.activeVideo.options.height * 100) / this.activeVideo.options.width) + '%' },
-                        { 'paddingBottom': padding }
-                    ], this.activeVideo.options.animation)
-                    this.responsive.style.paddingBottom = padding
-                    v2.play()
-                }
+                let padding = ((this.activeVideo.origin.height * 100) / this.activeVideo.origin.width) + '%'
+                let v2 = this.responsive.animate([
+                    { 'paddingBottom': ((this.activeVideo.options.height * 100) / this.activeVideo.options.width) + '%' },
+                    { 'paddingBottom': padding }
+                ], this.activeVideo.options.animation)
+                this.responsive.style.paddingBottom = padding
+                v2.play()
             } else
                 this.hide(callback)
 
@@ -169,10 +170,11 @@ export class VbInline {
         this.wrap.setAttribute('style', this.activeVideo.options.style)
         this.wrap.setAttribute('class', this.activeVideo.options.class)
         this.caption.innerHTML = this.activeVideo.title
+        toggleClass(this.button, 'visible', true)
         this.isOpen = true
 
         let wrapOrigin = {
-            'maxWidth': (this.activeVideo.origin ? this.activeVideo.origin.width : this.activeVideo.options.initialWidth) + 'px'
+            'maxWidth': this.activeVideo.origin.width + 'px'
         }
         let wrapDest = {
             'maxWidth': (this.activeVideo.options.width + 2 * this.activeVideo.options.padding) + 'px'
@@ -186,14 +188,15 @@ export class VbInline {
         let responsiveDest = {
             'paddingBottom': ((this.activeVideo.options.height * 100) / this.activeVideo.options.width) + '%'
         }
-        if (this.activeVideo.origin) {
-            let responsiveOrigin = {
-                'paddingBottom': ((this.activeVideo.origin.height * 100) / this.activeVideo.origin.width) + '%'
-            }
-            let animation = this.responsive.animate([responsiveOrigin, responsiveDest], this.activeVideo.options.animation)
-            this.animations.push(animation)
-            animation.play()
+        let responsiveOrigin = {
+            'paddingBottom': ((this.activeVideo.origin.height * 100) / this.activeVideo.origin.width) + '%'
         }
+        let animation2 = this.responsive.animate([responsiveOrigin, responsiveDest], this.activeVideo.options.animation)
+        animation2.onfinish = () => {
+            this.timer = window.setTimeout(() => toggleClass(this.button, 'visible', false), newVideo.options.closeTimeout)
+        }
+        this.animations.push(animation2)
+        animation2.play()
         applyStyles(this.responsive, responsiveDest)
     }
 
@@ -221,6 +224,7 @@ export class VbInline {
         this.animations = []
         this.isOpen = false
         this.video.setAttribute('src', '')
+        window.clearTimeout(this.timer)
         hide(this.video)
     }
 }

@@ -16,7 +16,8 @@
     box-sizing: border-box;
 }
 
-#vbiWrap:hover #vbiClose {
+#vbiWrap:hover #vbiClose,
+#vbiClose.visible {
     opacity: 1;
 }
 

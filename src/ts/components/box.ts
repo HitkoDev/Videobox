@@ -23,7 +23,6 @@ export class Videobox {
         height: 405,
         closeText: 'Close',
         padding: 30,
-        initialWidth: '15%',
         root: document.body,
         animation: {
             duration: 500,
@@ -113,7 +112,8 @@ export class Videobox {
      * @param video video to show
      */
     open(video: vbVideo): void {
-        VbInline.close()
+        if ('VbInline' in window)
+            window['VbInline'].close()
         this.close()
 
         video.options = Object.assign({}, this.defaults, video.options)
@@ -228,9 +228,9 @@ export class Videobox {
         this.isOpen = true
 
         let centerOrigin = {
-            top: (this.activeVideo.origin ? -(this.wrap.clientHeight / 2 - this.activeVideo.origin.y) : 0) + 'px',
-            left: (this.activeVideo.origin ? -(this.wrap.clientWidth / 2 - this.activeVideo.origin.x) : 0) + 'px',
-            'maxWidth': this.activeVideo.origin ? this.activeVideo.origin.width + 'px' : this.activeVideo.options.initialWidth
+            top: (this.activeVideo.origin.y - this.wrap.clientHeight / 2) + 'px',
+            left: (this.activeVideo.origin.x - this.wrap.clientWidth / 2) + 'px',
+            'maxWidth': this.activeVideo.origin.width + 'px'
         }
 
         let centerTarget = {
@@ -243,15 +243,12 @@ export class Videobox {
         new Array(this.wrap, this.overlay).forEach(el => toggleClass(el, 'visible', true))
         toggleClass(this.wrap, 'animating', true)
 
-        if (this.activeVideo.origin) {
-            let originRatio = ((this.activeVideo.origin.height * 100) / this.activeVideo.origin.width) || targetRatio
-            if (originRatio != targetRatio)
-                this.animations.push(this.responsive.animate([
-                    { 'paddingBottom': originRatio + '%' },
-                    { 'paddingBottom': targetRatio + '%' }
-                ], this.activeVideo.options.animation))
-
-        }
+        let originRatio = ((this.activeVideo.origin.height * 100) / this.activeVideo.origin.width) || targetRatio
+        if (originRatio != targetRatio)
+            this.animations.push(this.responsive.animate([
+                { 'paddingBottom': originRatio + '%' },
+                { 'paddingBottom': targetRatio + '%' }
+            ], this.activeVideo.options.animation))
 
         let centerAnimation = this.center.animate([
             centerOrigin,

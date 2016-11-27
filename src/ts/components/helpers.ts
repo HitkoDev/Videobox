@@ -24,11 +24,6 @@ export interface vbOptions {
     padding?: number,
 
     /**
-     * initial width of the pop-up (used when origin width isn't set)
-     */
-    initialWidth?: string,
-
-    /**
      * element the pop-up will be attached to 
      */
     root?: HTMLElement,
@@ -42,6 +37,11 @@ export interface vbOptions {
      * adittional class name(s) for the player (doesn't apply to the pop-up player)
      */
     class?: string,
+
+    /**
+     * time (in ms) while the close button remains visible when the inline player is shown
+     */
+    closeTimeout?: number,
 
     /**
      * animation properties (see <a href="https://w3c.github.io/web-animations/">web animations specifications</a>)

@@ -130,7 +130,8 @@
 
     #vbiClose {}
 
-    #vbiWrap:hover #vbiClose {}
+    #vbiWrap:hover #vbiClose,
+    #vbiClose.visible {}
 
     #vbiClose:hover,
     #vbiClose:focus {
