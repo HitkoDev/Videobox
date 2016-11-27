@@ -117,7 +117,7 @@ export class Videobox {
         this.close()
 
         video.options = Object.assign({}, this.defaults, video.options)
-        if(!video.options.root) video.options.root = document.body
+        if (!video.options.root) video.options.root = document.body
         this.setup(video)
 
         let link = video.origin.target
@@ -180,6 +180,9 @@ export class Videobox {
         let options = JSON.parse(el.getAttribute("data-videobox")) || {}
         if (options.root) {
             let root = options.root
+            if (typeof root == 'string')
+                root = iterableToArray<HTMLElement>(document.querySelectorAll(root))
+
             if (root.length > 0)
                 options.root = root[0]
             else
