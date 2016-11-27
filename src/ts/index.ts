@@ -10,11 +10,11 @@ function bindAll() {
     VbSlider.bind(".vb_slider")
 }
 
-if (document.readyState != 'loading')
+if (document.readyState == 'complete')
     bindAll()
 else
     document.addEventListener('readystatechange', function ready() {
-        if (document.readyState != 'loading') {
+        if (document.readyState == 'complete') {
             document.removeEventListener('readystatechange', ready)
             bindAll()
         }
