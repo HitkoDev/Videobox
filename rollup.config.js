@@ -1,14 +1,9 @@
-//import babel from 'rollup-plugin-babel'
-//import babelrc from 'babelrc-rollup'
-//import istanbul from 'rollup-plugin-istanbul'
+import sourcemaps from 'rollup-plugin-sourcemaps'
 
 export default {
     entry: 'build/index.js',
     plugins: [
-        //babel(babelrc()),
-        //istanbul({
-        //    exclude: ['test/**/*', 'node_modules/**/*']
-        //})
+        sourcemaps()
     ],
     sourceMap: true,
     targets: [

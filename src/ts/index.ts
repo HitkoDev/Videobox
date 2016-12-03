@@ -3,9 +3,7 @@ import { VbInlineObj as VbInline } from './components/inline'
 import { VbSlider } from './components/slider'
 
 function bindAll() {
-    Videobox.bind("a[rel^='videobox']", {
-        root: <HTMLElement>(document.querySelector(".mdl-layout.mdl-js-layout") || document.body)
-    })
+    Videobox.bind("a[rel^='videobox']")
     VbInline.bind("a[rel^='vbinline']")
     VbSlider.bind(".vb_slider")
 }

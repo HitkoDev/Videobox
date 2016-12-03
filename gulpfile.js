@@ -12,11 +12,19 @@ var insert = require('gulp-insert')
 var sourcemaps = require('gulp-sourcemaps')
 var bourbon = require('bourbon')
 var sass = require('gulp-sass')
-var closureCompiler = require('gulp-closure-compiler')
 var uglify = require('gulp-uglify')
 var typedoc = require("gulp-typedoc")
 var shell = require('gulp-shell')
 var path = require('path')
+var through = require('through2')
+var sorcery = require('sorcery')
+var closureCompiler = require('google-closure-compiler').gulp()
+
+var sourcemapsOptions = {
+    mapFile: (mapFilePath) => {
+        return mapFilePath.replace('.min.js.map', '.js.map').replace('.bundle.js.map', '.bundle.map')
+    }
+}
 
 var comment = `/*!	
  *	@author		HitkoDev http://hitko.eu/videobox
@@ -93,33 +101,86 @@ gulp.task('scripts:rollup', shell.task([
     'rollup -c'
 ]))
 
+var bcd = function(options) {
+
+    var base = ''
+    if ('base' in options && options['base'])
+        base = options['base'].trim()
+
+    if (!base)
+        base = '.'
+
+    delete options['base']
+
+    var map = {}
+
+    for (var src in options)
+        if (typeof options[src] == 'string')
+            map[options[src]] = path.join(base, src, options[src])
+        else
+            for (var i = 0; i < options[src].length; i++)
+                map[options[src][i]] = path.join(base, src, options[src][i])
+
+    function transform(file, encoding, callback) {
+        if (file.sourceMap)
+            for (var i = 0; i < file.sourceMap.sources.length; i++)
+                if (file.sourceMap.sources[i] in map)
+                    file.sourceMap.sources[i] = map[file.sourceMap.sources[i]]
+
+        this.push(file);
+        callback();
+    }
+
+    return through.obj(transform);
+}
+
+var efg = function() {
+
+    function transform(file, encoding, callback) {
+        if (file.sourceMap) {
+            var rel = path.relative('.', file.path)
+            var chain = sorcery.loadSync(rel)
+            file.sourceMap = chain.apply()
+        }
+
+        this.push(file)
+        callback()
+    }
+
+    return through.obj(transform)
+}
+
 gulp.task('scripts', [
     'scripts:rollup'
 ], () => {
     return merge([
         gulp.src('./build/videobox.js')
+            .pipe(sourcemaps.init({ loadMaps: true, largeFile: true }))
             .pipe(closureCompiler({
-                compilerPath: 'closure.jar',
-                compilerFlags: {
-                    language_out: 'ES5',
-                    create_source_map: 'dist/videobox.js.map',
-                    source_map_input: 'build/videobox.js|build/videobox.js.map'
-                },
-                fileName: 'videobox.min.js'
+                js_output_file: 'videobox.min.js',
+                language_out: 'ECMASCRIPT5',
+                warning_level: 'QUIET'
             }))
+            .pipe(bcd({
+                '../': 'build/videobox.js'
+            }))
+            .pipe(sourcemaps.write('.', sourcemapsOptions))
             .pipe(gulp.dest('./dist')),
 
         gulp.src(['./node_modules/web-animations-js/web-animations.min.js', './build/videobox.js'])
+            .pipe(sourcemaps.init({ loadMaps: true, largeFile: true }))
             .pipe(closureCompiler({
-                compilerPath: 'closure.jar',
-                compilerFlags: {
-                    language_out: 'ES5',
-                    create_source_map: 'dist/videobox.bundle.map',
-                    source_map_input: 'build/videobox.js|build/videobox.js.map'
-                },
-                continueWithWarnings: true,
-                fileName: 'videobox.bundle.js'
+                js_output_file: 'videobox.bundle.js',
+                language_out: 'ECMASCRIPT5',
+                warning_level: 'QUIET'
             }))
+            .pipe(bcd({
+                '../': [
+                    'node_modules/web-animations-js/web-animations.min.js',
+                    'build/videobox.js'
+                ]
+            }))
+            .pipe(sourcemaps.write('.', sourcemapsOptions))
             .pipe(gulp.dest('./dist'))
 
     ])
@@ -208,12 +269,9 @@ function compress() {
 
         gulp.src('./dist/*.js')
             .pipe(sourcemaps.init({ loadMaps: true }))
+            .pipe(efg())
             .pipe(uglify())
-            .pipe(sourcemaps.write('.', {
-                mapFile: (mapFilePath) => {
-                    return mapFilePath.replace('.min.js.map', '.js.map').replace('.bundle.js.map', '.bundle.map')
-                }
-            }))
+            .pipe(sourcemaps.write('.', sourcemapsOptions))
             .pipe(gulp.dest('./dist'))
     ])
 }
