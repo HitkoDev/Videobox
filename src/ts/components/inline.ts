@@ -22,6 +22,7 @@ export class VbInline {
         closeText: 'Close',
         padding: 30,
         closeTimeout: 1000,
+        closeKeys: [27, 81],
         animation: {
             duration: 500,
             iterations: 1,
@@ -51,9 +52,13 @@ export class VbInline {
         hide(this.video)
         this.responsive.appendChild(this.video)
 
+        window.addEventListener('keyup', (evt) => {
+            if (this.activeVideo && this.activeVideo.options.closeKeys.indexOf(evt.keyCode) >= 0)
+                this.close()
+        })
+
         if (links)
             this.bind(links, options, linkMapper || this.linkMapper)
-
     }
 
     /**

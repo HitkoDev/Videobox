@@ -44,6 +44,16 @@ export interface vbOptions {
     closeTimeout?: number,
 
     /**
+     * keycodes to close the pop-up / inlie player
+     */
+    closeKeys?: number[],
+
+    /**
+     * if true, the bottom line on the pop-up player won't be displayed
+     */
+    hideBottom?: boolean
+
+    /**
      * animation properties (see <a href="https://w3c.github.io/web-animations/">web animations specifications</a>)
      */
     animation?: KeyframeAnimationOptions

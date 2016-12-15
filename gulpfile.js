@@ -98,10 +98,10 @@ gulp.task('images', () => {
 })
 
 gulp.task('scripts:rollup', shell.task([
-    'rollup -c'
+    path.join('node_modules', '.bin', 'rollup') + ' -c'
 ]))
 
-var bcd = function(options) {
+var bcd = function (options) {
 
     var base = ''
     if ('base' in options && options['base'])
@@ -134,7 +134,7 @@ var bcd = function(options) {
     return through.obj(transform);
 }
 
-var efg = function() {
+var efg = function () {
 
     function transform(file, encoding, callback) {
         if (file.sourceMap) {

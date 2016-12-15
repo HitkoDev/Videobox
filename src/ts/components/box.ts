@@ -23,6 +23,8 @@ export class Videobox {
         height: 405,
         closeText: 'Close',
         padding: 30,
+        closeKeys: [27, 81],
+        hideBottom: false,
         root: document.body,
         animation: {
             duration: 500,
@@ -35,10 +37,8 @@ export class Videobox {
     /** @internal */
     constructor(links?: Array<HTMLElement> | string, options: vbOptions = {}, linkMapper?: ((el: HTMLElement) => vbVideo)) {
         this.overlay = <HTMLDivElement>create('div', 'vbOverlay', () => this.close())
-        //this.defaults.root.appendChild(this.overlay)
 
         this.wrap = <HTMLDivElement>create('div', 'vbWrap')
-        //this.defaults.root.appendChild(this.wrap)
 
         this.center = <HTMLDivElement>create('div', 'vbCenter')
         this.wrap.appendChild(this.center)
@@ -70,6 +70,11 @@ export class Videobox {
         window.addEventListener('resize', () => {
             if (this.isOpen && this.activeVideo)
                 this.setPlayerSizePosition()
+        })
+
+        window.addEventListener('keyup', (evt) => {
+            if (this.activeVideo && this.activeVideo.options.closeKeys.indexOf(evt.keyCode) >= 0)
+                this.close()
         })
 
         if (links)
@@ -261,14 +266,18 @@ export class Videobox {
     }
 
     private animateBotton(): void {
-        let bottomAnimation = this.bottomContainer.animate([
-            { 'maxHeight': '0px' },
-            { 'maxHeight': '200px' }
-        ], this.activeVideo.options.animation)
-        toggleClass(this.bottomContainer, 'visible', true)
-        bottomAnimation.onfinish = () => this.showVideo()
-        this.animations.push(bottomAnimation)
-        bottomAnimation.play()
+        if (this.activeVideo.options.hideBottom) {
+            this.showVideo()
+        } else {
+            let bottomAnimation = this.bottomContainer.animate([
+                { 'maxHeight': '0px' },
+                { 'maxHeight': '200px' }
+            ], this.activeVideo.options.animation)
+            toggleClass(this.bottomContainer, 'visible', true)
+            bottomAnimation.onfinish = () => this.showVideo()
+            this.animations.push(bottomAnimation)
+            bottomAnimation.play()
+        }
     }
 
     private showVideo(): void {
