@@ -1,6 +1,6 @@
 {
   "license": "GPL-3.0",
-  "version": "6.0.0-rc14",
+  "version": "6.0.0-rc15",
   "name": "videobox",
   "description": "Pop-up video player plugin",
   "copyright": "Hitko",
@@ -58,7 +58,7 @@
     "typedoc": ">=0.5.1"
   },
   "dependencies": {
-    "video.js": "^5.11.9",
+    "video.js": "git+https://github.com/HitkoDev/video.js.git#custom_build",
     "web-animations-js": ">=2.2.2"
   }
 }
